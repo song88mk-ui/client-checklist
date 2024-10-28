@@ -75,7 +75,7 @@ stages:
           - task: Docker@2
             displayName: Docker Build
             inputs:
-              command: buildAndPush
+              command: build
               buildContext: $(Build.SourcesDirectory)/client-checklist.fe
               repository: $(ImageRepository)
               containerRegistry: $(ContainerRegistry)
