@@ -126,7 +126,7 @@ stages:
                       ret=$(az containerapp update \
                         -n ${CA} -g ${RG} --output json \
                         -i ${CR}/${REPO}:${TAG} \
-                        --container-name api | jq -r '.properties.provisioningState')
+                        --container-name web | jq -r '.properties.provisioningState')
                       [[ $ret == "Succeeded" ]] && echo "Status: Success" && exit 0
                       echo "Status: ${ret}"
                       exit 1
@@ -183,7 +183,7 @@ stages:
                       ret=$(az containerapp update \
                         -n ${CA} -g ${RG} --output json \
                         -i ${CR}/${REPO}:${TAG} \
-                        --container-name api | jq -r '.properties.provisioningState')
+                        --container-name web | jq -r '.properties.provisioningState')
                       [[ $ret == "Succeeded" ]] && echo "Status: Success" && exit 0
                       echo "Status: ${ret}"
                       exit 1
