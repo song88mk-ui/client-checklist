@@ -72,17 +72,25 @@ stages:
               containerRegistry: $(ContainerRegistry)
               tags: $(Build.BuildId)staging
 
-          #- task: Docker@2
-            #displayName: Docker Build
-            #inputs:
-              #command: buildAndPush
-              #buildContext: $(Build.SourcesDirectory)/client-checklist.fe
-              #repository: $(ImageRepository)
-              #containerRegistry: $(ContainerRegistry)
-              #Dockerfile: client-checklist.fe/Dockerfile
-              #tags: $(Build.BuildId)production
-              #arguments:
-                #--build-arg STAGE=production
+          - task: Docker@2
+            displayName: Docker Build
+            inputs:
+              command: buildAndPush
+              buildContext: $(Build.SourcesDirectory)/client-checklist.fe
+              repository: $(ImageRepository)
+              containerRegistry: $(ContainerRegistry)
+              Dockerfile: client-checklist.fe/Dockerfile
+              tags: $(Build.BuildId)production
+              arguments:
+                --build-arg STAGE=production
+
+          - task: Docker@2
+            displayName: Docker Push
+            inputs:
+              command: push
+              repository: $(ImageRepository)
+              containerRegistry: $(ContainerRegistry)
+              tags: $(Build.BuildId)production
 
   - stage: stage_staging_release
     dependsOn: build
