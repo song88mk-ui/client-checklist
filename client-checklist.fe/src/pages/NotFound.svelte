@@ -1,1 +1,1 @@
-<div>Not Found</div>
+<div class="px-3">Not Found</div>
