@@ -53,7 +53,7 @@ namespace Client.Checklist.API.Repository
                         Message = $"{StatusCode.Success}",
                         Result = new LoginResponseDTO
                         {
-                            OperatorToken = response.Result.OperatorToken,
+                            UserToken = response.Result.OperatorToken,
                             RoleName = jwtToken.Claims.FirstOrDefault(c => c.Type == "RoleName")?.Value ?? string.Empty
                         }
                     };
@@ -139,25 +139,6 @@ namespace Client.Checklist.API.Repository
         #endregion
 
         #region Utilities
-
-        //private string GenerateJwtToken(string secretKey, string issuer, List<Claim> claims)
-        //{
-        //    // Generate the signing key
-        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-        //    var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            
-        //    // Create the token
-        //    var token = new JwtSecurityToken(
-        //        issuer: issuer,
-        //        audience: issuer,
-        //        claims: claims,
-        //        expires: DateTime.MaxValue,
-        //        signingCredentials: credentials
-        //    );
-
-        //    // Return the JWT token string
-        //    return new JwtSecurityTokenHandler().WriteToken(token);
-        //}
 
         #endregion
     }
