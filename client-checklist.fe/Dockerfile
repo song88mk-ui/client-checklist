@@ -12,5 +12,6 @@ ARG STAGE
 RUN npm run build:$STAGE
 
 FROM nginx:1.27-alpine
+ADD default.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build /src/dist /usr/share/nginx/html
