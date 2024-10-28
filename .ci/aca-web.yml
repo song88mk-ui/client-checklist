@@ -122,6 +122,7 @@ stages:
                     inlineScript: |
                       az config set core.only_show_errors=True
                       az containerapp show -n ${CA} -g ${RG} -o none
+                      echo "Set ${CA} Image to: ${CR}/${REPO}:${TAG}"
                       ret=$(az containerapp update \
                         -n ${CA} -g ${RG} --output json \
                         -i ${CR}/${REPO}:${TAG} \
