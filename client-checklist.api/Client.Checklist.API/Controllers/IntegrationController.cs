@@ -27,13 +27,17 @@ namespace Client.Checklist.API.Controllers
         #region Methods
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LogInDTO request)
+        public async Task<IActionResult> Login([FromBody] LogInRequestDTO request)
         {
-            var ipAddress = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-            var userAgent = HttpContext.Request.Headers["user-agent"].FirstOrDefault();
-            var apiKey = HttpContext.Request.Headers["x-api-key"].FirstOrDefault();
-
             var result = await _clientRepository.Login(request);
+
+            return ReturnResult(result);
+        }
+
+        [HttpPost("auth")]
+        public async Task<IActionResult> Authenticate([FromBody] AuthRequestDTO request)
+        {
+            var result = await _clientRepository.Authenticate(request);
 
             return ReturnResult(result);
         }

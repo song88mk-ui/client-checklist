@@ -51,24 +51,31 @@ namespace Client.Checklist.API.Repository
                 };
             }
         }
-        public async Task<BaseResponseDTO<TokenModel>> Authenticate(string token)
+        public async Task<BaseResponseDTO<UserModel>> Authenticate(string token)
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await _httpClient.PostAsync($"v1/authentication/access", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
+                if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-app-id");
+                _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
+
+                if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
+                _httpClient.DefaultRequestHeaders.Add("x-operator-token", token);
+
+                var response = await _httpClient.PostAsync($"v1/authentication/operator", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
 
                 if (response.IsSuccessStatusCode)
-                    return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
-                        ?? new BaseResponseDTO<TokenModel>();
+                    return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                        ?? new BaseResponseDTO<UserModel>();
                 else
                 {
                     if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
-                        return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
-                            ?? new BaseResponseDTO<TokenModel>();
+                        return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                            ?? new BaseResponseDTO<UserModel>();
                     else
                     {
-                        return new BaseResponseDTO<TokenModel>
+                        return new BaseResponseDTO<UserModel>
                         {
                             StatusCode = StatusCode.Error,
                             Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
@@ -78,13 +85,14 @@ namespace Client.Checklist.API.Repository
             }
             catch (Exception ex)
             {
-                return new BaseResponseDTO<TokenModel>
+                return new BaseResponseDTO<UserModel>
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
                 };
             }
         }
+
         public async Task<BaseResponseDTO<bool>> Logout(string token)
         {
             try

@@ -1,14 +1,24 @@
 ﻿using Client.Checklist.Shared.Enums;
 using Client.Checklist.Shared.Models;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 
 namespace Client.Checklist.API.Repository
 {
     public class ClientRepository : IClientRepository
     {
+        #region Fields
+
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
+
+        #endregion
+
+        #region Ctor
 
         public ClientRepository(IConfiguration configuration, IAuthRepository authRepository)
         {
@@ -16,7 +26,11 @@ namespace Client.Checklist.API.Repository
             _authRepository = authRepository;
         }
 
-        public async Task<BaseResponseDTO<LoginResponseDTO>> Login(LogInDTO request)
+        #endregion
+
+        #region Methods
+
+        public async Task<BaseResponseDTO<LoginResponseDTO>> Login(LogInRequestDTO request)
         {
             try
             {
@@ -63,6 +77,44 @@ namespace Client.Checklist.API.Repository
             }
         }
 
+        public async Task<BaseResponseDTO<AuthResponseDTO>> Authenticate(AuthRequestDTO request)
+        {
+            try
+            {
+                var response = await _authRepository.Authenticate(request.UserToken);
+
+                if (response.StatusCode == StatusCode.Success)
+                {
+                    return new BaseResponseDTO<AuthResponseDTO>
+                    {
+                        StatusCode = StatusCode.Success,
+                        Message = $"{StatusCode.Success}",
+                        Result = new AuthResponseDTO
+                        {
+                            UserId = response.Result.UserId,
+                            Name = response.Result.NickName,
+                        }
+                    };
+                }
+                else
+                {
+                    return new BaseResponseDTO<AuthResponseDTO>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"{response.StatusCode} - {response.Message}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<AuthResponseDTO>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
         public async Task<BaseResponseDTO<object>> GetClient(string request)
         {
             try
@@ -84,6 +136,29 @@ namespace Client.Checklist.API.Repository
             }
         }
 
+        #endregion
 
+        #region Utilities
+
+        //private string GenerateJwtToken(string secretKey, string issuer, List<Claim> claims)
+        //{
+        //    // Generate the signing key
+        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        //    var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            
+        //    // Create the token
+        //    var token = new JwtSecurityToken(
+        //        issuer: issuer,
+        //        audience: issuer,
+        //        claims: claims,
+        //        expires: DateTime.MaxValue,
+        //        signingCredentials: credentials
+        //    );
+
+        //    // Return the JWT token string
+        //    return new JwtSecurityTokenHandler().WriteToken(token);
+        //}
+
+        #endregion
     }
 }

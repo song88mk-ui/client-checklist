@@ -1,9 +1,10 @@
 ﻿
 namespace Client.Checklist.Shared.Models
 {
-    public class TokenModel
+    public class UserModel
     {
-        public string OperatorToken { get; set; }
-        public string? AccessToken { get; set; }
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string NickName { get; set; }
     }
 }
