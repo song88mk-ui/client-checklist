@@ -1,10 +1,12 @@
 using Client.Checklist.API.ActionFilters;
 using Client.Checklist.API.Repository;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddScoped<AuthorizationFilter>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
@@ -28,11 +30,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 app.UseCors("AllowAllOrigins");
 
 app.MapControllers();
+app.MapHealthChecks("/healthz");
 
 app.Run();
