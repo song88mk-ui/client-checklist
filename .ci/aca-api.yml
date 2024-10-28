@@ -59,7 +59,7 @@ stages:
               buildContext: $(Build.SourcesDirectory)/client-checklist.api
               repository: $(ImageRepository)
               containerRegistry: $(ContainerRegistry)
-              Dockerfile: client-checlist.api/Client.Checklist.API/Dockerfile
+              Dockerfile: client-checklist.api/Client.Checklist.API/Dockerfile
               tags: $(Build.BuildId)
 
   - stage: stage_staging_release
