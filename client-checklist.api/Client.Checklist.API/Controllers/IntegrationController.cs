@@ -3,7 +3,6 @@ using Client.Checklist.API.Repository;
 using Client.Checklist.Shared.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace Client.Checklist.API.Controllers
 {
@@ -28,17 +27,15 @@ namespace Client.Checklist.API.Controllers
         #region Methods
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LogInModel request)
+        public async Task<IActionResult> Login([FromBody] LogInDTO request)
         {
             var ipAddress = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
             var userAgent = HttpContext.Request.Headers["user-agent"].FirstOrDefault();
             var apiKey = HttpContext.Request.Headers["x-api-key"].FirstOrDefault();
 
-            //var result = await _clientRepository.Login(request, clientId);
+            var result = await _clientRepository.Login(request);
 
-            //return ReturnResult(result);
-
-            return Ok();
+            return ReturnResult(result);
         }
 
         #endregion
