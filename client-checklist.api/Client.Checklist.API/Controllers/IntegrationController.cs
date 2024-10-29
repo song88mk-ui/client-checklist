@@ -34,6 +34,14 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] LogOutRequestDTO request)
+        {
+            var result = await _clientRepository.Logout(request);
+
+            return ReturnResult(result);
+        }
+
         [HttpPost("auth")]
         public async Task<IActionResult> Authenticate([FromBody] AuthRequestDTO request)
         {

@@ -19,8 +19,9 @@ namespace Client.Checklist.API.Repository
         {
             try
             {
-                if (!_httpClient.DefaultRequestHeaders.Contains("x-version"))
-                    _httpClient.DefaultRequestHeaders.Add("x-version", _version);
+                if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-app-id");
+                _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
 
                 var response = await _httpClient.PostAsync($"v1/login", new StringContent(JsonSerializer.Serialize(loginModel), Encoding.UTF8, "application/json"));
 
@@ -97,8 +98,15 @@ namespace Client.Checklist.API.Repository
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                var response = await _httpClient.PostAsync($"v1/logout", new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json"));
+                if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-app-id");
+                _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
+
+                if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
+                _httpClient.DefaultRequestHeaders.Add("x-operator-token", token);
+
+                var response = await _httpClient.PostAsync($"v1/logout", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
 
                 if (response.IsSuccessStatusCode)
                     return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })

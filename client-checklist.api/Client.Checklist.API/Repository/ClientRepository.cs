@@ -77,6 +77,40 @@ namespace Client.Checklist.API.Repository
             }
         }
 
+        public async Task<BaseResponseDTO<bool>> Logout(LogOutRequestDTO request)
+        {
+            try
+            {
+                var response = await _authRepository.Logout(request.UserToken);
+
+                if (response.StatusCode == StatusCode.Success)
+                {
+                    return new BaseResponseDTO<bool>
+                    {
+                        StatusCode = StatusCode.Success,
+                        Message = $"{StatusCode.Success}",
+                        Result = true
+                    };
+                }
+                else
+                {
+                    return new BaseResponseDTO<bool>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"({response.StatusCode}) - {response.Message}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<bool>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
         public async Task<BaseResponseDTO<AuthResponseDTO>> Authenticate(AuthRequestDTO request)
         {
             try

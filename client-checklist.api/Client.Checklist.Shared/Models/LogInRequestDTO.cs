@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Client.Checklist.Shared.Models
+﻿namespace Client.Checklist.Shared.Models
 {
     public class LogInRequestDTO
     {
