@@ -1,6 +1,7 @@
 using Client.Checklist.API.ActionFilters;
 using Client.Checklist.API.Repository;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Client.Checklist.Shared.Data.ClientChecklist;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddDbContextPool<ClientChecklistContext>(o => o.UseSqlServer(builder.Configuration["ConnectionStrings:ClientChecklist"], options =>
+                options.CommandTimeout(180)));
 builder.Services.AddScoped<AuthorizationFilter>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddHttpClient<IAuthRepository, AuthRepository>(client =>

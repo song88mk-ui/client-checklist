@@ -42,11 +42,39 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
+        [HttpGet("client/list")]
+        public async Task<IActionResult> GetClientList()
+        {
+            var result = await _clientRepository.GetClientList();
+
+            return ReturnResult(result);
+        }
+
+        [HttpPost("client/post")]
+        public async Task<IActionResult> CreateOrUpdateClient([FromBody] CreateOrUpdateClientRequestDTO request)
+        {
+            var result = await _clientRepository.CreateOrUpdateClientInformation(request);
+
+            return ReturnResult(result);
+        }
+
         #endregion
 
         #region Utilities
 
         private IActionResult ReturnResult<T>(BaseResponseDTO<T> result)
+        {
+            switch (result.StatusCode)
+            {
+                case Shared.Enums.StatusCode.Success:
+                case Shared.Enums.StatusCode.Maintenance:
+                    return Ok(result);
+                default:
+                    return BadRequest(result);
+            }
+        }
+
+        private IActionResult ReturnResult(BaseResponse result)
         {
             switch (result.StatusCode)
             {

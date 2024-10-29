@@ -1,11 +1,9 @@
-﻿using Client.Checklist.Shared.Enums;
+﻿using Client.Checklist.Shared.Data.ClientChecklist;
+using Client.Checklist.Shared.Data.ClientChecklist.Entities;
+using Client.Checklist.Shared.Enums;
 using Client.Checklist.Shared.Models;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json;
 
 namespace Client.Checklist.API.Repository
 {
@@ -13,6 +11,7 @@ namespace Client.Checklist.API.Repository
     {
         #region Fields
 
+        private readonly ClientChecklistContext _clientChecklistContext;
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
 
@@ -20,8 +19,9 @@ namespace Client.Checklist.API.Repository
 
         #region Ctor
 
-        public ClientRepository(IConfiguration configuration, IAuthRepository authRepository)
+        public ClientRepository(ClientChecklistContext clientChecklistContext, IConfiguration configuration, IAuthRepository authRepository)
         {
+            _clientChecklistContext = clientChecklistContext;
             _configuration = configuration;
             _authRepository = authRepository;
         }
@@ -80,7 +80,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<bool>> Logout(LogOutRequestDTO request)
+        public async Task<BaseResponse> Logout(LogOutRequestDTO request)
         {
             try
             {
@@ -88,16 +88,15 @@ namespace Client.Checklist.API.Repository
 
                 if (response.StatusCode == StatusCode.Success)
                 {
-                    return new BaseResponseDTO<bool>
+                    return new BaseResponse
                     {
                         StatusCode = StatusCode.Success,
-                        Message = $"{StatusCode.Success}",
-                        Result = true
+                        Message = $"{StatusCode.Success}"
                     };
                 }
                 else
                 {
-                    return new BaseResponseDTO<bool>
+                    return new BaseResponse
                     {
                         StatusCode = StatusCode.Error,
                         Message = $"({response.StatusCode}) - {response.Message}"
@@ -106,7 +105,7 @@ namespace Client.Checklist.API.Repository
             }
             catch (Exception ex)
             {
-                return new BaseResponseDTO<bool>
+                return new BaseResponse
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
@@ -152,12 +151,105 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<object>> GetClient(string request)
+        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList()
         {
             try
             {
-                //TODO: get client by token
-                return new BaseResponseDTO<object>
+                var clients = _clientChecklistContext.ClientInformation.AsNoTracking().ToList();
+
+                return new BaseResponseDTO<ClientInformationListDTO>
+                {
+                    StatusCode = StatusCode.Success,
+                    Message = $"{StatusCode.Success}",
+                    Result = new ClientInformationListDTO
+                    {
+                        Clients = clients.Select(s => new ClientInformationModel
+                        {
+                            ClientId = s.ClientId.ToString(),
+                            ClientName = s.ClientName,
+                            CustomerServiceManager = s.CustomerServiceManager,
+                            Domain = s.Domain,
+                            CustomerServiceManagerContact = s.CustomerServiceManagerContact,
+                            FinanceManager = s.FinanceManager,
+                            FinanceManagerContact = s.FinanceManagerContact,
+                            MainDecisionMaker = s.MainDecisionMaker,
+                            MainDecisionMakerContact = s.MainDecisionMakerContact,
+                            ProductManager = s.ProductManager,
+                            ProductManagerContact = s.ProductManagerContact,
+                            ServiceTypeId = s.ServiceTypeId,
+                            SSLCertificate = s.SSLCertificate,
+                            SupportedCurrency = s.SupportedCurrency,
+                            SupportedLanguage = s.SupportedLanguage,
+                            TargetLaunchDate = s.TargetLaunchDate,
+                            TechnicalManager = s.TechnicalManager,
+                            TechnicalManagerContact = s.TechnicalManagerContact,
+                        }).ToList()
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<ClientInformationListDTO>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
+        public async Task<BaseResponse> CreateOrUpdateClientInformation(CreateOrUpdateClientRequestDTO request)
+        {
+            try
+            {
+                var client = await _clientChecklistContext.ClientInformation.FindAsync(request.ClientId);
+
+                if (client == null)
+                {
+                    var entity = _clientChecklistContext.ClientInformation.Add(new ClientInformation
+                    {
+                        ClientName = request.ClientName,
+                        CustomerServiceManager = request.CustomerServiceManager,
+                        CustomerServiceManagerContact = request.CustomerServiceManagerContact,
+                        FinanceManager = request.FinanceManager,
+                        FinanceManagerContact = request.FinanceManagerContact,
+                        MainDecisionMaker = request.MainDecisionMaker,
+                        MainDecisionMakerContact = request.MainDecisionMakerContact,
+                        ProductManager = request.ProductManager,
+                        ProductManagerContact = request.ProductManagerContact,
+                        Domain = request.Domain,
+                        SSLCertificate = request.SSLCertificate,
+                        ServiceTypeId = request.ServiceTypeId,
+                        SupportedCurrency = request.SupportedCurrency,
+                        SupportedLanguage = request.SupportedLanguage,
+                        TechnicalManager = request.TechnicalManager,
+                        TechnicalManagerContact = request.TechnicalManagerContact,
+                        TargetLaunchDate = request.TargetLaunchDate,
+                    });
+                }
+                else
+                {
+                    client.ClientName = request.ClientName;
+                    client.CustomerServiceManager = request.CustomerServiceManager;
+                    client.CustomerServiceManagerContact = request.CustomerServiceManagerContact;
+                    client.FinanceManager = request.FinanceManager;
+                    client.FinanceManagerContact = request.FinanceManagerContact;
+                    client.MainDecisionMaker = request.MainDecisionMaker;
+                    client.MainDecisionMakerContact = request.MainDecisionMakerContact;
+                    client.ProductManager = request.ProductManager;
+                    client.ProductManagerContact = request.ProductManagerContact;
+                    client.Domain = request.Domain;
+                    client.SSLCertificate = request.SSLCertificate;
+                    client.ServiceTypeId = request.ServiceTypeId;
+                    client.SupportedCurrency = request.SupportedCurrency;
+                    client.SupportedLanguage = request.SupportedLanguage;
+                    client.TechnicalManager = request.TechnicalManager;
+                    client.TechnicalManagerContact = request.TechnicalManagerContact;
+                    client.TargetLaunchDate = request.TargetLaunchDate;
+                }
+
+                _clientChecklistContext.SaveChanges();
+
+                return new BaseResponse
                 {
                     StatusCode = StatusCode.Success,
                     Message = $"{StatusCode.Success}"
