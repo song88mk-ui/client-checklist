@@ -162,7 +162,7 @@ namespace Client.Checklist.API.Repository
                     return new BaseResponseDTO<ClientInformationModel>
                     {
                         StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"{StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers.ToString().Replace('_', ' ')}"
+                        Message = $"Missing Or Unsupported Client Token In Request Headers"
                     };
                 }
 
@@ -216,10 +216,21 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList()
+        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList(string userToken)
         {
             try
             {
+                var authResponse = await _authRepository.Authenticate(userToken);
+
+                if (authResponse.StatusCode != StatusCode.Success)
+                {
+                    return new BaseResponseDTO<ClientInformationListDTO>
+                    {
+                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                        Message = $"Missing Or Unsupported User Token In Request Headers"
+                    };
+                }
+
                 var clients = _clientChecklistContext.ClientInformation.AsNoTracking().ToList();
 
                 return new BaseResponseDTO<ClientInformationListDTO>
@@ -262,10 +273,21 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponse> CreateOrUpdateClientInformation(CreateOrUpdateClientRequestDTO request)
+        public async Task<BaseResponse> CreateOrUpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
         {
             try
             {
+                var authResponse = await _authRepository.Authenticate(userToken);
+
+                if (authResponse.StatusCode != StatusCode.Success)
+                {
+                    return new BaseResponseDTO<ClientInformationListDTO>
+                    {
+                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                        Message = $"Missing Or Unsupported User Token In Request Headers"
+                    };
+                }
+
                 var client = await _clientChecklistContext.ClientInformation.FindAsync(request.ClientId);
 
                 if (client == null)

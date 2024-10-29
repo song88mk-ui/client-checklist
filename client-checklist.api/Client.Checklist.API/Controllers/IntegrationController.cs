@@ -54,6 +54,8 @@ namespace Client.Checklist.API.Controllers
         [HttpGet("client/list")]
         public async Task<IActionResult> GetClientList()
         {
+            var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
+
             var result = await _clientRepository.GetClientList();
 
             return ReturnResult(result);
@@ -62,6 +64,8 @@ namespace Client.Checklist.API.Controllers
         [HttpPost("client/post")]
         public async Task<IActionResult> CreateOrUpdateClient([FromBody] CreateOrUpdateClientRequestDTO request)
         {
+            var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
+
             var result = await _clientRepository.CreateOrUpdateClientInformation(request);
 
             return ReturnResult(result);
