@@ -42,14 +42,6 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [HttpPost("auth")]
-        public async Task<IActionResult> Authenticate([FromBody] AuthRequestDTO request)
-        {
-            var result = await _clientRepository.Authenticate(request);
-
-            return ReturnResult(result);
-        }
-
         #endregion
 
         #region Utilities

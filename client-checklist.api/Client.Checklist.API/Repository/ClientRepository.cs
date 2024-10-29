@@ -47,6 +47,8 @@ namespace Client.Checklist.API.Repository
 
                     var jwtToken = handler.ReadJwtToken(response.Result.AccessToken);
 
+                    var roleName = jwtToken.Claims.FirstOrDefault(c => c.Type == "RoleName")?.Value;
+
                     return new BaseResponseDTO<LoginResponseDTO>
                     {
                         StatusCode = StatusCode.Success,
@@ -54,7 +56,8 @@ namespace Client.Checklist.API.Repository
                         Result = new LoginResponseDTO
                         {
                             UserToken = response.Result.OperatorToken,
-                            RoleName = jwtToken.Claims.FirstOrDefault(c => c.Type == "RoleName")?.Value ?? string.Empty
+                            RoleName = "Admin",
+                            AccessType = roleName?.Contains("Super Admin") ?? false ? (int)AccessType.ReadAndWrite : (int)AccessType.ReadOnly
                         }
                     };
                 }
