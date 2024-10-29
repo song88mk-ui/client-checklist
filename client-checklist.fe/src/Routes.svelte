@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Router, Route } from "svelte-routing";
-  import Layout from "./components/Layout.svelte";
+  import Layout from "./components/PublicLayout.svelte";
   import Home from "./pages/Home.svelte";
   import About from "./pages/About.svelte";
   import Login from "./pages/Login.svelte";
@@ -8,12 +8,10 @@
 </script>
 
 <Router>
-  <Layout>
-    <Route path="/"><Home /></Route>
-    <Route path="/about"><About /></Route>
-    <Route path="/login"><Login /></Route>
-    <Route path="*">
-      <NotFound />
-    </Route>
-  </Layout>
+  <Route path="/"><Home /></Route>
+  <Route path="/about"><About /></Route>
+  <Route path="/login"><Login /></Route>
+  <Route path="*">
+    <NotFound />
+  </Route>
 </Router>

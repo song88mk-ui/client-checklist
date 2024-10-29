@@ -18,7 +18,7 @@
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "prettier-plugin-svelte": "^3.2.7",
-    "svelte": "^5.0.3",
+    "svelte": "^5.1.4",
     "svelte-check": "^4.0.5",
     "tailwindcss": "^3.4.14",
     "tslib": "^2.8.0",
@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@iconify/svelte": "^4.0.2",
-    "svelte-routing": "^2.13.0"
+    "svelte-forms-lib": "^2.0.1",
+    "svelte-routing": "^2.13.0",
+    "yup": "^1.4.0"
   }
 }
