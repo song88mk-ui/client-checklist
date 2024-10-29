@@ -56,7 +56,7 @@ namespace Client.Checklist.API.Controllers
         {
             var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
 
-            var result = await _clientRepository.GetClientList();
+            var result = await _clientRepository.GetClientList(userToken);
 
             return ReturnResult(result);
         }
@@ -66,7 +66,7 @@ namespace Client.Checklist.API.Controllers
         {
             var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
 
-            var result = await _clientRepository.CreateOrUpdateClientInformation(request);
+            var result = await _clientRepository.CreateOrUpdateClientInformation(request, userToken);
 
             return ReturnResult(result);
         }
