@@ -19,10 +19,6 @@ namespace Client.Checklist.API.Repository
         {
             try
             {
-                if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
-                    _httpClient.DefaultRequestHeaders.Remove("x-app-id");
-                _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
-
                 var response = await _httpClient.PostAsync($"v1/login", new StringContent(JsonSerializer.Serialize(loginModel), Encoding.UTF8, "application/json"));
 
                 if (response.IsSuccessStatusCode)
@@ -98,10 +94,6 @@ namespace Client.Checklist.API.Repository
         {
             try
             {
-                if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
-                    _httpClient.DefaultRequestHeaders.Remove("x-app-id");
-                _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
-
                 if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
                     _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
                 _httpClient.DefaultRequestHeaders.Add("x-operator-token", token);
