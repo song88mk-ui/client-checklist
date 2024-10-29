@@ -25,7 +25,7 @@ namespace Client.Checklist.API.Controllers
 
         #region Methods
 
-        [HttpPost("login")]
+        [HttpPost("users/login")]
         public async Task<IActionResult> Login([FromBody] LogInRequestDTO request)
         {
             var result = await _clientRepository.Login(request);
@@ -33,7 +33,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [HttpPost("logout")]
+        [HttpPost("users/logout")]
         public async Task<IActionResult> Logout([FromBody] LogOutRequestDTO request)
         {
             var result = await _clientRepository.Logout(request);
@@ -41,7 +41,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [HttpGet("client/{clientId}")]
+        [HttpGet("clients/{clientId}")]
         public async Task<IActionResult> GetClientInformation([FromRoute] string clientId)
         {
             var clientToken = HttpContext.Request.Headers["x-client-token"].FirstOrDefault();
@@ -51,7 +51,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [HttpGet("client/list")]
+        [HttpGet("clients")]
         public async Task<IActionResult> GetClientList()
         {
             var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
@@ -61,7 +61,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [HttpPost("client/post")]
+        [HttpPost("clients")]
         public async Task<IActionResult> CreateOrUpdateClient([FromBody] CreateOrUpdateClientRequestDTO request)
         {
             var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();

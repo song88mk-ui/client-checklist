@@ -288,7 +288,11 @@ namespace Client.Checklist.API.Repository
                     };
                 }
 
-                var client = await _clientChecklistContext.ClientInformation.FindAsync(request.ClientId);
+                var clientId = Guid.NewGuid();
+                if (Guid.TryParse(request.ClientId, out Guid result))
+                    clientId = result;
+
+                var client = await _clientChecklistContext.ClientInformation.FindAsync(clientId);
 
                 if (client == null)
                 {
@@ -312,6 +316,7 @@ namespace Client.Checklist.API.Repository
                         TechnicalManagerContact = request.TechnicalManagerContact,
                         TargetLaunchDate = request.TargetLaunchDate,
                     });
+
                 }
                 else
                 {
