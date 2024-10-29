@@ -151,6 +151,71 @@ namespace Client.Checklist.API.Repository
             }
         }
 
+        public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId, string clientToken)
+        {
+            try
+            {
+                var authResponse = await _authRepository.Authenticate(clientToken);
+
+                if(authResponse.StatusCode != StatusCode.Success)
+                {
+                    return new BaseResponseDTO<ClientInformationModel>
+                    {
+                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                        Message = $"{StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers.ToString().Replace('_', ' ')}"
+                    };
+                }
+
+                Guid.TryParse(clientId, out var clientGuid);
+
+                var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid);
+
+                if(client == null)
+                {
+                    return new BaseResponseDTO<ClientInformationModel>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"Client Not Found"
+                    };
+                }
+
+                return new BaseResponseDTO<ClientInformationModel>
+                {
+                    StatusCode = StatusCode.Success,
+                    Message = $"{StatusCode.Success}",
+                    Result = new ClientInformationModel
+                    {
+                        ClientId = client.ClientId.ToString(),
+                        ClientName = client.ClientName,
+                        CustomerServiceManager = client.CustomerServiceManager,
+                        Domain = client.Domain,
+                        CustomerServiceManagerContact = client.CustomerServiceManagerContact,
+                        FinanceManager = client.FinanceManager,
+                        FinanceManagerContact = client.FinanceManagerContact,
+                        MainDecisionMaker = client.MainDecisionMaker,
+                        MainDecisionMakerContact = client.MainDecisionMakerContact,
+                        ProductManager = client.ProductManager,
+                        ProductManagerContact = client.ProductManagerContact,
+                        ServiceTypeId = client.ServiceTypeId,
+                        SSLCertificate = client.SSLCertificate,
+                        SupportedCurrency = client.SupportedCurrency,
+                        SupportedLanguage = client.SupportedLanguage,
+                        TargetLaunchDate = client.TargetLaunchDate,
+                        TechnicalManager = client.TechnicalManager,
+                        TechnicalManagerContact = client.TechnicalManagerContact,
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<ClientInformationModel>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
         public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList()
         {
             try
@@ -248,6 +313,8 @@ namespace Client.Checklist.API.Repository
                 }
 
                 _clientChecklistContext.SaveChanges();
+
+                //TODO: update usertoken to return into the response
 
                 return new BaseResponse
                 {

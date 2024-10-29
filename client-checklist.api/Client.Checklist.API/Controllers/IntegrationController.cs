@@ -17,7 +17,6 @@ namespace Client.Checklist.API.Controllers
 
         #endregion
 
-
         public IntegrationController(ILogger<IntegrationController> logger, IClientRepository clientRepository)
         {
             _logger = logger;
@@ -38,6 +37,16 @@ namespace Client.Checklist.API.Controllers
         public async Task<IActionResult> Logout([FromBody] LogOutRequestDTO request)
         {
             var result = await _clientRepository.Logout(request);
+
+            return ReturnResult(result);
+        }
+
+        [HttpGet("client/{clientId}")]
+        public async Task<IActionResult> GetClientInformation([FromRoute] string clientId)
+        {
+            var clientToken = HttpContext.Request.Headers["x-client-token"].FirstOrDefault();
+
+            var result = await _clientRepository.GetClientInformation(clientId, clientToken);
 
             return ReturnResult(result);
         }
