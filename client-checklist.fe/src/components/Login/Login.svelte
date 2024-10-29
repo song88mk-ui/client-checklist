@@ -1,20 +1,25 @@
 <script lang="ts">
-  import "./Login.css";
+  import LoginForm from "./LoginForm.svelte";
+  import { type LoginFormType } from './validationSchema';
+  import Icon from '@iconify/svelte';
 
-  let username = "";
-  let password = "";
-  let showPassword = false;
+  let initialValues = {
+    username: "",
+    password: "",
+    rememberMe: false,
+  }
   let errorMessage = "";
   let showError = false;
   let isLoading = false;
 
-  async function handleLogin() {
+  const handleLogin = async (values: LoginFormType) => {
     isLoading = true;
+    showError = false;
     try {
       const response = await fetch("https://dummyjson.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify(values),
       });
 
       if (!response.ok) {
@@ -26,56 +31,28 @@
     } catch (error: any) {
       errorMessage = error.message;
       showError = true;
-      // Hide the error message after 3 seconds
-      setTimeout(() => {
-        showError = false;
-      }, 5000);
     }
     isLoading = false;
   }
-  function togglePassword() {
-    showPassword = !showPassword;
+  const handleRemoveError = () => {
+    showError = false;
   }
 </script>
 
-<div class="login-container">
-  <div class="logo">
+<div class="border rounded p-5 w-[400px] mx-auto gap-4 flex flex-col">
+  <div class="flex justify-center">
     <img src="./assets/logo.svg" alt="logo" />
-  </div>
-  <div class="input-container">
-    <img src="./assets/person.svg" alt="logo" class="left-icon" />
-    <input type="text" placeholder="Enter Username" bind:value={username} />
-  </div>
-  <div class="input-container">
-    <img src="./assets/lock.svg" alt="logo" class="left-icon" />
-    <input
-      type={showPassword ? "text" : "password"}
-      placeholder="Enter Password"
-      bind:value={password}
-    />
-    <div on:click={togglePassword} role="presentation">
-      <img src="./assets/password-eye.svg" alt="Eye Icon" class="right-icon" />
-    </div>
-  </div>
-
-  <div class="check-remember">
-    <input class="check-remember-input" type="checkbox" />
-    <span>Remember Me</span>
   </div>
 
   {#if errorMessage && showError}
-    <p class="error">{errorMessage}</p>
+  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+    <strong class="font-bold">Holy smokes!</strong>
+    <span class="block sm:inline">{errorMessage}</span>
+    <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" on:click={handleRemoveError} aria-label="Close alert">
+      <Icon icon="mdi:close" class="fill-current h-6 w-6 text-red-500" />
+    </button>
+  </div>
   {/if}
 
-  <button on:click={handleLogin}>
-    {#if isLoading}
-      <div
-        class="spinner"
-        style="display: {isLoading ? 'block' : 'none'}"
-      ></div>
-    {/if}
-    {#if !isLoading}
-      Login
-    {/if}
-  </button>
+  <LoginForm initialValues={initialValues} onSubmit={handleLogin} isLoading={isLoading} />
 </div>
