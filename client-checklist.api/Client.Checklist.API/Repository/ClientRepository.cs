@@ -151,11 +151,11 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId, string clientToken)
+        public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId, string token)
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(clientToken);
+                var authResponse = await _authRepository.Authenticate(token);
 
                 if(authResponse.StatusCode != StatusCode.Success)
                 {
@@ -168,7 +168,7 @@ namespace Client.Checklist.API.Repository
 
                 Guid.TryParse(clientId, out var clientGuid);
 
-                var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid);
+                var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid && f.IsDeleted == false);
 
                 if(client == null)
                 {
@@ -231,7 +231,7 @@ namespace Client.Checklist.API.Repository
                     };
                 }
 
-                var clients = _clientChecklistContext.ClientInformation.AsNoTracking().ToList();
+                var clients = _clientChecklistContext.ClientInformation.AsNoTracking().Where(c => c.IsDeleted == false).ToList();
 
                 return new BaseResponseDTO<ClientInformationListDTO>
                 {
@@ -337,6 +337,58 @@ namespace Client.Checklist.API.Repository
                     client.TechnicalManager = request.TechnicalManager;
                     client.TechnicalManagerContact = request.TechnicalManagerContact;
                     client.TargetLaunchDate = request.TargetLaunchDate;
+                }
+
+                _clientChecklistContext.SaveChanges();
+
+                //TODO: update usertoken to return into the response
+
+                return new BaseResponse
+                {
+                    StatusCode = StatusCode.Success,
+                    Message = $"{StatusCode.Success}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<object>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
+        public async Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request, string userToken)
+        {
+            try
+            {
+                var authResponse = await _authRepository.Authenticate(userToken);
+
+                if (authResponse.StatusCode != StatusCode.Success)
+                {
+                    return new BaseResponseDTO<ClientInformationListDTO>
+                    {
+                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                        Message = $"Missing Or Unsupported User Token In Request Headers"
+                    };
+                }
+
+                var clientId = Guid.Parse(request.ClientId);
+
+                var client = await _clientChecklistContext.ClientInformation.FindAsync(clientId);
+
+                if (client == null)
+                {
+                    return new BaseResponse
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"Client Not Found"
+                    };
+                }
+                else
+                {
+                    client.IsDeleted = true;
                 }
 
                 _clientChecklistContext.SaveChanges();

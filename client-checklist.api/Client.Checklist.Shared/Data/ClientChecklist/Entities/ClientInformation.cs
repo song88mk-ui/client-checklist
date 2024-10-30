@@ -24,5 +24,6 @@ namespace Client.Checklist.Shared.Data.ClientChecklist.Entities
         public string TechnicalManagerContact { get; set; }
         public string CustomerServiceManager { get; set; }
         public string CustomerServiceManagerContact { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

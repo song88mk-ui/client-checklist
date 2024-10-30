@@ -44,9 +44,9 @@ namespace Client.Checklist.API.Controllers
         [HttpGet("clients/{clientId}")]
         public async Task<IActionResult> GetClientInformation([FromRoute] string clientId)
         {
-            var clientToken = HttpContext.Request.Headers["x-client-token"].FirstOrDefault();
+            var token = HttpContext.Request.Headers["x-client-token"].FirstOrDefault() ?? HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
 
-            var result = await _clientRepository.GetClientInformation(clientId, clientToken);
+            var result = await _clientRepository.GetClientInformation(clientId, token);
 
             return ReturnResult(result);
         }
@@ -67,6 +67,16 @@ namespace Client.Checklist.API.Controllers
             var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
 
             var result = await _clientRepository.CreateOrUpdateClientInformation(request, userToken);
+
+            return ReturnResult(result);
+        }
+
+        [HttpDelete("clients")]
+        public async Task<IActionResult> DeleteClient([FromBody] DeleteClientRequestDTO request)
+        {
+            var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
+
+            var result = await _clientRepository.DeleteClientInformation(request, userToken);
 
             return ReturnResult(result);
         }

@@ -3,7 +3,6 @@
     public class CreateOrUpdateClientRequestDTO
     {
         public string ClientId { get; set; }
-        public int ClientIdRef { get; set; }
         public string ClientName { get; set; }
         public string Domain { get; set; }
         public string SSLCertificate { get; set; }
