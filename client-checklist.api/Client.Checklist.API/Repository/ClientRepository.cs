@@ -1,3 +1,4 @@
+using Client.Checklist.API.Telemetry;
 using Client.Checklist.Shared.Data.ClientChecklist;
 using Client.Checklist.Shared.Data.ClientChecklist.Entities;
 using Client.Checklist.Shared.Enums;
