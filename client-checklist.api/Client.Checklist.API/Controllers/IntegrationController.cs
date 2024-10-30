@@ -28,6 +28,20 @@ namespace Client.Checklist.API.Controllers
         [HttpPost("users/login")]
         public async Task<IActionResult> Login([FromBody] LogInRequestDTO request)
         {
+            // this endpoint will be called from User Agent, extract the original caller IP from the
+            // following:
+            //      cloudflare (ipv6) -> httpContext(xff) -> remoteIp (in that order)
+            var cfConnectingIpv6 = HttpContext.Request.Headers["cf-connecting-ipv6"].FirstOrDefault();
+            var xff = HttpContext.Request.Headers["x-forwarded-for"].FirstOrDefault();
+            // xff can be a comma separated values being the first as the original requester
+            var remoteIp = string.IsNullOrEmpty(xff) ?
+                HttpContext.Connection.RemoteIpAddress.ToString() :
+                xff.Split(",").First().Split(":").First();
+            var ipAddress = !string.IsNullOrEmpty(cfConnectingIpv6) ? cfConnectingIpv6 : remoteIp;
+
+            // inject the ip to the request so it can be processed downstream (eg. Auth-API)
+            request.IpAddress = ipAddress;
+
             var result = await _clientRepository.Login(request);
 
             return ReturnResult(result);

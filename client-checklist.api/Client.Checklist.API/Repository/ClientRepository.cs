@@ -43,6 +43,7 @@ namespace Client.Checklist.API.Repository
             try
             {
                 activity?.SetTag("username", request.Username);
+                activity?.SetTag("ip.address", request.IpAddress);
                 activity?.SetTag("provider", Application.ClientChecklist);
 
                 var response = await _authRepository.Login(new LogInModel
