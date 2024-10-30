@@ -273,7 +273,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponse> CreateOrUpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
+        public async Task<BaseResponseDTO<string>> CreateOrUpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
         {
             try
             {
@@ -281,7 +281,7 @@ namespace Client.Checklist.API.Repository
 
                 if (authResponse.StatusCode != StatusCode.Success)
                 {
-                    return new BaseResponseDTO<ClientInformationListDTO>
+                    return new BaseResponseDTO<string>
                     {
                         StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
                         Message = $"Missing Or Unsupported User Token In Request Headers"
@@ -298,6 +298,7 @@ namespace Client.Checklist.API.Repository
                 {
                     var entity = _clientChecklistContext.ClientInformation.Add(new ClientInformation
                     {
+                        ClientId = clientId,
                         ClientName = request.ClientName,
                         CustomerServiceManager = request.CustomerServiceManager,
                         CustomerServiceManagerContact = request.CustomerServiceManagerContact,
@@ -341,17 +342,22 @@ namespace Client.Checklist.API.Repository
 
                 _clientChecklistContext.SaveChanges();
 
-                //TODO: update usertoken to return into the response
+                var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
+                {
+                    ClientId = clientId.ToString(),
+                    ClientName = request.ClientName
+                });
 
-                return new BaseResponse
+                return new BaseResponseDTO<string>
                 {
                     StatusCode = StatusCode.Success,
-                    Message = $"{StatusCode.Success}"
+                    Message = $"{StatusCode.Success}",
+                    Result = token.Result
                 };
             }
             catch (Exception ex)
             {
-                return new BaseResponseDTO<object>
+                return new BaseResponseDTO<string>
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
@@ -392,8 +398,6 @@ namespace Client.Checklist.API.Repository
                 }
 
                 _clientChecklistContext.SaveChanges();
-
-                //TODO: update usertoken to return into the response
 
                 return new BaseResponse
                 {

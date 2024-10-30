@@ -128,5 +128,42 @@ namespace Client.Checklist.API.Repository
             }
         }
 
+        public async Task<BaseResponseDTO<string>> CreateClientToken(CreateClientTokenRequestDTO request)
+        {
+            try
+            {
+                if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-app-id");
+                _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
+
+                var response = await _httpClient.PostAsync($"v1/api/user/client/token", new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json"));
+
+                if (response.IsSuccessStatusCode)
+                    return JsonSerializer.Deserialize<BaseResponseDTO<string>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                        ?? new BaseResponseDTO<string>();
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
+                        return JsonSerializer.Deserialize<BaseResponseDTO<string>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                            ?? new BaseResponseDTO<string>();
+                    else
+                    {
+                        return new BaseResponseDTO<string>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<string>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
     }
 }
