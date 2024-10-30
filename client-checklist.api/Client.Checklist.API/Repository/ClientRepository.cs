@@ -1,9 +1,13 @@
-﻿using Client.Checklist.Shared.Data.ClientChecklist;
+using Client.Checklist.Shared.Data.ClientChecklist;
 using Client.Checklist.Shared.Data.ClientChecklist.Entities;
 using Client.Checklist.Shared.Enums;
 using Client.Checklist.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 
 namespace Client.Checklist.API.Repository
 {
@@ -14,16 +18,18 @@ namespace Client.Checklist.API.Repository
         private readonly ClientChecklistContext _clientChecklistContext;
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
+        private readonly ActivitySource _activitySource;
 
         #endregion
 
         #region Ctor
 
-        public ClientRepository(ClientChecklistContext clientChecklistContext, IConfiguration configuration, IAuthRepository authRepository)
+        public ClientRepository(ClientChecklistContext clientChecklistContext, IConfiguration configuration, IAuthRepository authRepository, Instrumentation instrumentation)
         {
             _clientChecklistContext = clientChecklistContext;
             _configuration = configuration;
             _authRepository = authRepository;
+            _activitySource = instrumentation.ActivitySource;
         }
 
         #endregion
@@ -32,8 +38,12 @@ namespace Client.Checklist.API.Repository
 
         public async Task<BaseResponseDTO<LoginResponseDTO>> Login(LogInRequestDTO request)
         {
+            using var activity = _activitySource.StartActivity("client.login");
             try
             {
+                activity.SetTag("username", request.Username);
+                activity.SetTag("provider", Application.ClientChecklist);
+
                 var response = await _authRepository.Login(new LogInModel
                 {
                     Username = request.Username,
@@ -41,6 +51,7 @@ namespace Client.Checklist.API.Repository
                     Provider = $"{(int)Application.ClientChecklist}"
                 });
 
+                activity.SetTag("http.status.code", response.StatusCode);
                 if (response.StatusCode == StatusCode.Success)
                 {
                     var handler = new JwtSecurityTokenHandler();
@@ -49,6 +60,7 @@ namespace Client.Checklist.API.Repository
 
                     var roleName = jwtToken.Claims.FirstOrDefault(c => c.Type == "RoleName")?.Value;
 
+                    activity.SetStatus(ActivityStatusCode.Ok);
                     return new BaseResponseDTO<LoginResponseDTO>
                     {
                         StatusCode = StatusCode.Success,
@@ -63,6 +75,7 @@ namespace Client.Checklist.API.Repository
                 }
                 else
                 {
+                    activity.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
                     return new BaseResponseDTO<LoginResponseDTO>
                     {
                         StatusCode = StatusCode.Error,
@@ -72,11 +85,16 @@ namespace Client.Checklist.API.Repository
             }
             catch (Exception ex)
             {
+                activity.SetStatus(ActivityStatusCode.Error, ex.Message);
                 return new BaseResponseDTO<LoginResponseDTO>
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
                 };
+            }
+            finally
+            {
+                activity?.Stop();
             }
         }
 
