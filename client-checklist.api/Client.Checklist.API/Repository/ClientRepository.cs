@@ -42,17 +42,18 @@ namespace Client.Checklist.API.Repository
             using var activity = _activitySource.StartActivity("client.login");
             try
             {
-                activity.SetTag("username", request.Username);
-                activity.SetTag("provider", Application.ClientChecklist);
+                activity?.SetTag("username", request.Username);
+                activity?.SetTag("provider", Application.ClientChecklist);
 
                 var response = await _authRepository.Login(new LogInModel
                 {
                     Username = request.Username,
                     Password = request.Password,
+                    IpAddress = request.IpAddress,
                     Provider = $"{(int)Application.ClientChecklist}"
                 });
 
-                activity.SetTag("http.status.code", response.StatusCode);
+                activity?.SetTag("http.status.code", response.StatusCode);
                 if (response.StatusCode == StatusCode.Success)
                 {
                     var handler = new JwtSecurityTokenHandler();
@@ -61,7 +62,7 @@ namespace Client.Checklist.API.Repository
 
                     var roleName = jwtToken.Claims.FirstOrDefault(c => c.Type == "RoleName")?.Value;
 
-                    activity.SetStatus(ActivityStatusCode.Ok);
+                    activity?.SetStatus(ActivityStatusCode.Ok);
                     return new BaseResponseDTO<LoginResponseDTO>
                     {
                         StatusCode = StatusCode.Success,
@@ -76,7 +77,7 @@ namespace Client.Checklist.API.Repository
                 }
                 else
                 {
-                    activity.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                    activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
                     return new BaseResponseDTO<LoginResponseDTO>
                     {
                         StatusCode = StatusCode.Error,
@@ -86,7 +87,7 @@ namespace Client.Checklist.API.Repository
             }
             catch (Exception ex)
             {
-                activity.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 return new BaseResponseDTO<LoginResponseDTO>
                 {
                     StatusCode = StatusCode.Error,

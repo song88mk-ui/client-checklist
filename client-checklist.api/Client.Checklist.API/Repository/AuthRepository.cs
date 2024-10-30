@@ -29,19 +29,19 @@ namespace Client.Checklist.API.Repository
 
                 if (response.IsSuccessStatusCode)
                 {
-                    activity.SetStatus(ActivityStatusCode.Ok);
+                    activity?.SetStatus(ActivityStatusCode.Ok);
                     return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                         ?? new BaseResponseDTO<TokenModel>();
                 }
                 else
                 {
-                    activity.SetTag("http.status.code", response.StatusCode);
+                    activity?.SetTag("http.status.code", response.StatusCode);
                     if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
                         return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                             ?? new BaseResponseDTO<TokenModel>();
                     else
                     {
-                        activity.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                        activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
                         return new BaseResponseDTO<TokenModel>
                         {
                             StatusCode = StatusCode.Error,
@@ -52,7 +52,7 @@ namespace Client.Checklist.API.Repository
             }
             catch (Exception ex)
             {
-                activity.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 return new BaseResponseDTO<TokenModel>
                 {
                     StatusCode = StatusCode.Error,
@@ -69,33 +69,33 @@ namespace Client.Checklist.API.Repository
             using var activity = _activitySource.StartActivity("auth.authenticate");
             try
             {
-                activity.SetTag("x-app-id", $"{Application.ClientChecklist}");
+                activity?.SetTag("x-app-id", $"{Application.ClientChecklist}");
                 if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
                     _httpClient.DefaultRequestHeaders.Remove("x-app-id");
                 _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
 
                 if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
                     _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
-                activity.SetTag("x-operator-token", token);
+                activity?.SetTag("x-operator-token", token);
                 _httpClient.DefaultRequestHeaders.Add("x-operator-token", token);
 
                 var response = await _httpClient.PostAsync($"v1/authentication/operator", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
 
                 if (response.IsSuccessStatusCode)
                 {
-                    activity.SetStatus(ActivityStatusCode.Ok);
+                    activity?.SetStatus(ActivityStatusCode.Ok);
                     return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                         ?? new BaseResponseDTO<UserModel>();
                 }
                 else
                 {
-                    activity.SetTag("http.status.code", response.StatusCode);
+                    activity?.SetTag("http.status.code", response.StatusCode);
                     if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
                         return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                             ?? new BaseResponseDTO<UserModel>();
                     else
                     {
-                        activity.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                        activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
                         return new BaseResponseDTO<UserModel>
                         {
                             StatusCode = StatusCode.Error,
@@ -106,7 +106,7 @@ namespace Client.Checklist.API.Repository
             }
             catch (Exception ex)
             {
-                activity.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 return new BaseResponseDTO<UserModel>
                 {
                     StatusCode = StatusCode.Error,
@@ -132,19 +132,19 @@ namespace Client.Checklist.API.Repository
 
                 if (response.IsSuccessStatusCode)
                 {
-                    activity.SetStatus(ActivityStatusCode.Ok);
+                    activity?.SetStatus(ActivityStatusCode.Ok);
                     return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                         ?? new BaseResponseDTO<bool>();
                 }
                 else
                 {
-                    activity.SetTag("http.status.code", response.StatusCode);
+                    activity?.SetTag("http.status.code", response.StatusCode);
                     if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
                         return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                             ?? new BaseResponseDTO<bool>();
                     else
                     {
-                        activity.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                        activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
                         return new BaseResponseDTO<bool>
                         {
                             StatusCode = StatusCode.Error,
@@ -155,7 +155,7 @@ namespace Client.Checklist.API.Repository
             }
             catch (Exception ex)
             {
-                activity.SetStatus(ActivityStatusCode.Error, ex.Message);
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 return new BaseResponseDTO<bool>
                 {
                     StatusCode = StatusCode.Error,
