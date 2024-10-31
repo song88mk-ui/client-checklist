@@ -8,7 +8,8 @@ namespace Client.Checklist.API.Repository
         Task<BaseResponse> Logout(LogOutRequestDTO request);
         Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId, string token);
         Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList(string userToken);
-        Task<BaseResponseDTO<string>> CreateOrUpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken);
+        Task<BaseResponseDTO<string>> CreateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken);
+        Task<BaseResponseDTO<string>> UpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken);
         Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request, string userToken);
     }
 }

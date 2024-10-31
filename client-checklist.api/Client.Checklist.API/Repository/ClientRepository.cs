@@ -5,10 +5,7 @@ using Client.Checklist.Shared.Enums;
 using Client.Checklist.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
 
 namespace Client.Checklist.API.Repository
 {
@@ -294,7 +291,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> CreateOrUpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
+        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
         {
             try
             {
@@ -309,36 +306,83 @@ namespace Client.Checklist.API.Repository
                     };
                 }
 
-                var clientId = Guid.NewGuid();
-                if (Guid.TryParse(request.ClientId, out Guid result))
-                    clientId = result;
+                var client = _clientChecklistContext.ClientInformation.Add(new ClientInformation
+                {
+                    ClientName = request.ClientName,
+                    CustomerServiceManager = request.CustomerServiceManager,
+                    CustomerServiceManagerContact = request.CustomerServiceManagerContact,
+                    FinanceManager = request.FinanceManager,
+                    FinanceManagerContact = request.FinanceManagerContact,
+                    MainDecisionMaker = request.MainDecisionMaker,
+                    MainDecisionMakerContact = request.MainDecisionMakerContact,
+                    ProductManager = request.ProductManager,
+                    ProductManagerContact = request.ProductManagerContact,
+                    Domain = request.Domain,
+                    SSLCertificate = request.SSLCertificate,
+                    ServiceTypeId = request.ServiceTypeId,
+                    SupportedCurrency = request.SupportedCurrency,
+                    SupportedLanguage = request.SupportedLanguage,
+                    TechnicalManager = request.TechnicalManager,
+                    TechnicalManagerContact = request.TechnicalManagerContact,
+                    TargetLaunchDate = request.TargetLaunchDate,
+                }).Entity;
 
-                var client = await _clientChecklistContext.ClientInformation.FindAsync(clientId);
+                _clientChecklistContext.SaveChanges();
+
+                var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
+                {
+                    ClientId = client.ClientId.ToString(),
+                    ClientName = request.ClientName
+                });
+
+                return new BaseResponseDTO<string>
+                {
+                    StatusCode = StatusCode.Success,
+                    Message = $"{StatusCode.Success}",
+                    Result = token.Result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<string>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
+        public async Task<BaseResponseDTO<string>> UpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
+        {
+            try
+            {
+                var authResponse = await _authRepository.Authenticate(userToken);
+
+                if (authResponse.StatusCode != StatusCode.Success)
+                {
+                    return new BaseResponseDTO<string>
+                    {
+                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                        Message = $"Missing Or Unsupported User Token In Request Headers"
+                    };
+                }
+
+                if (!Guid.TryParse(request.ClientId, out Guid result))
+                    return new BaseResponseDTO<string>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"Invalid Client ID"
+                    };
+
+                var client = await _clientChecklistContext.ClientInformation.FindAsync(result);
 
                 if (client == null)
                 {
-                    var entity = _clientChecklistContext.ClientInformation.Add(new ClientInformation
+                    return new BaseResponseDTO<string>
                     {
-                        ClientId = clientId,
-                        ClientName = request.ClientName,
-                        CustomerServiceManager = request.CustomerServiceManager,
-                        CustomerServiceManagerContact = request.CustomerServiceManagerContact,
-                        FinanceManager = request.FinanceManager,
-                        FinanceManagerContact = request.FinanceManagerContact,
-                        MainDecisionMaker = request.MainDecisionMaker,
-                        MainDecisionMakerContact = request.MainDecisionMakerContact,
-                        ProductManager = request.ProductManager,
-                        ProductManagerContact = request.ProductManagerContact,
-                        Domain = request.Domain,
-                        SSLCertificate = request.SSLCertificate,
-                        ServiceTypeId = request.ServiceTypeId,
-                        SupportedCurrency = request.SupportedCurrency,
-                        SupportedLanguage = request.SupportedLanguage,
-                        TechnicalManager = request.TechnicalManager,
-                        TechnicalManagerContact = request.TechnicalManagerContact,
-                        TargetLaunchDate = request.TargetLaunchDate,
-                    });
-
+                        StatusCode = StatusCode.Error,
+                        Message = $"Client Not Found"
+                    };
                 }
                 else
                 {
@@ -365,7 +409,7 @@ namespace Client.Checklist.API.Repository
 
                 var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
                 {
-                    ClientId = clientId.ToString(),
+                    ClientId = result.ToString(),
                     ClientName = request.ClientName
                 });
 
