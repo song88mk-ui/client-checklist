@@ -11,8 +11,8 @@
         public int TaskId { get; set; }
         public string TaskName { get; set; }
         public int ServiceTypeId { get; set; }
-        public string TargetDateCompleted { get; set; }
-        public string ActualDateCompleted { get; set; }
+        public string? TargetDateCompleted { get; set; }
+        public string? ActualDateCompleted { get; set; }
         public string AssignedTo { get; set; }
         public int SortOrder { get; set; }
         public int Environment { get; set; }

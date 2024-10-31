@@ -131,7 +131,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId, string token)
+        public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId)
         {
             try
             {
@@ -185,7 +185,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList(string userToken)
+        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList()
         {
             try
             {
@@ -231,7 +231,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
+        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateOrUpdateClientRequestDTO request)
         {
             try
             {
@@ -281,7 +281,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> UpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
+        public async Task<BaseResponseDTO<string>> UpdateClientInformation(CreateOrUpdateClientRequestDTO request)
         {
             try
             {
@@ -348,7 +348,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request, string userToken)
+        public async Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request)
         {
             try
             {
@@ -388,49 +388,42 @@ namespace Client.Checklist.API.Repository
         }
 
 
-        public async Task<BaseResponseDTO<string>> AddClientTask(AddClientTaskRequestDTO request, string userToken)
+        public async Task<BaseResponseDTO<string>> AddClientTask(AddClientTaskRequestDTO request)
         {
             try
             {
-                //var authResponse = await _authRepository.Authenticate(userToken);
+                var clientId = Guid.Parse(request.ClientId);
 
-                //if (authResponse.StatusCode != StatusCode.Success)
-                //{
-                //    return new BaseResponseDTO<string>
-                //    {
-                //        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                //        Message = $"Missing Or Unsupported User Token In Request Headers"
-                //    };
-                //}
+                var task = _clientChecklistContext.ClientTask.Add(new ClientTask
+                {
+                    ClientId = clientId,
+                    TaskId = request.TaskId,
+                    TaskName = request.TaskName,
+                    ServiceTypeId = request.ServiceTypeId,
+                    Environment = request.Environment,
+                    TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted),
+                    ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted),
+                    AssignedTo = request.AssignedTo,
+                    SortOrder = request.SortOrder,
+                }).Entity;
 
-                //var client = _clientChecklistContext.ClientInformation.Add(new ClientInformation
-                //{
-                //    ClientName = request.ClientName,
-                //    CustomerServiceManager = request.CustomerServiceManager,
-                //    CustomerServiceManagerContact = request.CustomerServiceManagerContact,
-                //    FinanceManager = request.FinanceManager,
-                //    FinanceManagerContact = request.FinanceManagerContact,
-                //    MainDecisionMaker = request.MainDecisionMaker,
-                //    MainDecisionMakerContact = request.MainDecisionMakerContact,
-                //    ProductManager = request.ProductManager,
-                //    ProductManagerContact = request.ProductManagerContact,
-                //    Domain = request.Domain,
-                //    SSLCertificate = request.SSLCertificate,
-                //    ServiceTypeId = request.ServiceTypeId,
-                //    SupportedCurrency = request.SupportedCurrency,
-                //    SupportedLanguage = request.SupportedLanguage,
-                //    TechnicalManager = request.TechnicalManager,
-                //    TechnicalManagerContact = request.TechnicalManagerContact,
-                //    TargetLaunchDate = request.TargetLaunchDate,
-                //}).Entity;
+                _clientChecklistContext.SaveChanges();
 
-                //_clientChecklistContext.SaveChanges();
+                foreach (var subTask in request.SubTasks)
+                {
+                    _clientChecklistContext.ClientSubtask.Add(new ClientSubtask
+                    {
+                        ClientTaskId = task.ClientTaskId,
+                        SubtaskId = subTask.SubtaskId,
+                        SubtaskName = subTask.SubtaskName,
+                        Comment = subTask.Comment,
+                        TaskStatusId = subTask.TaskStatusId,
+                        ClientTaskStatusId = subTask.ClientTaskStatusId,
+                        SortOrder = subTask.SortOrder,
+                    });
+                }
 
-                //var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
-                //{
-                //    ClientId = client.ClientId.ToString(),
-                //    ClientName = request.ClientName
-                //});
+                _clientChecklistContext.SaveChanges();
 
                 return new BaseResponseDTO<string>
                 {
