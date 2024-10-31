@@ -5,20 +5,21 @@
         public string ClientId { get; set; }
         public string ClientName { get; set; }
         public string Domain { get; set; }
-        public string SSLCertificate { get; set; }
+        public string SSLCert { get; set; }
         public int ServiceTypeId { get; set; }
-        public string SupportedLanguage { get; set; }
-        public string SupportedCurrency { get; set; }
-        public DateTime? TargetLaunchDate { get; set; }
-        public string MainDecisionMaker { get; set; }
-        public string MainDecisionMakerContact { get; set; }
-        public string FinanceManager { get; set; }
-        public string FinanceManagerContact { get; set; }
-        public string ProductManager { get; set; }
-        public string ProductManagerContact { get; set; }
-        public string TechnicalManager { get; set; }
-        public string TechnicalManagerContact { get; set; }
-        public string CustomerServiceManager { get; set; }
-        public string CustomerServiceManagerContact { get; set; }
+        public List<string> Languages { get; set; }
+        public List<string> Currencies { get; set; }
+        public DateTime? LaunchDate { get; set; }
+        public Manager MainDecisionMaker { get; set; }
+        public Manager FinanceManager { get; set; }
+        public Manager ProductManager { get; set; }
+        public Manager TechnicalManager { get; set; }
+        public Manager CustomerServiceManager { get; set; }
+    }
+
+    public class Manager
+    {
+        public string Name { get; set; }
+        public string Number { get; set; }
     }
 }
