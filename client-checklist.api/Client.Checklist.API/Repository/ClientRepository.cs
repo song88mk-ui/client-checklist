@@ -131,58 +131,58 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<AuthResponseDTO>> Authenticate(AuthRequestDTO request)
-        {
-            try
-            {
-                var response = await _authRepository.Authenticate(request.UserToken);
+        //public async Task<BaseResponseDTO<AuthResponseDTO>> Authenticate(AuthRequestDTO request)
+        //{
+        //    try
+        //    {
+        //        var response = await _authRepository.Authenticate(request.UserToken);
 
-                if (response.StatusCode == StatusCode.Success)
-                {
-                    return new BaseResponseDTO<AuthResponseDTO>
-                    {
-                        StatusCode = StatusCode.Success,
-                        Message = $"{StatusCode.Success}",
-                        Result = new AuthResponseDTO
-                        {
-                            UserId = response.Result.UserId,
-                            Name = response.Result.NickName,
-                        }
-                    };
-                }
-                else
-                {
-                    return new BaseResponseDTO<AuthResponseDTO>
-                    {
-                        StatusCode = StatusCode.Error,
-                        Message = $"{response.StatusCode} - {response.Message}"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponseDTO<AuthResponseDTO>
-                {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
-            }
-        }
+        //        if (response.StatusCode == StatusCode.Success)
+        //        {
+        //            return new BaseResponseDTO<AuthResponseDTO>
+        //            {
+        //                StatusCode = StatusCode.Success,
+        //                Message = $"{StatusCode.Success}",
+        //                Result = new AuthResponseDTO
+        //                {
+        //                    UserId = response.Result.UserId,
+        //                    Name = response.Result.NickName,
+        //                }
+        //            };
+        //        }
+        //        else
+        //        {
+        //            return new BaseResponseDTO<AuthResponseDTO>
+        //            {
+        //                StatusCode = StatusCode.Error,
+        //                Message = $"{response.StatusCode} - {response.Message}"
+        //            };
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new BaseResponseDTO<AuthResponseDTO>
+        //        {
+        //            StatusCode = StatusCode.Error,
+        //            Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+        //        };
+        //    }
+        //}
 
         public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId, string token)
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(token);
+                //var authResponse = await _authRepository.Authenticate(token);
 
-                if(authResponse.StatusCode != StatusCode.Success)
-                {
-                    return new BaseResponseDTO<ClientInformationModel>
-                    {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported Client Token In Request Headers"
-                    };
-                }
+                //if(authResponse.StatusCode != StatusCode.Success)
+                //{
+                //    return new BaseResponseDTO<ClientInformationModel>
+                //    {
+                //        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                //        Message = $"Missing Or Unsupported Client Token In Request Headers"
+                //    };
+                //}
 
                 Guid.TryParse(clientId, out var clientGuid);
 
@@ -238,16 +238,16 @@ namespace Client.Checklist.API.Repository
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(userToken);
+                //var authResponse = await _authRepository.Authenticate(userToken);
 
-                if (authResponse.StatusCode != StatusCode.Success)
-                {
-                    return new BaseResponseDTO<ClientInformationListDTO>
-                    {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported User Token In Request Headers"
-                    };
-                }
+                //if (authResponse.StatusCode != StatusCode.Success)
+                //{
+                //    return new BaseResponseDTO<ClientInformationListDTO>
+                //    {
+                //        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                //        Message = $"Missing Or Unsupported User Token In Request Headers"
+                //    };
+                //}
 
                 var clients = _clientChecklistContext.ClientInformation.AsNoTracking().Where(c => c.IsDeleted == false).ToList();
 
@@ -295,16 +295,16 @@ namespace Client.Checklist.API.Repository
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(userToken);
+                //var authResponse = await _authRepository.Authenticate(userToken);
 
-                if (authResponse.StatusCode != StatusCode.Success)
-                {
-                    return new BaseResponseDTO<string>
-                    {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported User Token In Request Headers"
-                    };
-                }
+                //if (authResponse.StatusCode != StatusCode.Success)
+                //{
+                //    return new BaseResponseDTO<string>
+                //    {
+                //        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                //        Message = $"Missing Or Unsupported User Token In Request Headers"
+                //    };
+                //}
 
                 var client = _clientChecklistContext.ClientInformation.Add(new ClientInformation
                 {
@@ -356,16 +356,16 @@ namespace Client.Checklist.API.Repository
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(userToken);
+                //var authResponse = await _authRepository.Authenticate(userToken);
 
-                if (authResponse.StatusCode != StatusCode.Success)
-                {
-                    return new BaseResponseDTO<string>
-                    {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported User Token In Request Headers"
-                    };
-                }
+                //if (authResponse.StatusCode != StatusCode.Success)
+                //{
+                //    return new BaseResponseDTO<string>
+                //    {
+                //        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                //        Message = $"Missing Or Unsupported User Token In Request Headers"
+                //    };
+                //}
 
                 if (!Guid.TryParse(request.ClientId, out Guid result))
                     return new BaseResponseDTO<string>
@@ -434,16 +434,16 @@ namespace Client.Checklist.API.Repository
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(userToken);
+                //var authResponse = await _authRepository.Authenticate(userToken);
 
-                if (authResponse.StatusCode != StatusCode.Success)
-                {
-                    return new BaseResponseDTO<ClientInformationListDTO>
-                    {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported User Token In Request Headers"
-                    };
-                }
+                //if (authResponse.StatusCode != StatusCode.Success)
+                //{
+                //    return new BaseResponseDTO<ClientInformationListDTO>
+                //    {
+                //        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                //        Message = $"Missing Or Unsupported User Token In Request Headers"
+                //    };
+                //}
 
                 var clientId = Guid.Parse(request.ClientId);
 
@@ -473,6 +473,68 @@ namespace Client.Checklist.API.Repository
             catch (Exception ex)
             {
                 return new BaseResponseDTO<object>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
+
+        public async Task<BaseResponseDTO<string>> AddClientTask(AddClientTaskRequestDTO request, string userToken)
+        {
+            try
+            {
+                //var authResponse = await _authRepository.Authenticate(userToken);
+
+                //if (authResponse.StatusCode != StatusCode.Success)
+                //{
+                //    return new BaseResponseDTO<string>
+                //    {
+                //        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
+                //        Message = $"Missing Or Unsupported User Token In Request Headers"
+                //    };
+                //}
+
+                //var client = _clientChecklistContext.ClientInformation.Add(new ClientInformation
+                //{
+                //    ClientName = request.ClientName,
+                //    CustomerServiceManager = request.CustomerServiceManager,
+                //    CustomerServiceManagerContact = request.CustomerServiceManagerContact,
+                //    FinanceManager = request.FinanceManager,
+                //    FinanceManagerContact = request.FinanceManagerContact,
+                //    MainDecisionMaker = request.MainDecisionMaker,
+                //    MainDecisionMakerContact = request.MainDecisionMakerContact,
+                //    ProductManager = request.ProductManager,
+                //    ProductManagerContact = request.ProductManagerContact,
+                //    Domain = request.Domain,
+                //    SSLCertificate = request.SSLCertificate,
+                //    ServiceTypeId = request.ServiceTypeId,
+                //    SupportedCurrency = request.SupportedCurrency,
+                //    SupportedLanguage = request.SupportedLanguage,
+                //    TechnicalManager = request.TechnicalManager,
+                //    TechnicalManagerContact = request.TechnicalManagerContact,
+                //    TargetLaunchDate = request.TargetLaunchDate,
+                //}).Entity;
+
+                //_clientChecklistContext.SaveChanges();
+
+                //var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
+                //{
+                //    ClientId = client.ClientId.ToString(),
+                //    ClientName = request.ClientName
+                //});
+
+                return new BaseResponseDTO<string>
+                {
+                    StatusCode = StatusCode.Success,
+                    Message = $"{StatusCode.Success}",
+                    //Result = token.Result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<string>
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
