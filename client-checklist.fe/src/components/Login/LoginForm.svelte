@@ -11,6 +11,11 @@
   };
   export let isLoading = false;
   export let onSubmit: (values: LoginFormType) => Promise<void>;
+  export let error = "";
+
+  const handleRemoveError = () => {
+    error = "";
+  };
 
   const { form, errors, handleChange, handleSubmit } = createForm({
     initialValues,
@@ -19,15 +24,15 @@
   });
 </script>
 
-<form on:submit={handleSubmit} class="flex flex-col gap-3">
+<form on:submit={handleSubmit} class="flex flex-col gap-4">
   <div>
     <div class="relative flex items-center border rounded w-full">
-      <Icon icon="mdi:user" class="absolute ml-2 text-blue-600" />
+      <Icon icon="mdi:user" class="absolute ml-2 text-blue-600" height={22} />
       <input
         id="username"
         name="text"
         placeholder="Enter Username"
-        class="block w-full py-2 pr-3 pl-8"
+        class="block w-full py-3 pr-3 pl-10 text-sm"
         on:change={handleChange}
         bind:value={$form.username}
       />
@@ -53,13 +58,30 @@
     <small class="font-semibold ml-2 text-slate-500">Remember Me</small>
   </label>
 
+  {#if error}
+    <div
+      class="bg-red-100 text-red-700 px-4 py-3 rounded relative text-sm"
+      role="alert"
+    >
+      <span class="block sm:inline">{error}</span>
+      <button
+        type="button"
+        class="absolute top-0 bottom-0 right-0 px-4 py-3"
+        on:click={handleRemoveError}
+        aria-label="Close alert"
+      >
+        <Icon icon="mdi:close" height={22} class="fill-current text-red-500" />
+      </button>
+    </div>
+  {/if}
+
   <button
-    class="w-full bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center disabled:bg-blue-400"
+    class="w-full bg-blue-600 hover:bg-blue-800 text-sm text-white font-semibold py-3 px-4 rounded-full flex items-center justify-center disabled:bg-blue-400"
     type="submit"
     disabled={isLoading}
   >
     {#if isLoading}
-      <Icon icon="mdi:loading" class="animate-spin" height={24} />
+      <Icon icon="mdi:loading" class="animate-spin" height={22} />
     {:else}
       Login
     {/if}

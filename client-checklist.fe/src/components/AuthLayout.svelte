@@ -1,8 +1,3 @@
-<script lang="ts">
-  import Footer from "./Footer.svelte";
-</script>
-
-<main class="flex-1 content-center">
+<main class="flex-1 content-center bg-slate-100">
   <slot />
 </main>
-<Footer />
