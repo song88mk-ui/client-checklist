@@ -34,16 +34,26 @@ namespace Client.Checklist.API.Extensions
                     {
                         t.AddSource(Instrumentation.ActivitySourceName)
                         .SetSampler(new AlwaysOnSampler())
-                        .AddHttpClientInstrumentation()
+                        .AddHttpClientInstrumentation(
+                            (opts) => opts.FilterHttpRequestMessage =
+                                (req) =>
+                                {
+                                    var uriString = req.RequestUri.ToString();
+                                    var isAzureReq = uriString.Contains("monitor.azure.com") ||
+                                                     uriString.Contains("visualstudio.com");
+                                    return !isAzureReq;
+                                }
+                        )
                         .AddOtlpExporter(o =>
                         {
                             o.Protocol = OtlpExportProtocol.HttpProtobuf;
                             o.Endpoint = new Uri(options.Collector + "/v1/traces");
                         });
                     })
-                    .WithMetrics(m =>
+                    .WithMetrics(metrics =>
                     {
-                        m.AddMeter(Instrumentation.MeterName)
+                        metrics
+                        .AddMeter(Instrumentation.MeterName)
                         .AddRuntimeInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddOtlpExporter(o =>
