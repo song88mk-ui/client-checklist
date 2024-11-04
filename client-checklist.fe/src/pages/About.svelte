@@ -1,7 +1,7 @@
 <script>
-  import PublicLayout from "../components/PublicLayout.svelte";
+  import Layout from "../components/Layout.svelte";
 </script>
 
-<PublicLayout>
+<Layout>
   <div class="px-3">About</div>
-</PublicLayout>
+</Layout>

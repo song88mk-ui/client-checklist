@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type { Step } from "../types/step";
+  import type Step from "../types/step";
   import ProgressStepper from "../components/ProgressStepper.svelte";
-  import PublicLayout from "../components/PublicLayout.svelte";
+  import Layout from "../components/Layout.svelte";
 
   const handleClick = (step: Step) => {
     console.log(step);
   };
 </script>
 
-<PublicLayout>
+<Layout>
   <div class="px-3">
     <ProgressStepper
       steps={[
@@ -24,4 +24,4 @@
       onClick={handleClick}
     />
   </div>
-</PublicLayout>
+</Layout>

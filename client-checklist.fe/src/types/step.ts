@@ -4,4 +4,4 @@ type Step = {
   status: "completed" | "active" | "inactive";
 };
 
-export type { Step };
+export type { Step as default };

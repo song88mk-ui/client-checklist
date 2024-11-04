@@ -1,7 +1,9 @@
 <script lang="ts">
   import LoginForm from "./LoginForm.svelte";
   import { type LoginFormType } from "./validationSchema";
-  import Icon from "@iconify/svelte";
+  import { setAuth } from "../../stores/auth";
+  import { navigate } from "svelte-routing";
+  import CompanyLogo from "../CompanyLogo.svelte";
 
   let initialValues = {
     username: "",
@@ -12,25 +14,34 @@
   let isLoading = false;
 
   const handleLogin = async (values: LoginFormType) => {
-    isLoading = true;
-    errorMessage = "";
-    try {
-      const response = await fetch("https://dummyjson.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+    // isLoading = true;
+    // errorMessage = "";
+    // try {
+    //   const response = await fetch("https://dummyjson.com/auth/login", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(values),
+    //   });
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
+    //   if (!response.ok) {
+    //     throw new Error("Login failed");
+    //   }
 
-      const data = await response.json();
-      isLoading = true;
-    } catch (error: any) {
-      errorMessage = error.message;
-    }
-    isLoading = false;
+    //   const data = await response.json();
+    //   isLoading = true;
+    // } catch (error: any) {
+    //   errorMessage = error.message;
+    // }
+    // isLoading = false;
+    // $user = { email: "jess@gmail.com" };
+
+    setAuth({
+      fullName: "janina mencero",
+      email: "jess@gmail.com",
+      role: "admin",
+    });
+
+    navigate("/dashboard");
   };
 </script>
 
@@ -38,7 +49,7 @@
   class="shadow bg-white border rounded-md p-6 w-[442px] mx-auto gap-4 flex flex-col"
 >
   <div class="flex justify-center">
-    <img src="./assets/logo.svg" alt="logo" />
+    <CompanyLogo />
   </div>
 
   <LoginForm

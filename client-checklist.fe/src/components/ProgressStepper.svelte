@@ -1,6 +1,6 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
-  import type { Step } from "../types/step";
+  import type Step from "../types/step";
 
   export let steps: Step[] = [];
   export let onClick: (step: Step) => void;
