@@ -32,6 +32,19 @@ builder.Services.AddHttpClient<IAuthRepository, AuthRepository>(client =>
     client.DefaultRequestHeaders.Add("x-api-key", builder.Configuration["API:AuthenticationAPI:Security:APIKey"]);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+                    builder =>
+                    {
+                        builder
+                       .SetPreflightMaxAge(TimeSpan.FromHours(24))
+                       .AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+                    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

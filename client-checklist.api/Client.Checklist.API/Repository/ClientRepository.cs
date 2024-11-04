@@ -5,10 +5,7 @@ using Client.Checklist.Shared.Enums;
 using Client.Checklist.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
 
 namespace Client.Checklist.API.Repository
 {
@@ -134,59 +131,10 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<AuthResponseDTO>> Authenticate(AuthRequestDTO request)
+        public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId)
         {
             try
             {
-                var response = await _authRepository.Authenticate(request.UserToken);
-
-                if (response.StatusCode == StatusCode.Success)
-                {
-                    return new BaseResponseDTO<AuthResponseDTO>
-                    {
-                        StatusCode = StatusCode.Success,
-                        Message = $"{StatusCode.Success}",
-                        Result = new AuthResponseDTO
-                        {
-                            UserId = response.Result.UserId,
-                            Name = response.Result.NickName,
-                        }
-                    };
-                }
-                else
-                {
-                    return new BaseResponseDTO<AuthResponseDTO>
-                    {
-                        StatusCode = StatusCode.Error,
-                        Message = $"{response.StatusCode} - {response.Message}"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponseDTO<AuthResponseDTO>
-                {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
-            }
-        }
-
-        public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId, string token)
-        {
-            try
-            {
-                var authResponse = await _authRepository.Authenticate(token);
-
-                if(authResponse.StatusCode != StatusCode.Success)
-                {
-                    return new BaseResponseDTO<ClientInformationModel>
-                    {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported Client Token In Request Headers"
-                    };
-                }
-
                 Guid.TryParse(clientId, out var clientGuid);
 
                 var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid && f.IsDeleted == false);
@@ -237,21 +185,10 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList(string userToken)
+        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList()
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(userToken);
-
-                if (authResponse.StatusCode != StatusCode.Success)
-                {
-                    return new BaseResponseDTO<ClientInformationListDTO>
-                    {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported User Token In Request Headers"
-                    };
-                }
-
                 var clients = _clientChecklistContext.ClientInformation.AsNoTracking().Where(c => c.IsDeleted == false).ToList();
 
                 return new BaseResponseDTO<ClientInformationListDTO>
@@ -294,78 +231,36 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> CreateOrUpdateClientInformation(CreateOrUpdateClientRequestDTO request, string userToken)
+        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateOrUpdateClientRequestDTO request)
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(userToken);
-
-                if (authResponse.StatusCode != StatusCode.Success)
+                var client = _clientChecklistContext.ClientInformation.Add(new ClientInformation
                 {
-                    return new BaseResponseDTO<string>
-                    {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported User Token In Request Headers"
-                    };
-                }
-
-                var clientId = Guid.NewGuid();
-                if (Guid.TryParse(request.ClientId, out Guid result))
-                    clientId = result;
-
-                var client = await _clientChecklistContext.ClientInformation.FindAsync(clientId);
-
-                if (client == null)
-                {
-                    var entity = _clientChecklistContext.ClientInformation.Add(new ClientInformation
-                    {
-                        ClientId = clientId,
-                        ClientName = request.ClientName,
-                        CustomerServiceManager = request.CustomerServiceManager,
-                        CustomerServiceManagerContact = request.CustomerServiceManagerContact,
-                        FinanceManager = request.FinanceManager,
-                        FinanceManagerContact = request.FinanceManagerContact,
-                        MainDecisionMaker = request.MainDecisionMaker,
-                        MainDecisionMakerContact = request.MainDecisionMakerContact,
-                        ProductManager = request.ProductManager,
-                        ProductManagerContact = request.ProductManagerContact,
-                        Domain = request.Domain,
-                        SSLCertificate = request.SSLCertificate,
-                        ServiceTypeId = request.ServiceTypeId,
-                        SupportedCurrency = request.SupportedCurrency,
-                        SupportedLanguage = request.SupportedLanguage,
-                        TechnicalManager = request.TechnicalManager,
-                        TechnicalManagerContact = request.TechnicalManagerContact,
-                        TargetLaunchDate = request.TargetLaunchDate,
-                    });
-
-                }
-                else
-                {
-                    client.ClientName = request.ClientName;
-                    client.CustomerServiceManager = request.CustomerServiceManager;
-                    client.CustomerServiceManagerContact = request.CustomerServiceManagerContact;
-                    client.FinanceManager = request.FinanceManager;
-                    client.FinanceManagerContact = request.FinanceManagerContact;
-                    client.MainDecisionMaker = request.MainDecisionMaker;
-                    client.MainDecisionMakerContact = request.MainDecisionMakerContact;
-                    client.ProductManager = request.ProductManager;
-                    client.ProductManagerContact = request.ProductManagerContact;
-                    client.Domain = request.Domain;
-                    client.SSLCertificate = request.SSLCertificate;
-                    client.ServiceTypeId = request.ServiceTypeId;
-                    client.SupportedCurrency = request.SupportedCurrency;
-                    client.SupportedLanguage = request.SupportedLanguage;
-                    client.TechnicalManager = request.TechnicalManager;
-                    client.TechnicalManagerContact = request.TechnicalManagerContact;
-                    client.TargetLaunchDate = request.TargetLaunchDate;
-                }
+                    ClientName = request.ClientName,
+                    CustomerServiceManager = request.CustomerServiceManager.Name,
+                    CustomerServiceManagerContact = request.CustomerServiceManager.Number,
+                    FinanceManager = request.FinanceManager.Name,
+                    FinanceManagerContact = request.FinanceManager.Number,
+                    MainDecisionMaker = request.MainDecisionMaker.Name,
+                    MainDecisionMakerContact = request.MainDecisionMaker.Number,
+                    ProductManager = request.ProductManager.Name,
+                    ProductManagerContact = request.ProductManager.Number,
+                    Domain = request.Domain,
+                    SSLCertificate = request.SSLCert,
+                    ServiceTypeId = request.ServiceTypeId,
+                    SupportedCurrency = request.Currencies.Any() ? string.Join(",", request.Currencies) :string.Empty,
+                    SupportedLanguage = request.Languages.Any() ? string.Join(",", request.Languages) : string.Empty,
+                    TechnicalManager = request.TechnicalManager.Name,
+                    TechnicalManagerContact = request.TechnicalManager.Number,
+                    TargetLaunchDate = request.LaunchDate,
+                }).Entity;
 
                 _clientChecklistContext.SaveChanges();
 
                 var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
                 {
-                    ClientId = clientId.ToString(),
+                    ClientId = client.ClientId.ToString(),
                     ClientName = request.ClientName
                 });
 
@@ -386,21 +281,77 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request, string userToken)
+        public async Task<BaseResponseDTO<string>> UpdateClientInformation(CreateOrUpdateClientRequestDTO request)
         {
             try
             {
-                var authResponse = await _authRepository.Authenticate(userToken);
-
-                if (authResponse.StatusCode != StatusCode.Success)
-                {
-                    return new BaseResponseDTO<ClientInformationListDTO>
+                if (!Guid.TryParse(request.ClientId, out Guid result))
+                    return new BaseResponseDTO<string>
                     {
-                        StatusCode = StatusCode.Missing_Or_Unsupported_OperatorToken_In_Request_Headers,
-                        Message = $"Missing Or Unsupported User Token In Request Headers"
+                        StatusCode = StatusCode.Error,
+                        Message = $"Invalid Client ID"
+                    };
+
+                var client = await _clientChecklistContext.ClientInformation.FindAsync(result);
+
+                if (client == null)
+                {
+                    return new BaseResponseDTO<string>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"Client Not Found"
                     };
                 }
+                else
+                {
+                    client.ClientName = request.ClientName;
+                    client.CustomerServiceManager = request.CustomerServiceManager.Name;
+                    client.CustomerServiceManagerContact = request.CustomerServiceManager.Number;
+                    client.FinanceManager = request.FinanceManager.Name;
+                    client.FinanceManagerContact = request.FinanceManager.Number;
+                    client.MainDecisionMaker = request.MainDecisionMaker.Name;
+                    client.MainDecisionMakerContact = request.MainDecisionMaker.Number;
+                    client.ProductManager = request.ProductManager.Name;
+                    client.ProductManagerContact = request.ProductManager.Number;
+                    client.Domain = request.Domain;
+                    client.SSLCertificate = request.SSLCert;
+                    client.ServiceTypeId = request.ServiceTypeId;
+                    client.SupportedCurrency = request.Currencies.Any() ? string.Join(",", request.Currencies) : string.Empty;
+                    client.SupportedLanguage = request.Languages.Any() ? string.Join(",", request.Languages) : string.Empty;
+                    client.TechnicalManager = request.TechnicalManager.Name;
+                    client.TechnicalManagerContact = request.TechnicalManager.Number;
+                    client.TargetLaunchDate = request.LaunchDate;
+                }
 
+                _clientChecklistContext.SaveChanges();
+
+                var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
+                {
+                    ClientId = result.ToString(),
+                    ClientName = request.ClientName
+                });
+
+                return new BaseResponseDTO<string>
+                {
+                    StatusCode = StatusCode.Success,
+                    Message = $"{StatusCode.Success}",
+                    Result = token.Result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<string>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
+        public async Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request)
+        {
+            try
+            {
                 var clientId = Guid.Parse(request.ClientId);
 
                 var client = await _clientChecklistContext.ClientInformation.FindAsync(clientId);
@@ -429,6 +380,61 @@ namespace Client.Checklist.API.Repository
             catch (Exception ex)
             {
                 return new BaseResponseDTO<object>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
+
+        public async Task<BaseResponseDTO<string>> AddClientTask(AddClientTaskRequestDTO request)
+        {
+            try
+            {
+                var clientId = Guid.Parse(request.ClientId);
+
+                var task = _clientChecklistContext.ClientTask.Add(new ClientTask
+                {
+                    ClientId = clientId,
+                    TaskId = request.TaskId,
+                    TaskName = request.TaskName,
+                    ServiceTypeId = request.ServiceTypeId,
+                    Environment = request.Environment,
+                    TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted),
+                    ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted),
+                    AssignedTo = request.AssignedTo,
+                    SortOrder = request.SortOrder,
+                }).Entity;
+
+                _clientChecklistContext.SaveChanges();
+
+                foreach (var subTask in request.SubTasks)
+                {
+                    _clientChecklistContext.ClientSubtask.Add(new ClientSubtask
+                    {
+                        ClientTaskId = task.ClientTaskId,
+                        SubtaskId = subTask.SubtaskId,
+                        SubtaskName = subTask.SubtaskName,
+                        Comment = subTask.Comment,
+                        TaskStatusId = subTask.TaskStatusId,
+                        ClientTaskStatusId = subTask.ClientTaskStatusId,
+                        SortOrder = subTask.SortOrder,
+                    });
+                }
+
+                _clientChecklistContext.SaveChanges();
+
+                return new BaseResponseDTO<string>
+                {
+                    StatusCode = StatusCode.Success,
+                    Message = $"{StatusCode.Success}",
+                    //Result = token.Result
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<string>
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"

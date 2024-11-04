@@ -55,44 +55,69 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
+        [Authorize]
         [HttpGet("clients/{clientId}")]
         public async Task<IActionResult> GetClientInformation([FromRoute] string clientId)
         {
-            var token = HttpContext.Request.Headers["x-client-token"].FirstOrDefault() ?? HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
-
-            var result = await _clientRepository.GetClientInformation(clientId, token);
+            var result = await _clientRepository.GetClientInformation(clientId);
 
             return ReturnResult(result);
         }
 
+        [Authorize]
         [HttpGet("clients")]
         public async Task<IActionResult> GetClientList()
         {
-            var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
-
-            var result = await _clientRepository.GetClientList(userToken);
+            var result = await _clientRepository.GetClientList();
 
             return ReturnResult(result);
         }
 
+        [Authorize]
         [HttpPost("clients")]
-        public async Task<IActionResult> CreateOrUpdateClient([FromBody] CreateOrUpdateClientRequestDTO request)
+        public async Task<IActionResult> CreateClient([FromBody] CreateOrUpdateClientRequestDTO request)
         {
-            var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
-
-            var result = await _clientRepository.CreateOrUpdateClientInformation(request, userToken);
+            var result = await _clientRepository.CreateClientInformation(request);
 
             return ReturnResult(result);
         }
 
+        [Authorize]
+        [HttpPut("clients")]
+        public async Task<IActionResult> UpdateClient([FromBody] CreateOrUpdateClientRequestDTO request)
+        {
+            var result = await _clientRepository.UpdateClientInformation(request);
+
+            return ReturnResult(result);
+        }
+
+        [Authorize]
         [HttpDelete("clients")]
         public async Task<IActionResult> DeleteClient([FromBody] DeleteClientRequestDTO request)
         {
-            var userToken = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
-
-            var result = await _clientRepository.DeleteClientInformation(request, userToken);
+            var result = await _clientRepository.DeleteClientInformation(request);
 
             return ReturnResult(result);
+        }
+
+        [Authorize]
+        [HttpPost("clients/tasks")]
+        public async Task<IActionResult> AddClientTask([FromBody] AddClientTaskRequestDTO request)
+        {
+            var result = await _clientRepository.AddClientTask(request);
+
+            //return ReturnResult(result);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut("clients/tasks")]
+        public async Task<IActionResult> UpdateClientTask([FromBody] AddClientTaskRequestDTO request)
+        {
+            //var result = await _clientRepository.CreateClientInformation(request, userToken);
+
+            //return ReturnResult(result);
+            return Ok();
         }
 
         #endregion
