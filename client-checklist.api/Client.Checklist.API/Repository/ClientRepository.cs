@@ -131,7 +131,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationModel>> GetClientInformation(string clientId)
+        public async Task<BaseResponseDTO<ClientInformationResponseDTO>> GetClientInformation(string clientId)
         {
             try
             {
@@ -139,45 +139,79 @@ namespace Client.Checklist.API.Repository
 
                 var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid && f.IsDeleted == false);
 
-                if(client == null)
+                if (client == null)
                 {
-                    return new BaseResponseDTO<ClientInformationModel>
+                    return new BaseResponseDTO<ClientInformationResponseDTO>
                     {
                         StatusCode = StatusCode.Error,
                         Message = $"Client Not Found"
                     };
                 }
 
-                return new BaseResponseDTO<ClientInformationModel>
+                var clientTasks = _clientChecklistContext.ClientTask.AsNoTracking().Where(c => c.ClientId == client.ClientId)
+                    .Select(s => new ClientTaskModel
+                    {
+                        
+                        AssignedTo = s.AssignedTo,
+                        ClientId = s.ClientId,
+                        TaskId = s.TaskId,
+                        TaskName = s.TaskName,
+                        ServiceTypeId = s.ServiceTypeId,
+                        ActualDateCompleted = s.TargetDateCompleted,
+                        TargetDateCompleted = s.ActualDateCompleted,
+                        Environment = s.Environment,
+                        SortOrder = s.SortOrder
+                    }).ToList();
+
+                foreach (var task in clientTasks)
+                {
+                    var clientSubtasks = _clientChecklistContext.ClientSubtask.AsNoTracking().Where(c => c.ClientTaskId == task.ClientTaskId).Select(cs => new ClientSubtaskModel
+                    {
+                        SubtaskId = cs.SubtaskId,
+                        SubtaskName = cs.SubtaskName,
+                        TaskStatusId = cs.TaskStatusId,
+                        ClientTaskStatusId = cs.ClientTaskStatusId,
+                        Comment = cs.Comment,
+                        SortOrder = cs.SortOrder
+                    }).ToList();
+
+                    task.ClientSubtasks.AddRange(clientSubtasks);
+                }
+
+                return new BaseResponseDTO<ClientInformationResponseDTO>
                 {
                     StatusCode = StatusCode.Success,
                     Message = $"{StatusCode.Success}",
-                    Result = new ClientInformationModel
+                    Result = new ClientInformationResponseDTO
                     {
-                        ClientId = client.ClientId.ToString(),
-                        ClientName = client.ClientName,
-                        CustomerServiceManager = client.CustomerServiceManager,
-                        Domain = client.Domain,
-                        CustomerServiceManagerContact = client.CustomerServiceManagerContact,
-                        FinanceManager = client.FinanceManager,
-                        FinanceManagerContact = client.FinanceManagerContact,
-                        MainDecisionMaker = client.MainDecisionMaker,
-                        MainDecisionMakerContact = client.MainDecisionMakerContact,
-                        ProductManager = client.ProductManager,
-                        ProductManagerContact = client.ProductManagerContact,
-                        ServiceTypeId = client.ServiceTypeId,
-                        SSLCertificate = client.SSLCertificate,
-                        SupportedCurrency = client.SupportedCurrency,
-                        SupportedLanguage = client.SupportedLanguage,
-                        TargetLaunchDate = client.TargetLaunchDate,
-                        TechnicalManager = client.TechnicalManager,
-                        TechnicalManagerContact = client.TechnicalManagerContact,
+                        Client = new ClientInformationModel
+                        {
+                            ClientId = client.ClientId.ToString(),
+                            ClientName = client.ClientName,
+                            CustomerServiceManager = client.CustomerServiceManager,
+                            Domain = client.Domain,
+                            CustomerServiceManagerContact = client.CustomerServiceManagerContact,
+                            FinanceManager = client.FinanceManager,
+                            FinanceManagerContact = client.FinanceManagerContact,
+                            MainDecisionMaker = client.MainDecisionMaker,
+                            MainDecisionMakerContact = client.MainDecisionMakerContact,
+                            ProductManager = client.ProductManager,
+                            ProductManagerContact = client.ProductManagerContact,
+                            ServiceTypeId = client.ServiceTypeId,
+                            SSLCertificate = client.SSLCertificate,
+                            SupportedCurrency = client.SupportedCurrency,
+                            SupportedLanguage = client.SupportedLanguage,
+                            TargetLaunchDate = client.TargetLaunchDate,
+                            TechnicalManager = client.TechnicalManager,
+                            TechnicalManagerContact = client.TechnicalManagerContact
+                        },
+                        ClientTasks = clientTasks
                     }
                 };
             }
             catch (Exception ex)
             {
-                return new BaseResponseDTO<ClientInformationModel>
+                return new BaseResponseDTO<ClientInformationResponseDTO>
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
@@ -249,7 +283,7 @@ namespace Client.Checklist.API.Repository
                     Domain = request.Domain,
                     SSLCertificate = request.SSLCert,
                     ServiceTypeId = request.ServiceTypeId,
-                    SupportedCurrency = request.Currencies.Any() ? string.Join(",", request.Currencies) :string.Empty,
+                    SupportedCurrency = request.Currencies.Any() ? string.Join(",", request.Currencies) : string.Empty,
                     SupportedLanguage = request.Languages.Any() ? string.Join(",", request.Languages) : string.Empty,
                     TechnicalManager = request.TechnicalManager.Name,
                     TechnicalManagerContact = request.TechnicalManager.Number,
@@ -387,8 +421,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-
-        public async Task<BaseResponseDTO<string>> AddClientTask(AddClientTaskRequestDTO request)
+        public async Task<BaseResponseDTO<bool>> AddClientTask(AddClientTaskRequestDTO request)
         {
             try
             {
@@ -404,7 +437,7 @@ namespace Client.Checklist.API.Repository
                     TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted),
                     ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted),
                     AssignedTo = request.AssignedTo,
-                    SortOrder = request.SortOrder,
+                    SortOrder = request.SortOrder,                    
                 }).Entity;
 
                 _clientChecklistContext.SaveChanges();
@@ -425,16 +458,80 @@ namespace Client.Checklist.API.Repository
 
                 _clientChecklistContext.SaveChanges();
 
-                return new BaseResponseDTO<string>
+                return new BaseResponseDTO<bool>
                 {
                     StatusCode = StatusCode.Success,
                     Message = $"{StatusCode.Success}",
-                    //Result = token.Result
+                    Result = true
                 };
             }
             catch (Exception ex)
             {
-                return new BaseResponseDTO<string>
+                return new BaseResponseDTO<bool>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
+        public async Task<BaseResponseDTO<bool>> UpdateClientTask(UpdateClientTaskRequestDTO request)
+        {
+            try
+            {
+                var clientTask = await _clientChecklistContext.ClientTask.FindAsync(request.ClientTaskId);
+
+                if (clientTask == null)
+                    return new BaseResponseDTO<bool>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"Client Task Not Found",
+                        Result = false
+                    };
+                else
+                {
+                    var clientId = Guid.Parse(request.ClientId);
+
+                    clientTask.ServiceTypeId = request.ServiceTypeId;
+                    clientTask.Environment = request.Environment;
+                    clientTask.TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted);
+                    clientTask.ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted);
+                    clientTask.AssignedTo = request.AssignedTo;
+                    clientTask.SortOrder = request.SortOrder;
+
+                    _clientChecklistContext.SaveChanges();
+
+                    var clientSubtasks = _clientChecklistContext.ClientSubtask.Where(c => c.ClientTaskId == clientTask.ClientTaskId);
+                    if (clientSubtasks.Any())
+                        _clientChecklistContext.ClientSubtask.RemoveRange(clientSubtasks);
+
+                    foreach (var subTask in request.SubTasks)
+                    {
+                        _clientChecklistContext.ClientSubtask.Add(new ClientSubtask
+                        {
+                            ClientTaskId = clientTask.ClientTaskId,
+                            SubtaskId = subTask.SubtaskId,
+                            SubtaskName = subTask.SubtaskName,
+                            Comment = subTask.Comment,
+                            TaskStatusId = subTask.TaskStatusId,
+                            ClientTaskStatusId = subTask.ClientTaskStatusId,
+                            SortOrder = subTask.SortOrder,
+                        });
+                    }
+
+                    _clientChecklistContext.SaveChanges();
+
+                    return new BaseResponseDTO<bool>
+                    {
+                        StatusCode = StatusCode.Success,
+                        Message = $"{StatusCode.Success}",
+                        Result = true
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<bool>
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
