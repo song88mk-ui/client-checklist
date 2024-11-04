@@ -66,7 +66,7 @@
       <span class="block sm:inline">{error}</span>
       <button
         type="button"
-        class="absolute top-0 bottom-0 right-0 px-4 py-3"
+        class="absolute top-0 bottom-0 right-0 p-3"
         on:click={handleRemoveError}
         aria-label="Close alert"
       >
