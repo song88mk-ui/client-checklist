@@ -20,11 +20,11 @@
     {#if $auth}
       <div class="flex items-center gap-3">
         <Link
-          class="inline-block bg-blue-600 hover:bg-blue-800 text-sm text-white font-semibold py-3 px-4 rounded items-center justify-center disabled:bg-blue-400"
+          class="flex-1 text-center inline-block bg-blue-600 hover:bg-blue-800 text-sm text-white font-semibold py-3 px-4 rounded items-center justify-center disabled:bg-blue-400"
           to="/clients/create">Create Client Account</Link
         >
         <div class="flex items-center gap-3">
-          <div class="text-sm text-right">
+          <div class="flex-1 text-sm text-right">
             <div class="text-blue-600 font-semibold capitalize">
               {$auth.fullName}
             </div>
@@ -40,8 +40,6 @@
           <Icon icon="mdi:logout" height={24} />
         </button>
       </div>
-    {:else}
-      <Link to="login">Login</Link>
     {/if}
   </nav>
 </header>
