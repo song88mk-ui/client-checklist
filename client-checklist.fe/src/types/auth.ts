@@ -1,5 +1,5 @@
-import type AccessType from "./accessType";
-import type Role from "./role";
+import AccessType from "../enums/accessType";
+import Role from "../enums/role";
 
 type Auth = {
   accessType: AccessType;

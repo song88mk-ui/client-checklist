@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Router, Route } from "svelte-routing";
-  import Role from "./types/role";
+  import Role from "./enums/role";
   import PrivateRoute from "./components/PrivateRoute.svelte";
   import About from "./pages/About.svelte";
   import Login from "./pages/Login.svelte";

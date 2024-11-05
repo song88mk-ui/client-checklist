@@ -3,7 +3,7 @@
   import { auth, removeAuth } from "../stores/auth";
   import CompanyLogo from "./CompanyLogo.svelte";
   import Icon from "@iconify/svelte";
-  import Role from "../types/role";
+  import Role from "../enums/role";
 
   let handleLogout = () => {
     removeAuth();
