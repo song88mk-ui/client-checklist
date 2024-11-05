@@ -4,6 +4,7 @@
   import { setAuth } from "../../stores/auth";
   import { navigate } from "svelte-routing";
   import CompanyLogo from "../CompanyLogo.svelte";
+  import Role from "../../types/role";
 
   let initialValues = {
     username: "",
@@ -38,10 +39,10 @@
     setAuth({
       fullName: "janina mencero",
       email: "jess@gmail.com",
-      role: "admin",
+      role: Role.ADMIN,
     });
 
-    navigate("/dashboard");
+    navigate("/clients");
   };
 </script>
 

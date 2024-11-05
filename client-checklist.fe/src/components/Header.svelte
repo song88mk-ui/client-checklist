@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { Link } from "svelte-routing";
   import { auth, removeAuth } from "../stores/auth";
   import CompanyLogo from "./CompanyLogo.svelte";
