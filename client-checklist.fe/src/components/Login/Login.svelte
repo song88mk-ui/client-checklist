@@ -1,37 +1,5 @@
 <script lang="ts">
   import LoginForm from "./LoginForm.svelte";
-  import { type LoginFormType } from "./validationSchema";
-  import Icon from "@iconify/svelte";
-
-  let initialValues = {
-    username: "",
-    password: "",
-    rememberMe: false,
-  };
-  let errorMessage = "";
-  let isLoading = false;
-
-  const handleLogin = async (values: LoginFormType) => {
-    isLoading = true;
-    errorMessage = "";
-    try {
-      const response = await fetch("https://dummyjson.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-      isLoading = true;
-    } catch (error: any) {
-      errorMessage = error.message;
-    }
-    isLoading = false;
-  };
 </script>
 
 <div
@@ -41,10 +9,5 @@
     <img src="./assets/logo.svg" alt="logo" />
   </div>
 
-  <LoginForm
-    error={errorMessage}
-    {initialValues}
-    onSubmit={handleLogin}
-    {isLoading}
-  />
+  <LoginForm/>
 </div>
