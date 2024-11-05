@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Router, Route } from "svelte-routing";
+  import Role from "./types/role";
   import PrivateRoute from "./components/PrivateRoute.svelte";
   import About from "./pages/About.svelte";
   import Login from "./pages/Login.svelte";
@@ -7,7 +8,6 @@
   import Dashboard from "./pages/Dashboard.svelte";
   import NotAuthorized from "./pages/NotAuthorized.svelte";
   import RoleGuard from "./components/RoleGuard.svelte";
-  import Role from "./types/role";
   import Redirect from "./components/Redirect.svelte";
   import Client from "./pages/Client.svelte";
 </script>
@@ -23,11 +23,9 @@
       <Dashboard />
     </RoleGuard>
   </PrivateRoute>
-  <PrivateRoute path="/client">
-    <RoleGuard allowedRoles={[Role.CLIENT]}>
-      <Client />
-    </RoleGuard>
-  </PrivateRoute>
+  <Route path="/client">
+    <Client />
+  </Route>
   <Route path="/not-authorized">
     <NotAuthorized />
   </Route>
