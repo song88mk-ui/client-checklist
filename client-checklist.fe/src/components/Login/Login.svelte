@@ -39,10 +39,10 @@
     setAuth({
       fullName: "janina mencero",
       email: "jess@gmail.com",
-      role: Role.ADMIN,
+      role: Role.CLIENT,
     });
 
-    navigate("/dashboard");
+    navigate("/client");
   };
 </script>
 
