@@ -16,7 +16,7 @@
         <ClientRowStatus status={client.status} />
     </span> 
     <div class="flex flex-row items-center gap-[12px] w-[4%] pl-3 py-5">
-        <span>Hi</span>
-        <span>Hi</span>
+        <img alt="" src="./assets/client-edit.svg" />
+        <img alt="" src="./assets/client-delete.svg" />
     </div> 
 </div>
