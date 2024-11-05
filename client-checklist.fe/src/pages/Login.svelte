@@ -1,8 +1,8 @@
-<script>
-    import AuthLayout from "../components/AuthLayout.svelte";
-    import LoginComponent from "../components/Login/Login.svelte"
+<script lang="ts">
+  import AuthLayout from "../components/AuthLayout.svelte";
+  import LoginComponent from "../components/Login/Login.svelte";
 </script>
 
 <AuthLayout>
-  <LoginComponent/>
+  <LoginComponent />
 </AuthLayout>

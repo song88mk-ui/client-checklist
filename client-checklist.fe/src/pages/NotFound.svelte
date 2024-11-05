@@ -3,7 +3,7 @@
   import { Link } from "svelte-routing";
 </script>
 
-<div class="px-3 flex-1 flex flex-col items-center justify-center">
+<div class="flex-1 flex flex-col items-center justify-center">
   <div class="text-center max-w-lg">
     <h1 class="text-3xl font-bold mb-3">Page Not Found</h1>
     <div class="mb-7">

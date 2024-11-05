@@ -106,18 +106,16 @@ namespace Client.Checklist.API.Controllers
         {
             var result = await _clientRepository.AddClientTask(request);
 
-            //return ReturnResult(result);
-            return Ok();
+            return ReturnResult(result);
         }
 
         [Authorize]
         [HttpPut("clients/tasks")]
-        public async Task<IActionResult> UpdateClientTask([FromBody] AddClientTaskRequestDTO request)
+        public async Task<IActionResult> UpdateClientTask([FromBody] UpdateClientTaskRequestDTO request)
         {
-            //var result = await _clientRepository.CreateClientInformation(request, userToken);
+            var result = await _clientRepository.UpdateClientTask(request);
 
-            //return ReturnResult(result);
-            return Ok();
+            return ReturnResult(result);
         }
 
         #endregion

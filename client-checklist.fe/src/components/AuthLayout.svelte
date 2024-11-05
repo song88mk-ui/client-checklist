@@ -1,3 +1,3 @@
-<main class="flex-1 content-center bg-slate-100">
+<main class="flex-1 content-center">
   <slot />
 </main>
