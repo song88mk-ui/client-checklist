@@ -42,7 +42,7 @@
       role: Role.ADMIN,
     });
 
-    navigate("/clients");
+    navigate("/dashboard");
   };
 </script>
 
