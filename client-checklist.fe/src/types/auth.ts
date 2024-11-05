@@ -1,8 +1,9 @@
+import type AccessType from "./accessType";
 import type Role from "./role";
 
 type Auth = {
-  fullName: string;
-  email: string;
+  accessType: AccessType;
+  userToken: string;
   role: Role;
 };
 

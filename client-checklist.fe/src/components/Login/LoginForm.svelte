@@ -3,15 +3,24 @@
   import Icon from "@iconify/svelte";
   import PasswordInput from "../PasswordInput.svelte";
   import validationSchema, { type LoginFormType } from "./validationSchema";
+  import { errorMessage, isLoginLoading } from "../../stores/login";
+  import { onSubmit } from "./auth";
 
-  export let initialValues: LoginFormType = {
+  let error = "";
+  let isLoading = false;
+  let initialValues: LoginFormType = {
     username: "",
     password: "",
     rememberMe: false,
   };
-  export let isLoading = false;
-  export let onSubmit: (values: LoginFormType) => Promise<void>;
-  export let error = "";
+
+  errorMessage.subscribe((value: any) => {
+    error = value;
+  });
+
+  isLoginLoading.subscribe((value: any) => {
+    isLoading = value;
+  });
 
   const handleRemoveError = () => {
     error = "";
