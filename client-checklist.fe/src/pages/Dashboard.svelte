@@ -1,17 +1,56 @@
 <script lang="ts">
-  import Layout from "../components/Layout.svelte";
-  import { auth, removeAuth } from "../stores/auth";
-  let handleLogout = () => {
-    removeAuth();
-  };
+	import ClientRow from "../components/ClientRow.svelte";
+import Layout from "../components/Layout.svelte";
+    import { ClientRowStatus } from "../enums/ClientRowStatus";
+
+	let placeholderValues = [
+		{
+			companyName: "WS Gaming",
+			domain: "www.wsgaming.com",
+			targetLaunchDate: "December 25, 2024",
+			services: "Wallet and Sportsbook Integration",
+			mainDecisionMaker: "Nicole Villegas",
+			status: ClientRowStatus.InProgress
+		},
+		{
+			companyName: "W88",
+			domain: "www.w88.com",
+			targetLaunchDate: "December 25, 2024",
+			services: "Odds Feed and Live Data Integration",
+			mainDecisionMaker: "Nicole Villegas",
+			status: ClientRowStatus.InProgress
+		},
+		{
+			companyName: "WS Gaming",
+			domain: "www.wsgaming.com",
+			targetLaunchDate: "December 25, 2024",
+			services: "Odds Feed and Live Data Integration",
+			mainDecisionMaker: "Nicole Villegas",
+			status: ClientRowStatus.InProgress
+		},
+		{
+			companyName: "WS Gaming",
+			domain: "www.wsgaming.com",
+			targetLaunchDate: "December 25, 2024",
+			services: "Wallet and Sportsbook Integration",
+			mainDecisionMaker: "Nicole Villegas",
+			status: ClientRowStatus.InProgress
+		}
+	]
+	let headerCss = "pl-3 font-[600] text-[13px] text-[#000] leading-[16.34px]"
 </script>
 
 <Layout>
-  {#if $auth}
-    <h3 class="capitalize">Welcome {$auth.fullName}</h3>
-  {/if}
-  <button
-    class="inline-block bg-blue-600 hover:bg-blue-800 text-sm text-white font-semibold py-2 px-3 rounded items-center justify-center disabled:bg-blue-400"
-    on:click={handleLogout}>Logout</button
-  >
+	<div class="w-full flex flex-row items-center mb-[15px] mt-[15px]">
+		<span class={`${headerCss} w-[15%]`}>Company</span> 
+		<span class={`${headerCss} w-[15%]`}>Domain</span> 
+		<span class={`${headerCss} w-[13%]`}>Target Launch Date</span> 
+		<span class={`${headerCss} w-[29%]`}>Services</span> 
+		<span class={`${headerCss} w-[13%]`}>Main Decision Maker</span> 
+		<span class={`${headerCss} w-[11%]`}>Status</span> 
+		<span class={`${headerCss} w-[4%]`}>Actions</span> 
+	</div>
+	{#each placeholderValues as client}
+		<ClientRow client={client} />
+	{/each}
 </Layout>
