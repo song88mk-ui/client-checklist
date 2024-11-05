@@ -2,7 +2,14 @@
   import type Step from "../types/step";
   import ProgressStepper from "../components/ProgressStepper.svelte";
   import Layout from "../components/Layout.svelte";
+  import {navigate} from 'svelte-routing'
+  import {isAuthenticated} from '../stores/login'
 
+  $: if (!$isAuthenticated) {
+    setTimeout(()=>{
+      navigate('/login');
+    },20)
+  }
   const handleClick = (step: Step) => {
     console.log(step);
   };
