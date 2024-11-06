@@ -10,6 +10,7 @@
   import RoleGuard from "./components/RoleGuard.svelte";
   import Redirect from "./components/Redirect.svelte";
   import Client from "./pages/Client.svelte";
+  import CreateClient from "./pages/CreateClient.svelte";
 </script>
 
 <Router>
@@ -18,17 +19,18 @@
   </Route>
   <Route path="/about"><About /></Route>
   <Route path="/login"><Login /></Route>
+  <Route path="/client"><Client /></Route>
+  <Route path="/not-authorized"><NotAuthorized /></Route>
   <PrivateRoute path="/dashboard">
     <RoleGuard allowedRoles={[Role.ADMIN]}>
       <Dashboard />
     </RoleGuard>
   </PrivateRoute>
-  <Route path="/client">
-    <Client />
-  </Route>
-  <Route path="/not-authorized">
-    <NotAuthorized />
-  </Route>
+  <PrivateRoute path="/clients/create/:integrationType">
+    <RoleGuard allowedRoles={[Role.ADMIN]}>
+      <CreateClient />
+    </RoleGuard>
+  </PrivateRoute>
   <Route path="*">
     <NotFound />
   </Route>

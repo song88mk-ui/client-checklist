@@ -4,6 +4,7 @@
   import CompanyLogo from "./CompanyLogo.svelte";
   import Icon from "@iconify/svelte";
   import Role from "../enums/role";
+  import CreateClientDropdown from "./CreateClientDropdown.svelte";
 
   let handleLogout = () => {
     removeAuth();
@@ -21,10 +22,7 @@
     {#if $auth}
       <div class="flex items-center gap-3">
         {#if $auth.role === Role.ADMIN}
-          <Link
-            class="flex-1 text-center inline-block bg-blue-600 hover:bg-blue-800 text-sm text-white font-semibold py-3 px-4 rounded items-center justify-center disabled:bg-blue-400"
-            to="/clients/create">Create Client Account</Link
-          >
+          <CreateClientDropdown />
         {/if}
         <div class="flex items-center gap-3">
           <div class="flex-1 text-sm text-right">

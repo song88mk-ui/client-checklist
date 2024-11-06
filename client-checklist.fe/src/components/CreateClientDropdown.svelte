@@ -1,0 +1,49 @@
+<script lang="ts">
+  import Icon from "@iconify/svelte";
+  import { Link } from "svelte-routing";
+  import IntegrationType from "../enums/integrationType";
+
+  const integrationTypes = Object.values(IntegrationType);
+
+  let isShow = false;
+
+  const toggle = () => {
+    isShow = !isShow;
+  };
+
+  const linkLabel = {
+    [IntegrationType.WALLET_INTEGRATION]: "Wallet Integration",
+    [IntegrationType.FEED_INTEGRATION]: "Feed Integration",
+  };
+</script>
+
+<div class="relative inline-block">
+  <button
+    class="flex-1 flex items-center gap-2 text-center inline-block bg-blue-600 hover:bg-blue-800 text-sm text-white font-semibold py-3 pl-4 pr-3 rounded items-center justify-center disabled:bg-blue-400"
+    on:click={toggle}
+  >
+    Create Client Account
+    <Icon icon={`mdi:${isShow ? "chevron-up" : "chevron-down"}`} height={24} />
+  </button>
+  {#if isShow}
+    <div
+      class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+      role="menu"
+      aria-orientation="vertical"
+      aria-labelledby="menu-button"
+      tabindex="-1"
+    >
+      <div class="py-1" role="none">
+        {#each integrationTypes as type}
+          <Link
+            to={`/clients/create/${type}`}
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            role="menuitem"
+            on:click={toggle}
+            id="menu-item-0">{linkLabel[type]}</Link
+          >
+        {/each}
+      </div>
+    </div>
+  {/if}
+</div>
