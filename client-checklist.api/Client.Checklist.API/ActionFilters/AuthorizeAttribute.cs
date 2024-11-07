@@ -1,10 +1,7 @@
 ﻿using Client.Checklist.API.Repository;
 using Client.Checklist.Shared.Enums;
-using Client.Checklist.Shared.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Net.Http.Headers;
 using System.Net;
 
 namespace Client.Checklist.API.ActionFilters

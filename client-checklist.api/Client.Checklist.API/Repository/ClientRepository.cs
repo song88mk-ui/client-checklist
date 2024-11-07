@@ -6,6 +6,7 @@ using Client.Checklist.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace Client.Checklist.API.Repository
 {
@@ -178,6 +179,9 @@ namespace Client.Checklist.API.Repository
                     task.ClientSubtasks.AddRange(clientSubtasks);
                 }
 
+                var currencies = string.IsNullOrEmpty(client.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedCurrency);
+                var languages = string.IsNullOrEmpty(client.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedLanguage);
+
                 return new BaseResponseDTO<ClientInformationResponseDTO>
                 {
                     StatusCode = StatusCode.Success,
@@ -188,22 +192,17 @@ namespace Client.Checklist.API.Repository
                         {
                             ClientId = client.ClientId.ToString(),
                             ClientName = client.ClientName,
-                            CustomerServiceManager = client.CustomerServiceManager,
                             Domain = client.Domain,
-                            CustomerServiceManagerContact = client.CustomerServiceManagerContact,
-                            FinanceManager = client.FinanceManager,
-                            FinanceManagerContact = client.FinanceManagerContact,
-                            MainDecisionMaker = client.MainDecisionMaker,
-                            MainDecisionMakerContact = client.MainDecisionMakerContact,
-                            ProductManager = client.ProductManager,
-                            ProductManagerContact = client.ProductManagerContact,
+                            CustomerServiceManager = new Manager { Name = client.CustomerServiceManager, Number = client.CustomerServiceManagerContact },
+                            FinanceManager = new Manager { Name = client.FinanceManager, Number = client.FinanceManagerContact },
+                            MainDecisionMaker = new Manager { Name = client.MainDecisionMaker, Number = client.MainDecisionMakerContact },
+                            ProductManager = new Manager { Name = client.ProductManager, Number = client.ProductManagerContact },
+                            TechnicalManager = new Manager { Name = client.TechnicalManager, Number = client.TechnicalManagerContact },
                             ServiceTypeId = client.ServiceTypeId,
                             SSLCertificate = client.SSLCertificate,
-                            SupportedCurrency = client.SupportedCurrency,
-                            SupportedLanguage = client.SupportedLanguage,
-                            TargetLaunchDate = client.TargetLaunchDate,
-                            TechnicalManager = client.TechnicalManager,
-                            TechnicalManagerContact = client.TechnicalManagerContact
+                            Currencies = currencies,
+                            Languages = languages,
+                            TargetLaunchDate = client.TargetLaunchDate
                         },
                         ClientTasks = clientTasks
                     }
@@ -235,22 +234,17 @@ namespace Client.Checklist.API.Repository
                         {
                             ClientId = s.ClientId.ToString(),
                             ClientName = s.ClientName,
-                            CustomerServiceManager = s.CustomerServiceManager,
                             Domain = s.Domain,
-                            CustomerServiceManagerContact = s.CustomerServiceManagerContact,
-                            FinanceManager = s.FinanceManager,
-                            FinanceManagerContact = s.FinanceManagerContact,
-                            MainDecisionMaker = s.MainDecisionMaker,
-                            MainDecisionMakerContact = s.MainDecisionMakerContact,
-                            ProductManager = s.ProductManager,
-                            ProductManagerContact = s.ProductManagerContact,
                             ServiceTypeId = s.ServiceTypeId,
                             SSLCertificate = s.SSLCertificate,
-                            SupportedCurrency = s.SupportedCurrency,
-                            SupportedLanguage = s.SupportedLanguage,
+                            CustomerServiceManager = new Manager { Name = s.CustomerServiceManager, Number = s.CustomerServiceManagerContact },
+                            FinanceManager = new Manager { Name = s.FinanceManager, Number = s.FinanceManagerContact },
+                            MainDecisionMaker = new Manager { Name = s.MainDecisionMaker, Number = s.MainDecisionMakerContact },
+                            ProductManager = new Manager { Name = s.ProductManager, Number = s.ProductManagerContact },
+                            TechnicalManager = new Manager { Name = s.TechnicalManager, Number = s.TechnicalManagerContact },
+                            Currencies = string.IsNullOrEmpty(s.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedCurrency) ?? new List<string>(),
+                            Languages = string.IsNullOrEmpty(s.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedLanguage) ?? new List<string>(),
                             TargetLaunchDate = s.TargetLaunchDate,
-                            TechnicalManager = s.TechnicalManager,
-                            TechnicalManagerContact = s.TechnicalManagerContact,
                         }).ToList()
                     }
                 };
