@@ -1,7 +1,5 @@
 <script lang="ts">
     import ClientRowStatus from "./ClientRowStatus.svelte";
-    import editIcon from "../lib/assets/client-edit.svg";
-    import deleteIcon from "../lib/assets/client-delete.svg";
 
     export let client: any = {};
 
@@ -18,7 +16,7 @@
         <ClientRowStatus status={client.status} />
     </span> 
     <div class="flex flex-row items-center justify-center gap-[5px] w-[6%] pl-3 py-5">
-        <img alt="" src={editIcon} />
-        <img alt="" src={deleteIcon} />
+        <img alt="" src="/client-edit.svg" />
+        <img alt="" src="/client-delete.svg" />
     </div> 
 </div>
