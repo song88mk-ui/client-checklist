@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { navigate, useLocation } from "svelte-routing";
-
-  const location = useLocation();
+  import { tick } from "svelte";
+  import { navigate } from "svelte-routing";
 
   export let to = "";
 
   $: if (to) {
-    navigate(to, { state: { from: location }, replace: true });
+    tick().then(() => navigate(to, { replace: true }));
   }
 </script>
