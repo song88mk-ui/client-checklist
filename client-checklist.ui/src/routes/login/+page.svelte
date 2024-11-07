@@ -16,13 +16,13 @@
   class="shadow bg-white border rounded-md p-6 w-[442px] mx-auto gap-4 flex flex-col"
 >
   <div class="flex justify-center">
-    <img src="/assets/logo.svg" width="200" alt="logo" />
+    <img src="/logo.svg" width="200" alt="logo" />
   </div>
 
   <form on:submit={()=>{}} class="flex flex-col gap-4">
     <div>
       <div class="relative flex items-center border rounded w-full">
-        <!-- <Icon icon="mdi:user" class="absolute ml-2 text-blue-600" height={22} /> -->
+        <img src="/person.svg"  alt="person" class="absolute ml-2 text-blue-600" />
         <input
           id="username"
           name="text"
@@ -38,7 +38,7 @@
   
     <div>
       <div class="relative flex items-center border rounded w-full">
-        <!-- <Icon icon="mdi:lock" class="absolute ml-2 text-blue-600" height={22} /> -->
+        <img src="/lock.svg"  alt="lock" class="absolute ml-2 text-blue-600" />
         <input
           name="password"
           type={showPassword ? "text" : "password"}
