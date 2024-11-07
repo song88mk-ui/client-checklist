@@ -1,4 +1,5 @@
 export enum ClientRowStatus {
-  InProgress = 0,
-  Completed = 1,
+    NotStarted = 0,
+    InProgress = 1,
+    Completed = 2,
 }

@@ -9,7 +9,7 @@
 			targetLaunchDate: 'December 25, 2024',
 			services: 'Wallet and Sportsbook Integration',
 			mainDecisionMaker: 'Nicole Villegas',
-			status: ClientRowStatus.InProgress
+			status: ClientRowStatus.Completed
 		},
 		{
 			companyName: 'W88',
@@ -33,7 +33,7 @@
 			targetLaunchDate: 'December 25, 2024',
 			services: 'Wallet and Sportsbook Integration',
 			mainDecisionMaker: 'Nicole Villegas',
-			status: ClientRowStatus.InProgress
+			status: ClientRowStatus.NotStarted
 		}
 	];
 	let headerCss = 'pl-3 font-[600] text-[13px] text-[#000] leading-[16.34px]';
