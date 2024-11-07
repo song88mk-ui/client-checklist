@@ -21,7 +21,7 @@
     <span class={`${textCss} w-[11%]`}>
         <ClientRowStatus status={client.status} />
     </span> 
-    <div class="flex flex-row items-center justify-center gap-[5px] w-[6%] pl-3 py-5">
+    <div class="flex flex-row items-center justify-center gap-[5px] w-[6%] pl-3 py-5 cursor-pointer">
         <img alt="" src="/icon-edit.svg" />
         <img alt="" src="/icon-delete.svg" on:click={handleShowDeleteModal}/>
     </div> 
