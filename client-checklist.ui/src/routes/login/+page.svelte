@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Button from '$lib/Button.svelte';
     let error = "";
     let showPassword = false;
     let password = "";
@@ -72,28 +73,17 @@
         role="alert"
       >
         <span class="block sm:inline">{"error"}</span>
-        <button
-          type="button"
-          class="absolute top-0 bottom-0 right-0 p-3"
-          on:click={()=>{}}
-          aria-label="Close alert"
-        >
-          <!-- <Icon icon="mdi:close" height={22} class="fill-current text-red-500" /> -->
-        </button>
+        <Button type="button" classNames="absolute top-0 bottom-0 right-0 p-3" ariaLabel="Close alert" click={() => {}}>Testing</Button>
       </div>
     {/if}
   
-    <button
-      class="w-full bg-blue-600 hover:bg-blue-800 text-sm text-white font-semibold py-3 px-4 rounded-full flex items-center justify-center disabled:bg-blue-400"
-      type="submit"
-      disabled={true}
-    >
-      <!-- {#if isLoading}
-        <Icon icon="mdi:loading" class="animate-spin" height={22} />
-      {:else}
+    <Button 
+        type="submit" 
+        classNames="w-full bg-blue-600 hover:bg-blue-800 text-sm text-white font-semibold py-3 px-4 rounded-full flex items-center justify-center disabled:bg-blue-400"
+        disabled={true} >
         Login
-      {/if} -->
-    </button>
+    </Button>
+
   </form>
   
 </div>
