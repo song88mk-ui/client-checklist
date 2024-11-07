@@ -1,9 +1,9 @@
 <script lang="ts">
     import Button from '$lib/Button.svelte';
+    let username = "";
+    let password = "";
     let error = "";
     let showPassword = false;
-    let password = "";
-    let onChange = (event: Event) => event;
 
     const togglePassword = () => {
       showPassword = !showPassword;
@@ -11,7 +11,7 @@
 
 </script>
 
-<div class="flex-1 content-center h-[110vh]">
+<div class="flex-1 content-center h-[100svh]">
   <div
   class="shadow bg-white border rounded-md p-6 w-[442px] mx-auto gap-4 flex flex-col"
 >
@@ -24,11 +24,11 @@
       <div class="relative flex items-center border rounded w-full">
         <img src="/person.svg"  alt="person" class="absolute ml-2 text-blue-600" />
         <input
-          id="username"
-          name="text"
+          name="username"
+          type="text"
           placeholder="Enter Username"
           class="block w-full py-3 pr-3 pl-10 text-sm"
-          on:change={()=>{}}
+          bind:value={username}
         />
       </div>
       <!-- {#if $errors.username}
@@ -45,7 +45,6 @@
           placeholder="Enter Password"
           class="block w-full py-3 px-10 text-sm"
           bind:value={password}
-          on:change={onChange}
         />
         <div on:click={togglePassword} role="presentation" class="cursor-pointer">
           <!-- <Icon
@@ -60,10 +59,7 @@
     </div>
   
     <label class="cursor-pointer flex items-center">
-      <input
-        type="checkbox"
-
-      />
+      <input type="checkbox"/>
       <small class="font-semibold ml-2 text-slate-500">Remember Me</small>
     </label>
   
