@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ClientRow from '../components/ClientRow.svelte';
+	import ClientRow from '$lib/ClientRow.svelte';
 	import { ClientRowStatus } from '../enums/ClientRowStatus';
 
 	let placeholderValues = [
