@@ -39,17 +39,17 @@
 	let headerCss = 'pl-3 font-[600] text-[13px] text-[#000] leading-[16.34px]';
 </script>
 
-<div class="p-[24px]">
-    <div class="mb-[15px] mt-[15px] flex w-full flex-row items-center">
-        <span class={`${headerCss} w-[15%]`}>Company</span>
-        <span class={`${headerCss} w-[15%]`}>Domain</span>
-        <span class={`${headerCss} w-[13%]`}>Target Launch Date</span>
-        <span class={`${headerCss} w-[27%]`}>Services</span>
-        <span class={`${headerCss} w-[13%]`}>Main Decision Maker</span>
-        <span class={`${headerCss} w-[11%]`}>Status</span>
-        <span class={`${headerCss} w-[6%] text-center`}>Actions</span>
-    </div>
-    {#each placeholderValues as client}
-        <ClientRow {client} />
-    {/each}
+<div class="p-6">
+	<div class="mb-[15px] mt-[15px] flex w-full flex-row items-center">
+		<span class={`${headerCss} w-[15%]`}>Company</span>
+		<span class={`${headerCss} w-[15%]`}>Domain</span>
+		<span class={`${headerCss} w-[13%]`}>Target Launch Date</span>
+		<span class={`${headerCss} w-[27%]`}>Services</span>
+		<span class={`${headerCss} w-[13%]`}>Main Decision Maker</span>
+		<span class={`${headerCss} w-[11%]`}>Status</span>
+		<span class={`${headerCss} w-[6%] text-center`}>Actions</span>
+	</div>
+	{#each placeholderValues as client}
+		<ClientRow {client} />
+	{/each}
 </div>
