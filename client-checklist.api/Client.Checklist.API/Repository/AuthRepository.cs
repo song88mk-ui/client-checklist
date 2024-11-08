@@ -22,149 +22,144 @@ namespace Client.Checklist.API.Repository
         }
         public async Task<BaseResponseDTO<TokenModel>> Login(LogInModel loginModel)
         {
-            using var activity = _activitySource.StartActivity("auth.login");
-            try
+            using(var activity = _activitySource.StartActivity("auth.login"))
             {
-                var response = await _httpClient.PostAsync($"v1/login", new StringContent(JsonSerializer.Serialize(loginModel), Encoding.UTF8, "application/json"));
+                activity?.SetTag("user.name", loginModel.Username);
+                try
+                {
+                    var response = await _httpClient.PostAsync($"v1/login", new StringContent(JsonSerializer.Serialize(loginModel), Encoding.UTF8, "application/json"));
 
-                if (response.IsSuccessStatusCode)
-                {
-                    activity?.SetStatus(ActivityStatusCode.Ok);
-                    return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
-                        ?? new BaseResponseDTO<TokenModel>();
-                }
-                else
-                {
-                    activity?.SetTag("http.status.code", response.StatusCode);
-                    if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
+                    if (response.IsSuccessStatusCode)
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Ok);
                         return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                             ?? new BaseResponseDTO<TokenModel>();
+                    }
                     else
                     {
-                        activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
-                        return new BaseResponseDTO<TokenModel>
+                        activity?.SetTag("http.status.code", response.StatusCode.ToString());
+                        if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
+                            return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                                ?? new BaseResponseDTO<TokenModel>();
+                        else
                         {
-                            StatusCode = StatusCode.Error,
-                            Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
-                        };
+                            activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                            return new BaseResponseDTO<TokenModel>
+                            {
+                                StatusCode = StatusCode.Error,
+                                Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
+                            };
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                return new BaseResponseDTO<TokenModel>
+                catch (Exception ex)
                 {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
-            }
-            finally
-            {
-                activity?.Stop();
+                    activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                    return new BaseResponseDTO<TokenModel>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                    };
+                }
             }
         }
         public async Task<BaseResponseDTO<UserModel>> Authenticate(string token)
         {
-            using var activity = _activitySource.StartActivity("auth.authenticate");
-            try
+            using(var activity = _activitySource.StartActivity("auth.authenticate"))
             {
-                activity?.SetTag("x-app-id", $"{Application.ClientChecklist}");
-                if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
-                    _httpClient.DefaultRequestHeaders.Remove("x-app-id");
-                _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
-
-                if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
-                    _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
-                activity?.SetTag("x-operator-token", token);
-                _httpClient.DefaultRequestHeaders.Add("x-operator-token", token);
-
-                var response = await _httpClient.PostAsync($"v1/authentication/operator", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    activity?.SetStatus(ActivityStatusCode.Ok);
-                    return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
-                        ?? new BaseResponseDTO<UserModel>();
-                }
-                else
-                {
-                    activity?.SetTag("http.status.code", response.StatusCode);
-                    if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
+                    activity?.SetTag("x-app-id", $"{Application.ClientChecklist}");
+                    if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
+                        _httpClient.DefaultRequestHeaders.Remove("x-app-id");
+                    _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
+
+                    if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
+                        _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
+                    activity?.SetTag("x-operator-token", token);
+                    _httpClient.DefaultRequestHeaders.Add("x-operator-token", token);
+
+                    var response = await _httpClient.PostAsync($"v1/authentication/operator", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Ok);
                         return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                             ?? new BaseResponseDTO<UserModel>();
+                    }
                     else
                     {
-                        activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
-                        return new BaseResponseDTO<UserModel>
+                        activity?.SetTag("http.status.code", response.StatusCode);
+                        if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
+                            return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                                ?? new BaseResponseDTO<UserModel>();
+                        else
                         {
-                            StatusCode = StatusCode.Error,
-                            Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
-                        };
+                            activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                            return new BaseResponseDTO<UserModel>
+                            {
+                                StatusCode = StatusCode.Error,
+                                Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
+                            };
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                return new BaseResponseDTO<UserModel>
+                catch (Exception ex)
                 {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
-            }
-            finally
-            {
-                activity?.Stop();
+                    activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                    return new BaseResponseDTO<UserModel>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                    };
+                }
             }
         }
 
         public async Task<BaseResponseDTO<bool>> Logout(string token)
         {
-            using var activity = _activitySource.StartActivity("auth.logout");
-            try
+            using(var activity = _activitySource.StartActivity("auth.logout"))
             {
-                if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
-                    _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
-                _httpClient.DefaultRequestHeaders.Add("x-operator-token", token);
-
-                var response = await _httpClient.PostAsync($"v1/logout", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    activity?.SetStatus(ActivityStatusCode.Ok);
-                    return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
-                        ?? new BaseResponseDTO<bool>();
-                }
-                else
-                {
-                    activity?.SetTag("http.status.code", response.StatusCode);
-                    if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
+                    if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
+                        _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
+                    _httpClient.DefaultRequestHeaders.Add("x-operator-token", token);
+
+                    var response = await _httpClient.PostAsync($"v1/logout", new StringContent(string.Empty, Encoding.UTF8, "application/json"));
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Ok);
                         return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
                             ?? new BaseResponseDTO<bool>();
+                    }
                     else
                     {
-                        activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
-                        return new BaseResponseDTO<bool>
+                        activity?.SetTag("http.status.code", response.StatusCode);
+                        if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
+                            return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                                ?? new BaseResponseDTO<bool>();
+                        else
                         {
-                            StatusCode = StatusCode.Error,
-                            Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
-                        };
+                            activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                            return new BaseResponseDTO<bool>
+                            {
+                                StatusCode = StatusCode.Error,
+                                Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
+                            };
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                return new BaseResponseDTO<bool>
+                catch (Exception ex)
                 {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
-            }
-            finally
-            {
-                activity?.Stop();
+                    activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                    return new BaseResponseDTO<bool>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                    };
+                }
             }
         }
 

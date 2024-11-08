@@ -37,65 +37,63 @@ namespace Client.Checklist.API.Repository
 
         public async Task<BaseResponseDTO<LoginResponseDTO>> Login(LogInRequestDTO request)
         {
-            using var activity = _activitySource.StartActivity("client.login");
-            try
+            using(var activity = _activitySource.StartActivity("client.login"))
             {
-                activity?.SetTag("username", request.Username);
-                activity?.SetTag("ip.address", request.IpAddress);
-                activity?.SetTag("provider", Application.ClientChecklist);
-
-                var response = await _authRepository.Login(new LogInModel
+                try
                 {
-                    Username = request.Username,
-                    Password = request.Password,
-                    IpAddress = request.IpAddress,
-                    Provider = $"{(int)Application.ClientChecklist}"
-                });
+                    activity?.SetTag("user.name", request.Username);
+                    activity?.SetTag("ip.address", request.IpAddress);
+                    activity?.SetTag("provider", Application.ClientChecklist);
 
-                activity?.SetTag("http.status.code", response.StatusCode);
-                if (response.StatusCode == StatusCode.Success)
-                {
-                    var handler = new JwtSecurityTokenHandler();
-
-                    var jwtToken = handler.ReadJwtToken(response.Result.AccessToken);
-
-                    var roleName = jwtToken.Claims.FirstOrDefault(c => c.Type == "RoleName")?.Value;
-
-                    activity?.SetStatus(ActivityStatusCode.Ok);
-                    return new BaseResponseDTO<LoginResponseDTO>
+                    var response = await _authRepository.Login(new LogInModel
                     {
-                        StatusCode = StatusCode.Success,
-                        Message = $"{StatusCode.Success}",
-                        Result = new LoginResponseDTO
+                        Username = request.Username,
+                        Password = request.Password,
+                        IpAddress = request.IpAddress,
+                        Provider = $"{(int)Application.ClientChecklist}"
+                    });
+
+                    activity?.SetTag("http.status.code", response.StatusCode);
+                    if (response.StatusCode == StatusCode.Success)
+                    {
+                        var handler = new JwtSecurityTokenHandler();
+
+                        var jwtToken = handler.ReadJwtToken(response.Result.AccessToken);
+
+                        var roleName = jwtToken.Claims.FirstOrDefault(c => c.Type == "RoleName")?.Value;
+
+                        activity?.SetStatus(ActivityStatusCode.Ok);
+                        return new BaseResponseDTO<LoginResponseDTO>
                         {
-                            UserToken = response.Result.OperatorToken,
-                            RoleName = "Admin",
-                            AccessType = roleName?.Contains("Super Admin") ?? false ? (int)AccessType.ReadAndWrite : (int)AccessType.ReadOnly
-                        }
-                    };
+                            StatusCode = StatusCode.Success,
+                            Message = $"{StatusCode.Success}",
+                            Result = new LoginResponseDTO
+                            {
+                                UserToken = response.Result.OperatorToken,
+                                RoleName = "Admin",
+                                AccessType = roleName?.Contains("Super Admin") ?? false ? (int)AccessType.ReadAndWrite : (int)AccessType.ReadOnly
+                            }
+                        };
+                    }
+                    else
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                        return new BaseResponseDTO<LoginResponseDTO>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"({response.StatusCode}) - {response.Message}"
+                        };
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    activity?.SetStatus(ActivityStatusCode.Error, StatusCode.Error.ToString());
+                    activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                     return new BaseResponseDTO<LoginResponseDTO>
                     {
                         StatusCode = StatusCode.Error,
-                        Message = $"({response.StatusCode}) - {response.Message}"
+                        Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
                     };
                 }
-            }
-            catch (Exception ex)
-            {
-                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
-                return new BaseResponseDTO<LoginResponseDTO>
-                {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
-            }
-            finally
-            {
-                activity?.Stop();
             }
         }
 
@@ -152,7 +150,7 @@ namespace Client.Checklist.API.Repository
                 var clientTasks = _clientChecklistContext.ClientTask.AsNoTracking().Where(c => c.ClientId == client.ClientId)
                     .Select(s => new ClientTaskModel
                     {
-                        
+
                         AssignedTo = s.AssignedTo,
                         ClientId = s.ClientId,
                         TaskId = s.TaskId,
@@ -431,7 +429,7 @@ namespace Client.Checklist.API.Repository
                     TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted),
                     ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted),
                     AssignedTo = request.AssignedTo,
-                    SortOrder = request.SortOrder,                    
+                    SortOrder = request.SortOrder,
                 }).Entity;
 
                 _clientChecklistContext.SaveChanges();
