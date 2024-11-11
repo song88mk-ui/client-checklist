@@ -2,7 +2,7 @@
 import { type APIResponse, type APIService } from "./models";
 
 const BaseAPIService = (): APIService => {
-    const BASE_API_URL = import.meta.env.MODE === "production" ? "https://startapi.jmj.bet" : "https://preprod-startapi.jmj.bet";
+    const BASE_API_URL = import.meta.env.PROD ? "https://startapi.jmj.bet" : "https://preprod-startapi.jmj.bet";
 
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -32,11 +32,11 @@ const BaseAPIService = (): APIService => {
                     const errorReturnValue: APIResponse = {
                         error
                     }
-        
+
                     return errorReturnValue
                 }
-            );
-            
+                );
+
             const returnValue: APIResponse = {
                 data: response?.result,
                 message: response?.message,

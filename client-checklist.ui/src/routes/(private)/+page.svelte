@@ -1,6 +1,8 @@
 <script lang="ts">
 	import ClientRow from '$lib/ClientRow.svelte';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
+	import auth from '$stores/auth';
+	import { AccessType } from '$enums/role';
 
 	let placeholderValues = [
 		{
@@ -42,11 +44,17 @@
 <div class="mb-[15px] mt-[15px] flex w-full flex-row items-center">
 	<span class={`${headerCss} w-[15%]`}>Company</span>
 	<span class={`${headerCss} w-[15%]`}>Domain</span>
-	<span class={`${headerCss} w-[13%]`}>Target Launch Date</span>
-	<span class={`${headerCss} w-[27%]`}>Services</span>
-	<span class={`${headerCss} w-[13%]`}>Main Decision Maker</span>
-	<span class={`${headerCss} w-[11%]`}>Status</span>
-	<span class={`${headerCss} w-[6%] text-center`}>Actions</span>
+	<span class={`${headerCss} w-[10%]`}>Target Launch Date</span>
+    {#if $auth?.accessType == AccessType.READWRITE}
+	    <span class={`${headerCss} w-[30%]`}>Services</span>
+    {:else}
+	    <span class={`${headerCss} w-[40%]`}>Services</span>
+    {/if}
+	<span class={`${headerCss} w-[10%]`}>Main Decision Maker</span>
+    <span class={`${headerCss} w-[10%]`}>Status</span>
+    {#if $auth?.accessType == AccessType.READWRITE}
+	    <span class={`${headerCss} w-[10%] text-center`}>Actions</span>
+    {/if}
 </div>
 {#each placeholderValues as client}
 	<ClientRow {client} />
