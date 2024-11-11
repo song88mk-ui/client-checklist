@@ -40,7 +40,9 @@
 		};
 
 		if (rememberMe) {
-			LocalStorage.setValue('auth', JSON.stringify(response.data));
+			LocalStorage.setValue('userToken', JSON.stringify(userToken));
+            LocalStorage.setValue('accessType', JSON.stringify(accessType));
+            LocalStorage.setValue('username', JSON.stringify(username));
 		}
 
 		goto('/');

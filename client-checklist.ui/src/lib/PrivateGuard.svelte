@@ -1,12 +1,22 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { tick } from 'svelte';
 	import { browser } from '$app/environment';
 	import auth from '$stores/auth';
+	import { LocalStorage } from './storage';
+	import Role from '$enums/role';
 
-	$: if (browser && !$auth) {
+	$: if (browser && (!$auth?.userToken && !LocalStorage.getValue('userToken'))) {
 		goto('/login');
-	}
+	} else {
+        if (LocalStorage.getValue('userToken')) {
+            $auth = {
+                username: LocalStorage.getValue('username'),
+                userToken: LocalStorage.getValue('userToken'),
+                accessType: LocalStorage.getValue('accessType'),
+                roleName: Role.ADMIN
+            };
+        }
+    }
 </script>
 
 {#if $auth}
