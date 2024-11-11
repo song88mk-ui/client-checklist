@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type APIResponse, type APIService, type CatchExceptionAPIResponse, type SuccessfulAPIResponse } from "./models";
+import { type APIResponse, type APIService } from "./models";
 
 const BaseAPIService = (): APIService => {
     const BASE_API_URL = import.meta.env.MODE === "production" ? "https://startapi.jmj.bet" : "https://preprod-startapi.jmj.bet";
@@ -29,11 +29,15 @@ const BaseAPIService = (): APIService => {
                 options
             ).then(res => res.json())
                 .catch((error: unknown) => {
-                    console.log(error)
+                    const errorReturnValue: APIResponse = {
+                        error
+                    }
+        
+                    return errorReturnValue
                 }
             );
             
-            const returnValue: SuccessfulAPIResponse = {
+            const returnValue: APIResponse = {
                 data: response?.result,
                 message: response?.message,
                 statusCode: response?.statusCode
@@ -41,7 +45,7 @@ const BaseAPIService = (): APIService => {
 
             return returnValue;
         } catch (error: unknown) {
-            const errorReturnValue: CatchExceptionAPIResponse = {
+            const errorReturnValue: APIResponse = {
                 error
             }
 
