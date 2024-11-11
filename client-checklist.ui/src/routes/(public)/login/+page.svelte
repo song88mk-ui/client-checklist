@@ -43,20 +43,8 @@
 			if (rememberMe) {
 				LocalStorage.setValue('authenticationToken', authToken);
 			}
-			let role: Role = Role.ADMIN;
 
-			switch (res.data.accessType) {
-				case AccessTypeAPIResponse.ADMIN:
-					role = Role.ADMIN;
-					break;
-				case AccessTypeAPIResponse.SUPER_ADMIN:
-					role = Role.SUPER_ADMIN;
-					break;
-				default:
-					break;
-			}
-
-			$auth = { username, password, role };
+			$auth = { username, password, role: res.data.roleName, accessType: res.data.accessType };
 
             goto('/');
 		}
