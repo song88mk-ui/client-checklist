@@ -3,17 +3,12 @@ export enum ResponseMessage {
     Failed = "Failed"
 }
 
-export type CatchExceptionAPIResponse = {
-    error: unknown
+export type APIResponse = {
+    data?: unknown
+    message?: string,
+    statusCode?: number,
+    error?: unknown
 }
-
-export type SuccessfulAPIResponse = {
-    data: unknown
-    message: string,
-    statusCode: number,
-}
-
-export type APIResponse = SuccessfulAPIResponse | CatchExceptionAPIResponse
 
 export type LoginResponse = {
     data: {
