@@ -14,4 +14,4 @@ RUN npm run build:$STAGE
 FROM nginx:1.27-alpine
 ADD default.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=build /src/dist /usr/share/nginx/html
+COPY --from=build /src/build /usr/share/nginx/html
