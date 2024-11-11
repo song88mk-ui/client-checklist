@@ -37,6 +37,8 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
-		"@iconify/svelte": "^4.0.2"
+		"@iconify/svelte": "^4.0.2",
+		"svelte-forms-lib": "^2.0.1",
+		"yup": "^1.4.0"
 	}
 }
