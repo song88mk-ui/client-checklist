@@ -1,35 +1,70 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Role from '$enums/role';
+	import Role, { AccessTypeAPIResponse } from '$enums/role';
 	import Button from '$lib/Button.svelte';
 	import { LocalStorage } from '$lib/storage';
 	import auth from '$stores/auth';
+	import APIGateway from '../../../api/APIGateway';
+	import { ResponseMessage, type LoginResponse } from '../../../api/models';
 	let username = '';
 	let password = '';
 	let error = '';
-    let rememberMe = false;
+	let rememberMe = false;
 	let showPassword = false;
+
+	const { login } = APIGateway();
 
 	const togglePassword = () => {
 		showPassword = !showPassword;
 	};
 
 	// TODO
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any): Promise<void> => {
 		e.preventDefault();
-		$auth = { username, password, role: Role.SUPER_ADMIN };
 
-        let authenticationToken = '';
+		const res: any = await login({ username, password });
+        const isCatchExceptionError: boolean = res?.error !== undefined && res?.error !== null;
+        const isValidationError: boolean = !isCatchExceptionError && (res?.data === undefined || res?.data === null);
 
-        if (rememberMe) {
-            LocalStorage.setValue('authenticationToken', authenticationToken); 
+		if (isCatchExceptionError) {
+			// todo catch exception error handling
+            console.log("catch exception error");
+			return;
+		}
+
+        if (isValidationError) {
+            // todo validation error handling
+            console.log("validation error");
+            return;
         }
-		goto('/');
+
+		if (res?.data !== undefined && res?.error !== null) {
+			const authToken: string = res.data.userToken;
+			if (rememberMe) {
+				LocalStorage.setValue('authenticationToken', authToken);
+			}
+			let role: Role = Role.ADMIN;
+
+			switch (res.data.accessType) {
+				case AccessTypeAPIResponse.ADMIN:
+					role = Role.ADMIN;
+					break;
+				case AccessTypeAPIResponse.SUPER_ADMIN:
+					role = Role.SUPER_ADMIN;
+					break;
+				default:
+					break;
+			}
+
+			$auth = { username, password, role };
+
+            goto('/');
+		}
 	};
 
-    const getAuthenticationToken = () => {
-        return LocalStorage.getValue('authenticationToken');
-    }
+	const getAuthenticationToken = () => {
+		return LocalStorage.getValue('authenticationToken');
+	};
 </script>
 
 <div class="h-[100svh] flex-1 content-center">
@@ -79,7 +114,7 @@
 			</div>
 
 			<label class="flex cursor-pointer items-center">
-				<input type="checkbox" bind:checked={rememberMe}/>
+				<input type="checkbox" bind:checked={rememberMe} />
 				<small class="ml-2 font-semibold text-slate-500">Remember Me</small>
 			</label>
 
