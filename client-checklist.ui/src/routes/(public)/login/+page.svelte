@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Role, { AccessTypeAPIResponse } from '$enums/role';
 	import Button from '$lib/Button.svelte';
 	import { LocalStorage } from '$lib/storage';
 	import auth from '$stores/auth';
 	import APIGateway from '../../../api/APIGateway';
-	import { ResponseMessage, type LoginResponse } from '../../../api/models';
 	let username = '';
 	let password = '';
 	let error = '';
