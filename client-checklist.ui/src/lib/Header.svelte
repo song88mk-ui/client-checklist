@@ -6,7 +6,7 @@
 	import auth from '$stores/auth';
 
 	const handleLogout = () => {
-		auth.set(null);
+		$auth = null;
 	};
 </script>
 
