@@ -3,8 +3,8 @@ import type Role from '$enums/role';
 
 type Auth = {
 	username: string;
-	password: string;
-	role: Role;
+	userToken: string;
+	roleName: Role;
 	accessType: AccessType;
 };
 

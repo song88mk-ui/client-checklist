@@ -73,7 +73,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         [HttpPost("clients")]
         public async Task<IActionResult> CreateClient([FromBody] CreateOrUpdateClientRequestDTO request)
         {
@@ -82,7 +82,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         [HttpPut("clients")]
         public async Task<IActionResult> UpdateClient([FromBody] CreateOrUpdateClientRequestDTO request)
         {
@@ -91,7 +91,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         [HttpDelete("clients")]
         public async Task<IActionResult> DeleteClient([FromBody] DeleteClientRequestDTO request)
         {
@@ -100,7 +100,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         [HttpPost("clients/tasks")]
         public async Task<IActionResult> AddClientTask([FromBody] AddClientTaskRequestDTO request)
         {
@@ -109,7 +109,7 @@ namespace Client.Checklist.API.Controllers
             return ReturnResult(result);
         }
 
-        [Authorize]
+        [Authorize("Admin")]
         [HttpPut("clients/tasks")]
         public async Task<IActionResult> UpdateClientTask([FromBody] UpdateClientTaskRequestDTO request)
         {

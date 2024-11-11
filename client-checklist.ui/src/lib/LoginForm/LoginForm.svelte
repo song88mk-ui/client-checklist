@@ -10,16 +10,14 @@
 
 	export let onSubmit: (values: LoginFormType) => void;
 
+	export let onRemoveError: () => void;
+
 	export let isLoading = false;
 
 	export const initialValues: LoginFormType = {
 		username: '',
 		password: '',
 		rememberMe: false
-	};
-
-	const handleRemoveError = () => {
-		error = '';
 	};
 
 	const { form, errors, handleChange, handleSubmit } = createForm({
@@ -93,7 +91,7 @@
 				<button
 					type="button"
 					class="absolute bottom-0 right-0 top-0 p-3"
-					on:click={handleRemoveError}
+					on:click={onRemoveError}
 					aria-label="Close alert"
 				>
 					<Icon icon="mdi:close" height={22} class="fill-current text-red-500" />

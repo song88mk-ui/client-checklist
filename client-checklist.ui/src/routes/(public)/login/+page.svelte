@@ -2,9 +2,9 @@
 	import { goto } from '$app/navigation';
 	import LoginForm from '$lib/LoginForm/LoginForm.svelte';
 	import { LocalStorage } from '$lib/storage';
-	import auth from '$stores/auth';
-	import APIGateway from '$api/APIGateway';
 	import type { LoginFormType } from '$lib/LoginForm/validationSchema';
+	import APIGateway from '$api/APIGateway';
+	import auth from '$stores/auth';
 
 	let initialValues = { username: '', password: '', rememberMe: false };
 
@@ -24,23 +24,39 @@
 			return;
 		}
 
-		const authToken: string = response.data.userToken;
-
-		if (rememberMe) {
-			LocalStorage.setValue('authenticationToken', authToken);
+		if (!response?.data) {
+			isLoading = false;
+			error = response.message;
+			return;
 		}
 
+		const { userToken, roleName, accessType } = response.data;
+
 		$auth = {
-			username,
-			password,
-			role: response.data.roleName,
-			accessType: response.data.accessType
+			username: values.username,
+			userToken,
+			roleName,
+			accessType
 		};
 
+		if (rememberMe) {
+			LocalStorage.setValue('auth', JSON.stringify(response.data));
+		}
+
 		goto('/');
+	};
+
+	const handleRemoveError = () => {
+		error = '';
 	};
 </script>
 
 <div class="h-[100svh] flex-1 content-center">
-	<LoginForm {initialValues} {error} {isLoading} onSubmit={handleSubmit} />
+	<LoginForm
+		{initialValues}
+		{error}
+		{isLoading}
+		onRemoveError={handleRemoveError}
+		onSubmit={handleSubmit}
+	/>
 </div>
