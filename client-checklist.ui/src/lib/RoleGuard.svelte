@@ -11,7 +11,7 @@
 		if (!$auth) {
 			goto('/not-authorized');
 		} else {
-			hasAccess = allowedRoles.includes($auth.role);
+			hasAccess = allowedRoles.includes(Role.ADMIN);
 
 			if (!hasAccess) {
 				goto('/not-authorized');
