@@ -2,10 +2,12 @@
 	import { goto } from '$app/navigation';
 	import Role from '$enums/role';
 	import Button from '$lib/Button.svelte';
+	import { LocalStorage } from '$lib/storage';
 	import auth from '$stores/auth';
 	let username = '';
 	let password = '';
 	let error = '';
+    let rememberMe = false;
 	let showPassword = false;
 
 	const togglePassword = () => {
@@ -16,8 +18,18 @@
 	const handleSubmit = (e: any) => {
 		e.preventDefault();
 		$auth = { username, password, role: Role.SUPER_ADMIN };
+
+        let authenticationToken = '';
+
+        if (rememberMe) {
+            LocalStorage.setValue('authenticationToken', authenticationToken); 
+        }
 		goto('/');
 	};
+
+    const getAuthenticationToken = () => {
+        return LocalStorage.getValue('authenticationToken');
+    }
 </script>
 
 <div class="h-[100svh] flex-1 content-center">
@@ -67,7 +79,7 @@
 			</div>
 
 			<label class="flex cursor-pointer items-center">
-				<input type="checkbox" />
+				<input type="checkbox" bind:checked={rememberMe}/>
 				<small class="ml-2 font-semibold text-slate-500">Remember Me</small>
 			</label>
 
