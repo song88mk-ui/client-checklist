@@ -9,8 +9,14 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const logout = async (formData: Record<string, string>): Promise<APIResponse> => {
+		const res = await fetchPrivate('POST', '/v1/users/logout', formData);
+		return res;
+	};
+
 	return {
-		login
+		login,
+		logout
 	};
 };
 
