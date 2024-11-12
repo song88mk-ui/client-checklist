@@ -5,6 +5,8 @@
 	import type { LoginFormType } from '$lib/LoginForm/validationSchema';
 	import APIGateway from '$api/APIGateway';
 	import auth from '$stores/auth';
+	import { FetchStatus } from '$api/models';
+	import { ErrorMessages } from '$enums/ErrorMessages';
 
 	let initialValues = { username: '', password: '', rememberMe: false };
 
@@ -18,17 +20,23 @@
 		isLoading = true;
 		const response: any = await login({ username, password });
 
+        console.log('res', response)
+
 		if (response?.error) {
 			isLoading = false;
-			error = response.error.toString();
-			return;
-		}
-		if (!response?.data) {
-			isLoading = false;
-			error = response.message;
-			return;
-		}
 
+            switch (response.error.status) {
+                case FetchStatus.BadRequest:
+                    error = ErrorMessages.LoginIncorrectUsernamePassword;
+                    break;
+                case FetchStatus.ServerError:
+                    error = ErrorMessages.LoginFailed;
+                    break;
+                default:
+                    break;
+            }
+			return;
+		}
 
 		const { userToken, roleName, accessType } = response.data;
 
