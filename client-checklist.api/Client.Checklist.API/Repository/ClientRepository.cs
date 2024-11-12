@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Diagnostics;
 using System.Text.Json;
+using TaskStatus = Client.Checklist.Shared.Enums.TaskStatus;
 
 namespace Client.Checklist.API.Repository
 {
@@ -199,6 +200,7 @@ namespace Client.Checklist.API.Repository
                             ProductManager = new Manager { Name = client.ProductManager, Number = client.ProductManagerContact },
                             TechnicalManager = new Manager { Name = client.TechnicalManager, Number = client.TechnicalManagerContact },
                             ServiceTypeId = client.ServiceTypeId,
+                            TaskStatus = client.TaskStatus,
                             SSLCertificate = client.SSLCertificate,
                             Currencies = currencies,
                             Languages = languages,
@@ -249,6 +251,7 @@ namespace Client.Checklist.API.Repository
                             Sports = string.IsNullOrEmpty(s.SupportedSports) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedSports) ?? new List<string>(),
                             Markets = string.IsNullOrEmpty(s.TargetMarkets) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.TargetMarkets) ?? new List<string>(),
                             TargetLaunchDate = s.TargetLaunchDate,
+                            TaskStatus = s.TaskStatus
                         }).ToList()
                     }
                 };
@@ -288,6 +291,7 @@ namespace Client.Checklist.API.Repository
                     TargetLaunchDate = request.LaunchDate,
                     SupportedSports = request.Sports.Any() ? string.Join(",", request.Sports) : string.Empty,
                     TargetMarkets = request.Markets.Any() ? string.Join(",", request.Markets) : string.Empty,
+                    TaskStatus = (int)TaskStatus.NotStarted,
                 }).Entity;
 
                 _clientChecklistContext.SaveChanges();
@@ -357,6 +361,7 @@ namespace Client.Checklist.API.Repository
                     client.TargetLaunchDate = request.LaunchDate;
                     client.SupportedSports = request.Sports.Any() ? string.Join(",", request.Sports) : string.Empty;
                     client.TargetMarkets = request.Markets.Any() ? string.Join(",", request.Markets) : string.Empty;
+                    client.TaskStatus = request.TaskStatus;
                 }
 
                 _clientChecklistContext.SaveChanges();

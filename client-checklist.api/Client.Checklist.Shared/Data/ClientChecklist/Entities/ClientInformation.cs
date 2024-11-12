@@ -11,6 +11,7 @@ namespace Client.Checklist.Shared.Data.ClientChecklist.Entities
         public string Domain { get; set; }
         public string SSLCertificate { get; set; }
         public int ServiceTypeId { get; set; }
+        public int TaskStatus { get; set; }
         public string SupportedLanguage { get; set; }
         public string SupportedCurrency { get; set; }
         public string SupportedSports { get; set; }
