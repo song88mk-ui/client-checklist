@@ -20,8 +20,6 @@
 		isLoading = true;
 		const response: any = await login({ username, password });
 
-        console.log('res', response)
-
 		if (response?.error) {
 			isLoading = false;
 
