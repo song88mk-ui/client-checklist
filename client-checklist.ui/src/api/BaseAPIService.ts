@@ -3,7 +3,6 @@ import { type APIResponse, type APIService } from "./models";
 
 const BaseAPIService = (): APIService => {
     const BASE_API_URL = import.meta.env.VITE_API_BASE_URL;
-    console.log(import.meta.env);
 
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
