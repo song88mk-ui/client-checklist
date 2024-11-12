@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type APIResponse, type APIService } from "./models";
+import { FetchStatus, type APIErrorObject, type APIResponse, type APIService } from "./models";
 
 const BaseAPIService = (): APIService => {
-    const BASE_API_URL = import.meta.env.PROD ? "https://startapi.jmj.bet" : "https://preprod-startapi.jmj.bet";
+    const BASE_API_URL = import.meta.env.VITE_API_BASE_URL;
 
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -10,11 +10,24 @@ const BaseAPIService = (): APIService => {
         "Access-Control-Allow-Origin": "*",
     }
 
-    const fetchPrivate = async (method: string, url: string, body?: Record<string, unknown>): Promise<APIResponse> => {
+    const fetchPrivate = async (method: string, url: string, body?: Record<string, unknown>, addHeaders?: Record<string, string>): Promise<APIResponse> => {
+        let apiError: APIErrorObject | null = null;
+
         try {
+            let newHeaders: Record<string, string> = {
+                ...headers
+            }
+
+            if (addHeaders !== undefined && addHeaders !== null) {
+                newHeaders = {
+                    ...newHeaders,
+                    ...addHeaders
+                }
+            }
+
             let options: Record<string, unknown> = {
                 method,
-                headers
+                headers: newHeaders
             };
 
             if (body !== null && body !== undefined) {
@@ -27,26 +40,37 @@ const BaseAPIService = (): APIService => {
             const response: any = await fetch(
                 `${BASE_API_URL}${url}`,
                 options
-            ).then(res => res.json())
-                .catch((error: unknown) => {
-                    const errorReturnValue: APIResponse = {
-                        error
+            )
+
+            if (!response.ok) {
+                if (response?.status === 400) {
+                    apiError = {
+                        status: FetchStatus.BadRequest,
+                        statusCode: 400
                     }
-
-                    return errorReturnValue
+                    throw new Error()
                 }
-                );
 
+                if (response?.status >= 500) {
+                    apiError = {
+                        status: FetchStatus.ServerError,
+                        statusCode: 500
+                    }
+                    throw new Error()
+                }
+            }
+
+            const resJson: any = await response.json()
             const returnValue: APIResponse = {
-                data: response?.result,
-                message: response?.message,
-                statusCode: response?.statusCode
+                data: resJson?.result,
+                message: resJson?.message,
+                statusCode: resJson?.statusCode
             }
 
             return returnValue;
-        } catch (error: unknown) {
+        } catch {
             const errorReturnValue: APIResponse = {
-                error
+                error: apiError
             }
 
             return errorReturnValue
