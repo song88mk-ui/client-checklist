@@ -75,7 +75,7 @@ namespace Client.Checklist.API.Controllers
 
         [Authorize("Admin")]
         [HttpPost("clients")]
-        public async Task<IActionResult> CreateClient([FromBody] CreateOrUpdateClientRequestDTO request)
+        public async Task<IActionResult> CreateClient([FromBody] CreateClientRequestDTO request)
         {
             var result = await _clientRepository.CreateClientInformation(request);
 
@@ -84,7 +84,7 @@ namespace Client.Checklist.API.Controllers
 
         [Authorize("Admin")]
         [HttpPut("clients")]
-        public async Task<IActionResult> UpdateClient([FromBody] CreateOrUpdateClientRequestDTO request)
+        public async Task<IActionResult> UpdateClient([FromBody] UpdateClientRequestDTO request)
         {
             var result = await _clientRepository.UpdateClientInformation(request);
 

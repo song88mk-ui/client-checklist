@@ -13,6 +13,8 @@ namespace Client.Checklist.Shared.Data.ClientChecklist.Entities
         public int ServiceTypeId { get; set; }
         public string SupportedLanguage { get; set; }
         public string SupportedCurrency { get; set; }
+        public string SupportedSports { get; set; }
+        public string TargetMarkets { get; set; }
         public DateTime? TargetLaunchDate { get; set; }
         public string MainDecisionMaker { get; set; }
         public string MainDecisionMakerContact { get; set; }

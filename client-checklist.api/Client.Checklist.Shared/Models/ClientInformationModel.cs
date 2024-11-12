@@ -9,6 +9,8 @@
         public int ServiceTypeId { get; set; }
         public List<string> Languages { get; set; }
         public List<string> Currencies { get; set; }
+        public List<string> Sports { get; set; }
+        public List<string> Markets { get; set; }
         public DateTime? TargetLaunchDate { get; set; }
         public Manager MainDecisionMaker { get; set; }
         public Manager FinanceManager { get; set; }

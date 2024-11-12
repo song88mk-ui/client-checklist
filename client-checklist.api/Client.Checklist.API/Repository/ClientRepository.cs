@@ -179,6 +179,8 @@ namespace Client.Checklist.API.Repository
 
                 var currencies = string.IsNullOrEmpty(client.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedCurrency);
                 var languages = string.IsNullOrEmpty(client.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedLanguage);
+                var sports = string.IsNullOrEmpty(client.SupportedSports) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedSports) ?? new List<string>();
+                var markets = string.IsNullOrEmpty(client.TargetMarkets) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.TargetMarkets) ?? new List<string>();
 
                 return new BaseResponseDTO<ClientInformationResponseDTO>
                 {
@@ -200,6 +202,8 @@ namespace Client.Checklist.API.Repository
                             SSLCertificate = client.SSLCertificate,
                             Currencies = currencies,
                             Languages = languages,
+                            Sports = sports,
+                            Markets = markets,
                             TargetLaunchDate = client.TargetLaunchDate
                         },
                         ClientTasks = clientTasks
@@ -242,6 +246,8 @@ namespace Client.Checklist.API.Repository
                             TechnicalManager = new Manager { Name = s.TechnicalManager, Number = s.TechnicalManagerContact },
                             Currencies = string.IsNullOrEmpty(s.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedCurrency) ?? new List<string>(),
                             Languages = string.IsNullOrEmpty(s.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedLanguage) ?? new List<string>(),
+                            Sports = string.IsNullOrEmpty(s.SupportedSports) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedSports) ?? new List<string>(),
+                            Markets = string.IsNullOrEmpty(s.TargetMarkets) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.TargetMarkets) ?? new List<string>(),
                             TargetLaunchDate = s.TargetLaunchDate,
                         }).ToList()
                     }
@@ -257,7 +263,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateOrUpdateClientRequestDTO request)
+        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateClientRequestDTO request)
         {
             try
             {
@@ -280,6 +286,8 @@ namespace Client.Checklist.API.Repository
                     TechnicalManager = request.TechnicalManager.Name,
                     TechnicalManagerContact = request.TechnicalManager.Number,
                     TargetLaunchDate = request.LaunchDate,
+                    SupportedSports = request.Sports.Any() ? string.Join(",", request.Sports) : string.Empty,
+                    TargetMarkets = request.Markets.Any() ? string.Join(",", request.Markets) : string.Empty,
                 }).Entity;
 
                 _clientChecklistContext.SaveChanges();
@@ -307,7 +315,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> UpdateClientInformation(CreateOrUpdateClientRequestDTO request)
+        public async Task<BaseResponseDTO<string>> UpdateClientInformation(UpdateClientRequestDTO request)
         {
             try
             {
@@ -347,6 +355,8 @@ namespace Client.Checklist.API.Repository
                     client.TechnicalManager = request.TechnicalManager.Name;
                     client.TechnicalManagerContact = request.TechnicalManager.Number;
                     client.TargetLaunchDate = request.LaunchDate;
+                    client.SupportedSports = request.Sports.Any() ? string.Join(",", request.Sports) : string.Empty;
+                    client.TargetMarkets = request.Markets.Any() ? string.Join(",", request.Markets) : string.Empty;
                 }
 
                 _clientChecklistContext.SaveChanges();
