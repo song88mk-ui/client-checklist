@@ -3,6 +3,11 @@ export enum ResponseMessage {
     Failed = "Failed"
 }
 
+export enum FetchStatus {
+    BadRequest = 'BadRequest',
+    ServerError = 'ServerError'
+}
+
 export type APIResponse = {
     data?: unknown
     message?: string,
@@ -30,3 +35,8 @@ export type APIGatewayType = {
 	login: EndpointWithBody;
 	logout: EndpointWithBody;
 };
+
+export type APIErrorObject = {
+    status: FetchStatus,
+    statusCode: number
+}
