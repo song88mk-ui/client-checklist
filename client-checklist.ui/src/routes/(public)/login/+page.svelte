@@ -23,12 +23,12 @@
 			error = response.error.toString();
 			return;
 		}
-
 		if (!response?.data) {
 			isLoading = false;
 			error = response.message;
 			return;
 		}
+
 
 		const { userToken, roleName, accessType } = response.data;
 
@@ -51,6 +51,7 @@
 	const handleRemoveError = () => {
 		error = '';
 	};
+
 </script>
 
 <div class="h-[100svh] flex-1 content-center">
