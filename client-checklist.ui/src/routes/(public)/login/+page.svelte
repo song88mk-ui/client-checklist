@@ -5,6 +5,7 @@
 	import type { LoginFormType } from '$lib/LoginForm/validationSchema';
 	import APIGateway from '$api/APIGateway';
 	import auth from '$stores/auth';
+	import {getErrorMessage} from '../../../utils';
 
 	let initialValues = { username: '', password: '', rememberMe: false };
 
@@ -18,17 +19,13 @@
 		isLoading = true;
 		const response: any = await login({ username, password });
 
-		if (response?.error) {
+		if (!response?.data) {
 			isLoading = false;
-			error = response.error.toString();
+			error = getErrorMessage(response?.message);
 			return;
 		}
 
-		if (!response?.data) {
-			isLoading = false;
-			error = response.message;
-			return;
-		}
+
 
 		const { userToken, roleName, accessType } = response.data;
 
@@ -51,6 +48,7 @@
 	const handleRemoveError = () => {
 		error = '';
 	};
+
 </script>
 
 <div class="h-[100svh] flex-1 content-center">
