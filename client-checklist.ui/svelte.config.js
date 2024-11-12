@@ -17,7 +17,8 @@ const config = {
 		alias: {
 			$enums: './src/enums',
 			$stores: './src/stores',
-			$types: './src/types'
+			$types: './src/types',
+			$api: './src/api'
 		}
 	}
 };

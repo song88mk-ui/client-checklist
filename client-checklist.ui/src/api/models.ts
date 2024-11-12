@@ -27,5 +27,6 @@ export type APIService = {
 }
 
 export type APIGatewayType = {
-    login: EndpointWithBody
-}
+	login: EndpointWithBody;
+	logout: EndpointWithBody;
+};
