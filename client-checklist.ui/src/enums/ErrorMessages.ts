@@ -1,5 +1,6 @@
 export enum ErrorMessages {
-    LoginIncorrectUsernamePassword = "Incorrect username or password.",
-    LoginFailed = "Login failed.",
-    FetchClientsFailed = 'Failed to fetch clients.',
+	LoginIncorrectUsernamePassword = 'Incorrect username or password.',
+	LoginFailed = 'Login failed.',
+	FetchClientsFailed = 'Failed to fetch clients.',
+	DeleteClientFailed = 'Failed to delete client.'
 }

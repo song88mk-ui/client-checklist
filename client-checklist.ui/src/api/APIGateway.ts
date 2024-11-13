@@ -19,10 +19,19 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const deleteClient = async (
+		formData: Record<string, string>,
+		headers?: Record<string, string>
+	): Promise<APIResponse> => {
+		const res = await fetchPrivate('DELETE', '/v1/clients', formData, headers);
+		return res;
+	};
+
 	return {
 		login,
 		logout,
 		fetchClients,
+		deleteClient
 	};
 };
 
