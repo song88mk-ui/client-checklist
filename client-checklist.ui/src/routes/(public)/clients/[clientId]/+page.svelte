@@ -2,12 +2,16 @@
 	import { onMount } from 'svelte';
 	import APIGateway from '$api/APIGateway';
 	import { page } from '$app/stores';
-	import Header from './ClientHeader.svelte';
+    import CompanyLogo from '$lib/CompanyLogo.svelte';
+	import ClientDetails from './ClientDetails.svelte';
 	import ClientTaskComponent from './ClientTask.svelte';
 	import ClientProgressBar from './ClientProgressBar.svelte';
 	import { type ClientInformation, type ClientTask, type ClientProgressStatus } from './types';
 
 	const { clientId } = $page.params;
+    const { searchParams } = $page.url;
+
+    let queryToken = searchParams.get('token')
 	const { getClientTaskStatus } = APIGateway();
 	let client: ClientInformation | null = $state(null);
 	let clientProgess: ClientProgressStatus = $state({
@@ -44,7 +48,7 @@
 
 	onMount(async () => {
 		try {
-			const response = await getClientTaskStatus({ clientId });
+			const response = await getClientTaskStatus({ clientId,token: queryToken ? queryToken : '' });
 			loading = false;
 			let res: any = response?.data;
 			client = {
@@ -144,10 +148,34 @@
 		}
 	});
 </script>
+<header class="flex items-center bg-white p-5 shadow-md">
+	<h1 class="mr-3">
+		<a href="/">
+			<CompanyLogo size={136} />
+		</a>
+	</h1>
+	<nav class="flex flex-1 items-center justify-between">
+		<div></div>
+			<div class="flex items-center gap-3">
+				<div class="flex items-center gap-3">
+					<div class="flex-1 text-right text-sm">
+						<div class="font-semibold capitalize text-blue-600">test</div>
+						<div class="text-xs capitalize italic">test</div>
+					</div>
+					<div class="flex h-8 w-8 items-center justify-center rounded-full bg-pink-500 text-white">
+						J
+					</div>
+				</div>
+				<button>
+					<!-- <Icon icon="mdi:logout" height={24} /> -->
+				</button>
+			</div>
+	</nav>
+</header>
 
 {#if client !== null}
 	<div class="flex-1 p-6">
-		<Header
+		<ClientDetails
 			CompanyName={client.clientName}
 			Domain={client?.domain}
 			LangSupported={client?.languages}
