@@ -68,9 +68,9 @@ const BaseAPIService = (): APIService => {
             }
 
             return returnValue;
-        } catch {
+        } catch (error) {
             const errorReturnValue: APIResponse = {
-                error: apiError
+                error: apiError || error
             }
 
             return errorReturnValue

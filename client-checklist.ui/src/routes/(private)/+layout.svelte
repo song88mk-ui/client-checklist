@@ -7,9 +7,11 @@
 </script>
 
 <PrivateGuard>
-	<Header />
-	<div class="p-6">
-		{@render children()}
+	<div class="flex h-full flex-col">
+		<Header />
+		<div class="p-6 flex-1">
+			{@render children()}
+		</div>
 	</div>
 	<ModalContainer />
 </PrivateGuard>
