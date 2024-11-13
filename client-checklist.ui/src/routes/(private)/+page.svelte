@@ -25,7 +25,9 @@
 	onMount(async () => {
 		isLoading = true;
 
-		const response = await fetchClients();
+		const response = await fetchClients({
+			'x-user-token': $auth?.userToken as string,
+		});
 
 		isLoading = false;
 		

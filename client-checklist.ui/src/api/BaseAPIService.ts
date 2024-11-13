@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import auth from "$stores/auth";
 import { FetchStatus, type APIErrorObject, type APIResponse, type APIService } from "./models";
 
 const BaseAPIService = (): APIService => {
@@ -10,12 +9,6 @@ const BaseAPIService = (): APIService => {
         "x-api-key": "B4DhSieTYe7AuNAp",
         "Access-Control-Allow-Origin": "*",
     }
-
-    auth.subscribe((value) => {
-        if (value) {
-            headers["x-user-token"] = value.userToken;
-        }
-    });
 
     const fetchPrivate = async (method: string, url: string, body?: Record<string, unknown>, addHeaders?: Record<string, string>): Promise<APIResponse> => {
         let apiError: APIErrorObject | null = null;
