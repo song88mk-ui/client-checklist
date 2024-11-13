@@ -23,7 +23,7 @@ namespace Client.Checklist.API.ActionFilters
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            using (var activity = _activitySource.StartActivity("client.login"))
+            using (var activity = _activitySource.StartActivity("authorize"))
             {
                 var httpContext = context.HttpContext;
 
