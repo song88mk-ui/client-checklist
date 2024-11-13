@@ -14,9 +14,16 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const getClientTaskStatus = async (data: Record<string, string>): Promise<APIResponse> => {
+		const {clientId,token} =  data
+		const res = await fetchPrivate("GET", `/v1/clients/${clientId}`,undefined,{"x-user-token":token})
+		return res;
+    }
+
 	return {
 		login,
-		logout
+		logout,
+		getClientTaskStatus
 	};
 };
 
