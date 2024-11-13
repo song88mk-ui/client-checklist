@@ -1,6 +1,7 @@
 ﻿using Client.Checklist.API.Repository;
 using Client.Checklist.API.Telemetry;
 using Client.Checklist.Shared.Enums;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics;
@@ -13,20 +14,26 @@ namespace Client.Checklist.API.ActionFilters
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         private readonly string _requiredRole;
-        private readonly ActivitySource _activitySource;
 
-        public AuthorizeAttribute(Instrumentation instrumentation, string requiredRole = null)
+        public AuthorizeAttribute(string requiredRole = null)
         {
             _requiredRole = requiredRole;
-            _activitySource = instrumentation.ActivitySource;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            using (var activity = _activitySource.StartActivity("authorize"))
-            {
-                var httpContext = context.HttpContext;
+            var httpContext = context.HttpContext;
+            
+            var instrumentation = httpContext.RequestServices.GetService<Instrumentation>();
 
+            if (instrumentation == null)
+            {
+                context.Result = new JsonResult(new { StatusCode = HttpStatusCode.Unauthorized, message = "Authorization service unavailable" }) { StatusCode = StatusCodes.Status401Unauthorized };
+                return;
+            }
+
+            using (var activity = instrumentation.ActivitySource.StartActivity("authorize"))
+            {
                 var token = httpContext.Request.Headers["x-client-token"].FirstOrDefault() ?? httpContext.Request.Headers["x-user-token"].FirstOrDefault();
 
                 activity?.SetTag("token", token);
