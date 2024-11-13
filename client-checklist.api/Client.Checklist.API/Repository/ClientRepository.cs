@@ -288,13 +288,13 @@ namespace Client.Checklist.API.Repository
                         Domain = request.Domain,
                         SSLCertificate = request.SSLCert,
                         ServiceTypeId = request.ServiceTypeId,
-                        SupportedCurrency = request.Currencies.Any() ? string.Join(",", request.Currencies) : string.Empty,
-                        SupportedLanguage = request.Languages.Any() ? string.Join(",", request.Languages) : string.Empty,
+                        SupportedCurrency = request.Currencies.Any() ? JsonSerializer.Serialize(request.Currencies) : string.Empty,
+                        SupportedLanguage = request.Languages.Any() ? JsonSerializer.Serialize(request.Languages) : string.Empty,
                         TechnicalManager = request.TechnicalManager.Name,
                         TechnicalManagerContact = request.TechnicalManager.Number,
                         TargetLaunchDate = request.LaunchDate,
-                        SupportedSports = request.Sports.Any() ? string.Join(",", request.Sports) : string.Empty,
-                        TargetMarkets = request.Markets.Any() ? string.Join(",", request.Markets) : string.Empty,
+                        SupportedSports = request.Sports.Any() ? JsonSerializer.Serialize(request.Sports) : string.Empty,
+                        TargetMarkets = request.Markets.Any() ? JsonSerializer.Serialize(request.Markets) : string.Empty,
                         TaskStatus = (int)TaskStatus.NotStarted,
                     }).Entity;
 
@@ -367,13 +367,13 @@ namespace Client.Checklist.API.Repository
                         client.Domain = request.Domain;
                         client.SSLCertificate = request.SSLCert;
                         client.ServiceTypeId = request.ServiceTypeId;
-                        client.SupportedCurrency = request.Currencies.Any() ? string.Join(",", request.Currencies) : string.Empty;
-                        client.SupportedLanguage = request.Languages.Any() ? string.Join(",", request.Languages) : string.Empty;
+                        client.SupportedCurrency = request.Currencies.Any() ? JsonSerializer.Serialize(request.Currencies) : string.Empty;
+                        client.SupportedLanguage = request.Languages.Any() ? JsonSerializer.Serialize(request.Languages) : string.Empty;
                         client.TechnicalManager = request.TechnicalManager.Name;
                         client.TechnicalManagerContact = request.TechnicalManager.Number;
                         client.TargetLaunchDate = request.LaunchDate;
-                        client.SupportedSports = request.Sports.Any() ? string.Join(",", request.Sports) : string.Empty;
-                        client.TargetMarkets = request.Markets.Any() ? string.Join(",", request.Markets) : string.Empty;
+                        client.SupportedSports = request.Sports.Any() ? JsonSerializer.Serialize(request.Sports) : string.Empty;
+                        client.TargetMarkets = request.Markets.Any() ? JsonSerializer.Serialize(request.Markets) : string.Empty;
                         client.TaskStatus = request.TaskStatus;
                     }
 
