@@ -266,7 +266,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateClientRequestDTO request)
+        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateClientRequestDTO request, string userToken)
         {
             using (var activity = _activitySource.StartActivity("create.client"))
             {
@@ -304,7 +304,7 @@ namespace Client.Checklist.API.Repository
                     {
                         ClientId = client.ClientId.ToString(),
                         ClientName = request.ClientName
-                    });
+                    }, userToken);
 
                     activity?.SetStatus(ActivityStatusCode.Ok);
 
@@ -328,7 +328,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> UpdateClientInformation(UpdateClientRequestDTO request)
+        public async Task<BaseResponseDTO<string>> UpdateClientInformation(UpdateClientRequestDTO request, string userToken)
         {
             using (var activity = _activitySource.StartActivity("update.client"))
             {
@@ -383,7 +383,7 @@ namespace Client.Checklist.API.Repository
                     {
                         ClientId = result.ToString(),
                         ClientName = request.ClientName
-                    });
+                    }, userToken);
 
                     activity?.SetStatus(ActivityStatusCode.Ok);
 

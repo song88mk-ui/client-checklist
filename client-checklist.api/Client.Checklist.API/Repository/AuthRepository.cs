@@ -163,13 +163,17 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> CreateClientToken(CreateClientTokenRequestDTO request)
+        public async Task<BaseResponseDTO<string>> CreateClientToken(CreateClientTokenRequestDTO request, string userToken)
         {
             try
             {
                 if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
                     _httpClient.DefaultRequestHeaders.Remove("x-app-id");
                 _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
+
+                if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
+                _httpClient.DefaultRequestHeaders.Add("x-operator-token", userToken);
 
                 var response = await _httpClient.PostAsync($"v1/api/user/client/token", new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json"));
 
