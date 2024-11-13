@@ -24,16 +24,17 @@ export type LoginResponse = {
     message: ResponseMessage
 }
 
-export type EndpointNoBody = () => Promise<APIResponse>
+export type EndpointNoBody = (headers?: Record<string, string>) => Promise<APIResponse>
 export type EndpointWithBody = (data: Record<string, string>) => Promise<APIResponse>
 
 export type APIService = {
-    fetchPrivate: (method: string, url: string, body?: Record<string, unknown>) => Promise<APIResponse>
+		fetchPrivate: (method: string, url: string, body?: Record<string, unknown>, headers?: Record<string, string>) => Promise<APIResponse>
 }
 
 export type APIGatewayType = {
-	login: EndpointWithBody;
-	logout: EndpointWithBody;
+		login: EndpointWithBody;
+		logout: EndpointWithBody;
+		fetchClients: EndpointNoBody;
 };
 
 export type APIErrorObject = {

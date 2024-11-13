@@ -18,7 +18,8 @@ const config = {
 			$enums: './src/enums',
 			$stores: './src/stores',
 			$types: './src/types',
-			$api: './src/api'
+			$api: './src/api',
+			$constants: './src/constants',
 		}
 	}
 };

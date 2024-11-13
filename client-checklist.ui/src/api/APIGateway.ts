@@ -14,9 +14,15 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const fetchClients = async (headers?: Record<string, string>): Promise<APIResponse> => {
+		const res = await fetchPrivate('GET', '/v1/clients', undefined, headers);
+		return res;
+	};
+
 	return {
 		login,
-		logout
+		logout,
+		fetchClients,
 	};
 };
 
