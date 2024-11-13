@@ -35,16 +35,16 @@ namespace Client.Checklist.API.ActionFilters
                 return;
             }
 
-            var authResponse = authRepository.Authenticate(token);
+            var authResponse = Task.Run(() => authRepository.Authenticate(token)).Result;
 
-            if (authResponse.Result.StatusCode != StatusCode.Success)
+            if (authResponse.StatusCode != StatusCode.Success)
             {
                 context.Result = new JsonResult(new { StatusCode = HttpStatusCode.Unauthorized, Message = $"Missing Or Unsupported Token In Request Headers" }) { StatusCode = StatusCodes.Status401Unauthorized };
             }
 
             if (!string.IsNullOrEmpty(_requiredRole) && _requiredRole == "Admin")
             {
-                if (!authResponse.Result.Result.RoleName.Contains("Super Admin"))
+                if (!authResponse.Result.RoleName.Contains("Super Admin"))
                 {
                     context.Result = new JsonResult(new { StatusCode = HttpStatusCode.Forbidden, Message = "Insufficient access permission" })
                     {
