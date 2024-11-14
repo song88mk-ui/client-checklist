@@ -5,7 +5,7 @@
 	import Alert from './Alert.svelte';
 	import auth from '$stores/auth';
 	import { ErrorMessages } from '$enums/ErrorMessages';
-	import { clients, selectedClient } from '$stores/client';
+	import { clients, selectedClient, deletedClient } from '$stores/client';
 
 	const { deleteClient } = APIGateway();
 
@@ -34,6 +34,7 @@
 		}
 
 		$clients = $clients.filter((client) => client.id !== $selectedClient?.id);
+		$deletedClient = $selectedClient;
 		$selectedClient = null;
 
 		closeModal();
@@ -59,7 +60,7 @@
 	>
 
 	{#if error}
-		<Alert message={error} onClose={handleRemoveError} />
+		<Alert variant="error" message={error} onClose={handleRemoveError} />
 	{/if}
 
 	<div class="mt-[16px] flex w-full flex-row gap-[12px]">
