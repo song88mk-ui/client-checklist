@@ -38,12 +38,12 @@
 
 	<form on:submit={handleSubmit} class="flex flex-col gap-4">
 		<div>
-			<div class={`relative flex w-full items-center rounded border ${error && "border-red-500"}`}>
+			<div class={`relative flex w-full items-center rounded border ${error && 'border-red-500'}`}>
 				<img src="/person.svg" alt="person" class="absolute ml-2 text-blue-600" />
 				<input
 					name="username"
 					placeholder="Enter Username"
-					class="block w-full py-3 pl-10 pr-3 text-sm rounded"
+					class="block w-full rounded py-3 pl-10 pr-3 text-sm"
 					on:change={handleChange}
 					bind:value={$form.username}
 				/>
@@ -54,13 +54,13 @@
 		</div>
 
 		<div>
-			<div class={`relative flex w-full items-center rounded border ${error && "border-red-500"}`}>
+			<div class={`relative flex w-full items-center rounded border ${error && 'border-red-500'}`}>
 				<img src="/lock.svg" alt="lock" class="absolute ml-2 text-blue-600" />
 				<input
 					name="password"
 					type={showPassword ? 'text' : 'password'}
 					placeholder="Enter Password"
-					class="block w-full px-10 py-3 text-sm rounded"
+					class="block w-full rounded px-10 py-3 text-sm"
 					on:change={handleChange}
 				/>
 				<div on:click={togglePassword} role="presentation" class="cursor-pointer">
@@ -82,7 +82,7 @@
 				bind:checked={$form.rememberMe}
 				on:click={() => ($form.rememberMe = !$form.rememberMe)}
 			/>
-			<small class="ml-2 font-semibold text-slate-500">Remember Me</small>
+			<small class="ml-2 font-semibold text-slate-500">Keep me signed in</small>
 		</label>
 
 		{#if error}
