@@ -24,7 +24,7 @@
 			onclick={onClose}
 			aria-label="Close alert"
 		>
-			<img src="/icon-close-${variant === 'error' ? 'red' : 'green'}.svg" alt="icon-close" />
+			<img src="/icon-close-{variant === 'error' ? 'red' : 'green'}.svg" alt="icon-close" />
 		</button>
 	{/if}
 </div>

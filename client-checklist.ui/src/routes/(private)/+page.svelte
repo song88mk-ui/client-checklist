@@ -36,7 +36,8 @@
 			targetLaunchDate: client.targetLaunchDate,
 			services: services[client.serviceTypeId],
 			mainDecisionMaker: client.mainDecisionMaker.name,
-			status: client.taskStatus
+			status: client.taskStatus,
+			clientToken: client.clientToken
 		}));
 	});
 
