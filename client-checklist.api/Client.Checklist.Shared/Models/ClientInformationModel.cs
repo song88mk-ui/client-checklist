@@ -18,5 +18,6 @@
         public Manager ProductManager { get; set; }
         public Manager TechnicalManager { get; set; }
         public Manager CustomerServiceManager { get; set; }
+        public string ClientToken { get; set; }
     }
 }

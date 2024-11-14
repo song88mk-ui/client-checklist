@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Diagnostics;
 using System.Text.Json;
 using TaskStatus = Client.Checklist.Shared.Enums.TaskStatus;
+using System.Collections.Generic;
 
 namespace Client.Checklist.API.Repository
 {
@@ -222,10 +223,12 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList()
+        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList(string userToken)
         {
             try
             {
+                var clientTokens = (await _authRepository.GetClientToken(userToken)).Result;
+
                 var clients = _clientChecklistContext.ClientInformation.AsNoTracking().Where(c => c.IsDeleted == false).ToList();
 
                 return new BaseResponseDTO<ClientInformationListDTO>
@@ -251,7 +254,8 @@ namespace Client.Checklist.API.Repository
                             Sports = string.IsNullOrEmpty(s.SupportedSports) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedSports) ?? new List<string>(),
                             Markets = string.IsNullOrEmpty(s.TargetMarkets) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.TargetMarkets) ?? new List<string>(),
                             TargetLaunchDate = s.TargetLaunchDate,
-                            TaskStatus = s.TaskStatus
+                            TaskStatus = s.TaskStatus,
+                            ClientToken = clientTokens?.FirstOrDefault(f => f.UserId.ToUpper() == s.ClientId.ToString().ToUpper())?.OperatorToken ?? string.Empty
                         }).ToList()
                     }
                 };

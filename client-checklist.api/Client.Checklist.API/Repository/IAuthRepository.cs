@@ -8,5 +8,6 @@ namespace Client.Checklist.API.Repository
         Task<BaseResponseDTO<UserModel>> Authenticate(string token);
         Task<BaseResponseDTO<bool>> Logout(string token);
         Task<BaseResponseDTO<string>> CreateClientToken(CreateClientTokenRequestDTO request, string userToken);
+        Task<BaseResponseDTO<List<ClientTokenModel>>> GetClientToken(string userToken);
     }
 }

@@ -68,7 +68,9 @@ namespace Client.Checklist.API.Controllers
         [HttpGet("clients")]
         public async Task<IActionResult> GetClientList()
         {
-            var result = await _clientRepository.GetClientList();
+            var token = HttpContext.Request.Headers["x-user-token"].FirstOrDefault();
+
+            var result = await _clientRepository.GetClientList(token);
 
             return ReturnResult(result);
         }
