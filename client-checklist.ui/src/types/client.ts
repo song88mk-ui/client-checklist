@@ -8,6 +8,7 @@ export type Client = {
 	services: string;
 	mainDecisionMaker: string;
 	status: ClientRowStatus;
+	clientToken: string;
 };
 
 export type Clients = Client[] | [];

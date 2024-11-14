@@ -3,6 +3,7 @@
 	import auth from '$stores/auth';
 	import ClientRowStatus from './ClientRowStatus.svelte';
 	import DeleteClientModal from './DeleteClientModal.svelte';
+	import GenerateLinkModal from './GenerateLinkModal.svelte';
 	import { AccessType } from '$enums/role';
 	import { format } from 'date-fns';
 	import { selectedClient } from '$stores/client';
@@ -14,6 +15,11 @@
 	const handleShowDeleteModal = () => {
 		$selectedClient = client;
 		openModal(DeleteClientModal);
+	};
+
+	const handleShowGenerateLinkModal = () => {
+		$selectedClient = client;
+		openModal(GenerateLinkModal);
 	};
 </script>
 
@@ -36,12 +42,15 @@
 		<ClientRowStatus status={client.status} />
 	</span>
 	{#if $auth?.accessType == AccessType.READWRITE}
-		<div
-			class="flex w-[10%] cursor-pointer flex-row items-center justify-center gap-[5px] py-5 pl-3"
-		>
-			<img alt="" src="/icon-edit.svg" />
-			<button on:click={handleShowDeleteModal} class="cursor-pointer">
+		<div class="flex w-[10%] cursor-pointer flex-row items-center justify-center py-5 pl-3">
+			<button class="cursor-pointer p-2">
+				<img alt="icon-edit" src="/icon-edit.svg" />
+			</button>
+			<button on:click={handleShowDeleteModal} class="cursor-pointer p-2">
 				<img alt="icon-delete" src="/icon-delete.svg" />
+			</button>
+			<button on:click={handleShowGenerateLinkModal} class="cursor-pointer p-2">
+				<img alt="icon-link" src="/icon-link.svg" />
 			</button>
 		</div>
 	{/if}
