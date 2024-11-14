@@ -7,6 +7,8 @@
 	import APIGateway from '$api/APIGateway';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import services from '$constants/services';
+	import { deletedClient } from '$stores/client';
+	import Alert from '$lib/Alert.svelte';
 
 	const { fetchClients } = APIGateway();
 
@@ -39,6 +41,12 @@
 	});
 
 	let headerCss = 'pl-3 font-[600] text-[13px] text-[#000] leading-[16.34px]';
+
+	$: if ($deletedClient) {
+		setTimeout(() => {
+			$deletedClient = null;
+		}, 5000);
+	}
 </script>
 
 {#if isLoading}
@@ -50,6 +58,13 @@
 {/if}
 
 {#if !isLoading && !error}
+	{#if $deletedClient}
+		<Alert
+			variant="success"
+			message={`The account ${$deletedClient.companyName} has been successfully deleted.`}
+			hasCloseButton={false}
+		/>
+	{/if}
 	<div class="mb-[15px] mt-[15px] flex w-full flex-row items-center">
 		<span class={`${headerCss} w-[15%]`}>Company</span>
 		<span class={`${headerCss} w-[15%]`}>Domain</span>

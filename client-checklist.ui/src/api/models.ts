@@ -5,7 +5,8 @@ export enum ResponseMessage {
 
 export enum FetchStatus {
 	BadRequest = 'BadRequest',
-	ServerError = 'ServerError'
+	ServerError = 'ServerError',
+    UnAuthorized = 'UnAuthorized'
 }
 
 export type APIResponse = {
