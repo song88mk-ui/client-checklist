@@ -31,27 +31,23 @@
 	<span class={`${textCss} w-[10%]`}
 		>{format(new Date(client.targetLaunchDate), 'MMMM dd, yyyy')}</span
 	>
-	{#if $auth?.accessType == AccessType.READWRITE}
-		<span class={`${textCss} w-[30%]`}>{client.services}</span>
-	{:else}
-		<span class={`${textCss} w-[40%]`}>{client.services}</span>
-	{/if}
+	<span class={`${textCss} w-[30%]`}>{client.services}</span>
 	<span class={`${textCss} w-[10%] capitalize`}>{client.mainDecisionMaker}</span>
 
 	<span class={`${textCss} w-[10%]`}>
 		<ClientRowStatus status={client.status} />
 	</span>
-	{#if $auth?.accessType == AccessType.READWRITE}
-		<div class="flex w-[10%] cursor-pointer flex-row items-center justify-center py-5 pl-3">
+	<div class="flex w-[10%] cursor-pointer flex-row items-center justify-center py-5 pl-3">
+		{#if $auth?.accessType == AccessType.READWRITE}
 			<button class="cursor-pointer p-2">
 				<img alt="icon-edit" src="/icon-edit.svg" />
 			</button>
 			<button on:click={handleShowDeleteModal} class="cursor-pointer p-2">
 				<img alt="icon-delete" src="/icon-delete.svg" />
 			</button>
-			<button on:click={handleShowGenerateLinkModal} class="cursor-pointer p-2">
-				<img alt="icon-link" src="/icon-link.svg" />
-			</button>
-		</div>
-	{/if}
+		{/if}
+		<button on:click={handleShowGenerateLinkModal} class="cursor-pointer p-2">
+			<img alt="icon-link" src="/icon-link.svg" />
+		</button>
+	</div>
 </div>
