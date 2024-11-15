@@ -4,24 +4,11 @@
 	import { AccessType } from '$enums/role';
 	import CreateClientDropdown from '$lib/CreateClientDropdown.svelte';
 	import auth from '$stores/auth';
-	import { LocalStorage } from './storage';
-	import APIGateway from '$api/APIGateway';
-
-	const { logout } = APIGateway();
+	import { openModal } from '$stores/modal';
+	import LogoutModal from '$lib/LogoutModal.svelte';
 
 	const handleLogout = async () => {
-		try {
-			await logout({
-				userToken: $auth?.userToken as string
-			});
-
-			$auth = null;
-			LocalStorage.removeValue('userToken');
-			LocalStorage.removeValue('accessType');
-			LocalStorage.removeValue('username');
-		} catch (error: unknown) {
-			console.error(error);
-		}
+		openModal(LogoutModal);
 	};
 </script>
 
