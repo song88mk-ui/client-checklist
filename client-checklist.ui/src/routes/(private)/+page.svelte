@@ -70,16 +70,10 @@
 		<span class={`${headerCss} w-[15%]`}>Company</span>
 		<span class={`${headerCss} w-[15%]`}>Domain</span>
 		<span class={`${headerCss} w-[10%]`}>Target Launch Date</span>
-		{#if $auth?.accessType == AccessType.READWRITE}
-			<span class={`${headerCss} w-[30%]`}>Services</span>
-		{:else}
-			<span class={`${headerCss} w-[40%]`}>Services</span>
-		{/if}
+		<span class={`${headerCss} w-[30%]`}>Services</span>
 		<span class={`${headerCss} w-[10%]`}>Main Decision Maker</span>
 		<span class={`${headerCss} w-[10%]`}>Status</span>
-		{#if $auth?.accessType == AccessType.READWRITE}
-			<span class={`${headerCss} w-[10%] text-center`}>Actions</span>
-		{/if}
+		<span class={`${headerCss} w-[10%] text-center`}>Actions</span>
 	</div>
 	{#each $clients as client}
 		<ClientRow {client} />
