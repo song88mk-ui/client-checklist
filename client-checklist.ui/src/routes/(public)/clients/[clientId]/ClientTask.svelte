@@ -26,7 +26,7 @@
 	}
   function calculateProgress(subTasks: SubTask[]) {
     if(subTasks.length > 0){
-      const taskProgress = subTasks.map((item) => item.sortOrder);
+      const taskProgress = subTasks.map((item) => item.taskStatusId);
 		  const totalPercentage = calculatePercentage(taskProgress,1)
       percentage = totalPercentage.toFixed(0)
     }
@@ -65,7 +65,7 @@
 		<div class="flex">
 			<span
 				class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
-				>{clientTask.taskName}</span
+				>{clientTask.stepName}</span
 			>
 			<div
 				class="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#0071BC] text-[12px] font-bold font-normal leading-none text-white"
@@ -145,7 +145,7 @@
 								>{subTask.comment}</td
 							>
 							<td class="border-b border-[#ECECEC] px-4 py-2 text-start text-[14px] text-[#1A1A1A]"
-								>{@html Status(subTask.sortOrder)}</td
+								>{@html Status(subTask.taskStatusId)}</td
 							>
 						</tr>
 					{/each}

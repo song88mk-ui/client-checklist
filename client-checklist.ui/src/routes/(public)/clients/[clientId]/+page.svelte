@@ -15,7 +15,7 @@
 
 	const { getClientTaskStatus } = APIGateway();
 	let client: ClientInformation | null = $state(null);
-	let clientProgess: ClientProgressStatus = $state({
+	let clientProgress: ClientProgressStatus = $state({
 		notStarted: 0,
 		inProgress: 0,
 		completed: 0
@@ -40,7 +40,7 @@
 		const notStarted = calculatePercentage(clientProgressStatus,0)
         const inProgress = calculatePercentage(clientProgressStatus,1)
 		const completed = calculatePercentage(clientProgressStatus,2)
-        clientProgess = {
+        clientProgress = {
             notStarted,
             inProgress,
             completed,
@@ -76,25 +76,22 @@
 								subtaskId: 0,
 								subtaskName: 'string',
 								comment: 'string',
-								taskStatusId: 0,
-								clientTaskStatusId: 0,
-								sortOrder: 1
+								taskStatusId: 1,
+								assignedTo: ""
 							},
                             {
 								subtaskId: 0,
 								subtaskName: 'string',
 								comment: 'string',
 								taskStatusId: 0,
-								clientTaskStatusId: 0,
-								sortOrder: 0
+								assignedTo: ""
 							},
                             {
-								subtaskId: 0,
+								subtaskId: 2,
 								subtaskName: 'string',
 								comment: 'string',
 								taskStatusId: 0,
-								clientTaskStatusId: 0,
-								sortOrder: 0
+								assignedTo: ""
 							}
 						]
 					},
@@ -195,9 +192,9 @@
 			})}
 		/>
 		<ClientProgressBar
-			InProgress={clientProgess.inProgress}
-			NotStarted={clientProgess.notStarted}
-			Completed={clientProgess.completed}
+			InProgress={clientProgress.inProgress}
+			NotStarted={clientProgress.notStarted}
+			Completed={clientProgress.completed}
 		/>
 		{#if client.clientTasks.length > 0}
 			{#each client.clientTasks as clientTask}
