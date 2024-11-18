@@ -12,6 +12,7 @@
     const { searchParams } = $page.url;
 
     let queryToken = searchParams.get('token')
+
 	const { getClientTaskStatus } = APIGateway();
 	let client: ClientInformation | null = $state(null);
 	let clientProgess: ClientProgressStatus = $state({
@@ -49,6 +50,10 @@
 	onMount(async () => {
 		try {
 			const response = await getClientTaskStatus({ clientId,token: queryToken ? queryToken : '' });
+			if(response?.error){
+				error = response.error
+				return
+			}
 			loading = false;
 			let res: any = response?.data;
 			client = {
@@ -172,6 +177,10 @@
 			</div>
 	</nav>
 </header>
+
+{#if error}
+	<div>Client not found</div>
+{/if}
 
 {#if client !== null}
 	<div class="flex-1 p-6">
