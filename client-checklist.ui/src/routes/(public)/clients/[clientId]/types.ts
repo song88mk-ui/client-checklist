@@ -3,15 +3,14 @@ export type SubTask = {
     subtaskName: string
     comment: string;
     taskStatusId: number
-    clientTaskStatusId: number;
-    sortOrder: number
+    assignedTo: number;
 };
 
 export type ClientTask = {
     clientTaskId: number;
     clientId: string;
-    taskId: number;
-    taskName: string;
+    stepId: number;
+    stepName: string;
     serviceTypeId: number;
     targetDateCompleted: string;
     actualDateCompleted:string;
