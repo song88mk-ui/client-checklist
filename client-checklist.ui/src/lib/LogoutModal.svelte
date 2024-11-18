@@ -16,7 +16,7 @@
 	let isLoading = false;
 	let error = '';
 
-	const handleDelete = async () => {
+	const handleLogout = async () => {
 		isLoading = true;
 		const response = await logout(
 			{
@@ -70,7 +70,7 @@
 		<Button
 			type="button"
 			classNames="w-full py-2 h-[44px] bg-[#7F56D9] text-[#FFF] text-[16px] font-[600] rounded-[8px] border-solid border border-[transparent] cursor-pointer disabled:bg-[#956DEE] disabled:cursor-not-allowed"
-			click={handleDelete}
+			click={handleLogout}
 			disabled={isLoading}
 		>
 			{isLoading ? 'Confirming...' : 'Confirm'}
