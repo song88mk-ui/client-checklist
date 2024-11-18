@@ -1,7 +1,8 @@
+import type StepStatus from "$enums/StepStatus";
+
 type Step = {
-	id: string;
-	title: string;
-	status: 'completed' | 'active' | 'inactive';
+    title: string;
+    status: StepStatus;
 };
 
 export type { Step as default };
