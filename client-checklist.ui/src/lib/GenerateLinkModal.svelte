@@ -10,7 +10,7 @@
 
 	let isCopied = false;
 
-	const linkToShare = `${$page.url.origin}/clients/${$selectedClient?.id}&token=${$selectedClient?.clientToken}`;
+	const linkToShare = `${$page.url.origin}/clients/${$selectedClient?.id}?token=${$selectedClient?.clientToken}`;
 </script>
 
 <div class="flex w-full max-w-[440px] flex-col justify-center gap-3 rounded-[12px] bg-white p-6">
