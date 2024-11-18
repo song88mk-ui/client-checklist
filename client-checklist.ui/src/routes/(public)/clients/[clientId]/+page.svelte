@@ -6,7 +6,7 @@
 	import ClientDetails from './ClientDetails.svelte';
 	import ClientTaskComponent from './ClientTask.svelte';
 	import ClientProgressBar from './ClientProgressBar.svelte';
-	import { type ClientInformation, type ClientTask, type ClientProgressStatus } from './types';
+	import { type ClientInformation, type ClientStep, type ClientProgressStatus } from './types';
 
 	const { clientId } = $page.params;
     const { searchParams } = $page.url;
@@ -35,8 +35,14 @@
 		return percentage;
 	}
 
-	function calculateProgress(clientTask: ClientTask[]) {
-		const clientProgressStatus = clientTask.map((item) => item.sortOrder);
+	function calcClientStepProgress(clientSteps: ClientStep[]) {		
+		const clientProgressStatus = clientSteps.map((item) => {
+			const taskProgress = item.clientSubtasks.map((clientSubtask) => clientSubtask.taskStatusId);
+			const totalPercentage = calculatePercentage(taskProgress,2)
+			if(totalPercentage === 0) return 0
+			if(totalPercentage > 0 && totalPercentage < 100) return 1
+			if(totalPercentage === 100) return 2
+		});
 		const notStarted = calculatePercentage(clientProgressStatus,0)
         const inProgress = calculatePercentage(clientProgressStatus,1)
 		const completed = calculatePercentage(clientProgressStatus,2)
@@ -44,7 +50,7 @@
             notStarted,
             inProgress,
             completed,
-        }   
+        }
 	}
 
 	onMount(async () => {
@@ -58,91 +64,10 @@
 			let res: any = response?.data;
 			client = {
 				...res?.client,
-                // clientTasks: res?.clientTasks
-				clientTasks: [
-					{
-						clientTaskId: 0,
-						clientId: 'string',
-						taskId: 0,
-						taskName: 'string',
-						serviceTypeId: 0,
-						targetDateCompleted: 'string',
-						actualDateCompleted: 'string',
-						assignedTo: 'string',
-						sortOrder: 0,
-						environment: 0,
-						subTasks: [
-							{
-								subtaskId: 0,
-								subtaskName: 'string',
-								comment: 'string',
-								taskStatusId: 1,
-								assignedTo: ""
-							},
-                            {
-								subtaskId: 0,
-								subtaskName: 'string',
-								comment: 'string',
-								taskStatusId: 0,
-								assignedTo: ""
-							},
-                            {
-								subtaskId: 2,
-								subtaskName: 'string',
-								comment: 'string',
-								taskStatusId: 0,
-								assignedTo: ""
-							}
-						]
-					},
-					{
-						clientTaskId: 0,
-						clientId: 'string',
-						taskId: 0,
-						taskName: 'string',
-						serviceTypeId: 0,
-						targetDateCompleted: 'string',
-						actualDateCompleted: 'string',
-						assignedTo: 'string',
-						sortOrder: 1,
-						environment: 0,
-						subTasks: [
-							{
-								subtaskId: 0,
-								subtaskName: 'string',
-								comment: 'string',
-								taskStatusId: 0,
-								clientTaskStatusId: 0,
-								sortOrder: 0
-							}
-						]
-					},
-					{
-						clientTaskId: 0,
-						clientId: 'string',
-						taskId: 0,
-						taskName: 'string',
-						serviceTypeId: 0,
-						targetDateCompleted: 'string',
-						actualDateCompleted: 'string',
-						assignedTo: 'string',
-						sortOrder: 2,
-						environment: 0,
-						subTasks: [
-							{
-								subtaskId: 0,
-								subtaskName: 'string',
-								comment: 'string',
-								taskStatusId: 0,
-								clientTaskStatusId: 0,
-								sortOrder: 0
-							}
-						]
-					}
-				]
+                clientSteps: res?.clientSteps
 			};
-			if (client && client.clientTasks.length > 0) {
-				calculateProgress(client?.clientTasks);
+			if (client && client.clientSteps.length > 0) {
+				calcClientStepProgress(client?.clientSteps);
 			}
 		} catch (err: any) {
 			error = err;
@@ -168,9 +93,6 @@
 						J
 					</div>
 				</div>
-				<button>
-					<!-- <Icon icon="mdi:logout" height={24} /> -->
-				</button>
 			</div>
 	</nav>
 </header>
@@ -196,9 +118,9 @@
 			NotStarted={clientProgress.notStarted}
 			Completed={clientProgress.completed}
 		/>
-		{#if client.clientTasks.length > 0}
-			{#each client.clientTasks as clientTask}
-				<ClientTaskComponent {clientTask} />
+		{#if client.clientSteps.length > 0}
+			{#each client.clientSteps as clientStep}
+				<ClientTaskComponent {clientStep} />
 			{/each}
 		{/if}
 	</div>

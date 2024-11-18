@@ -1,4 +1,4 @@
-export type SubTask = {
+export type ClientSubtask = {
     subtaskId: number;
     subtaskName: string
     comment: string;
@@ -6,7 +6,7 @@ export type SubTask = {
     assignedTo: number;
 };
 
-export type ClientTask = {
+export type ClientStep = {
     clientTaskId: number;
     clientId: string;
     stepId: number;
@@ -17,7 +17,7 @@ export type ClientTask = {
     assignedTo: string;
     sortOrder: number;
     environment: number;
-    subTasks: SubTask[]
+    clientSubtasks: ClientSubtask[]
 }
 
 export type Manager = {
@@ -39,7 +39,7 @@ export type ClientInformation = {
     targetLaunchDate: string;
     taskStatus: number;
     technicalManager: Manager
-    clientTasks: ClientTask[];
+    clientSteps: ClientStep[];
 };
 
 export type ClientProgressStatus = {
