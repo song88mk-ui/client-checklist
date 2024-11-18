@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Diagnostics;
 using System.Text.Json;
+using TaskStatus = Client.Checklist.Shared.Enums.TaskStatus;
+using System.Collections.Generic;
 
 namespace Client.Checklist.API.Repository
 {
@@ -179,6 +181,8 @@ namespace Client.Checklist.API.Repository
 
                 var currencies = string.IsNullOrEmpty(client.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedCurrency);
                 var languages = string.IsNullOrEmpty(client.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedLanguage);
+                var sports = string.IsNullOrEmpty(client.SupportedSports) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedSports) ?? new List<string>();
+                var markets = string.IsNullOrEmpty(client.TargetMarkets) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.TargetMarkets) ?? new List<string>();
 
                 return new BaseResponseDTO<ClientInformationResponseDTO>
                 {
@@ -197,9 +201,12 @@ namespace Client.Checklist.API.Repository
                             ProductManager = new Manager { Name = client.ProductManager, Number = client.ProductManagerContact },
                             TechnicalManager = new Manager { Name = client.TechnicalManager, Number = client.TechnicalManagerContact },
                             ServiceTypeId = client.ServiceTypeId,
+                            TaskStatus = client.TaskStatus,
                             SSLCertificate = client.SSLCertificate,
                             Currencies = currencies,
                             Languages = languages,
+                            Sports = sports,
+                            Markets = markets,
                             TargetLaunchDate = client.TargetLaunchDate
                         },
                         ClientTasks = clientTasks
@@ -216,10 +223,12 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList()
+        public async Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList(string userToken)
         {
             try
             {
+                var clientTokens = (await _authRepository.GetClientToken(userToken)).Result;
+
                 var clients = _clientChecklistContext.ClientInformation.AsNoTracking().Where(c => c.IsDeleted == false).ToList();
 
                 return new BaseResponseDTO<ClientInformationListDTO>
@@ -242,7 +251,11 @@ namespace Client.Checklist.API.Repository
                             TechnicalManager = new Manager { Name = s.TechnicalManager, Number = s.TechnicalManagerContact },
                             Currencies = string.IsNullOrEmpty(s.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedCurrency) ?? new List<string>(),
                             Languages = string.IsNullOrEmpty(s.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedLanguage) ?? new List<string>(),
+                            Sports = string.IsNullOrEmpty(s.SupportedSports) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedSports) ?? new List<string>(),
+                            Markets = string.IsNullOrEmpty(s.TargetMarkets) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.TargetMarkets) ?? new List<string>(),
                             TargetLaunchDate = s.TargetLaunchDate,
+                            TaskStatus = s.TaskStatus,
+                            ClientToken = clientTokens?.FirstOrDefault(f => f.UserId.ToUpper() == s.ClientId.ToString().ToUpper())?.OperatorToken ?? string.Empty
                         }).ToList()
                     }
                 };
@@ -257,120 +270,144 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateOrUpdateClientRequestDTO request)
+        public async Task<BaseResponseDTO<string>> CreateClientInformation(CreateClientRequestDTO request, string userToken)
         {
-            try
+            using (var activity = _activitySource.StartActivity("create.client"))
             {
-                var client = _clientChecklistContext.ClientInformation.Add(new ClientInformation
+                try
                 {
-                    ClientName = request.ClientName,
-                    CustomerServiceManager = request.CustomerServiceManager.Name,
-                    CustomerServiceManagerContact = request.CustomerServiceManager.Number,
-                    FinanceManager = request.FinanceManager.Name,
-                    FinanceManagerContact = request.FinanceManager.Number,
-                    MainDecisionMaker = request.MainDecisionMaker.Name,
-                    MainDecisionMakerContact = request.MainDecisionMaker.Number,
-                    ProductManager = request.ProductManager.Name,
-                    ProductManagerContact = request.ProductManager.Number,
-                    Domain = request.Domain,
-                    SSLCertificate = request.SSLCert,
-                    ServiceTypeId = request.ServiceTypeId,
-                    SupportedCurrency = request.Currencies.Any() ? string.Join(",", request.Currencies) : string.Empty,
-                    SupportedLanguage = request.Languages.Any() ? string.Join(",", request.Languages) : string.Empty,
-                    TechnicalManager = request.TechnicalManager.Name,
-                    TechnicalManagerContact = request.TechnicalManager.Number,
-                    TargetLaunchDate = request.LaunchDate,
-                }).Entity;
+                    activity?.SetTag("request", JsonSerializer.Serialize(request));
 
-                _clientChecklistContext.SaveChanges();
+                    var client = _clientChecklistContext.ClientInformation.Add(new ClientInformation
+                    {
+                        ClientName = request.ClientName,
+                        CustomerServiceManager = request.CustomerServiceManager.Name,
+                        CustomerServiceManagerContact = request.CustomerServiceManager.Number,
+                        FinanceManager = request.FinanceManager.Name,
+                        FinanceManagerContact = request.FinanceManager.Number,
+                        MainDecisionMaker = request.MainDecisionMaker.Name,
+                        MainDecisionMakerContact = request.MainDecisionMaker.Number,
+                        ProductManager = request.ProductManager.Name,
+                        ProductManagerContact = request.ProductManager.Number,
+                        Domain = request.Domain,
+                        SSLCertificate = request.SSLCert,
+                        ServiceTypeId = request.ServiceTypeId,
+                        SupportedCurrency = request.Currencies.Any() ? JsonSerializer.Serialize(request.Currencies) : string.Empty,
+                        SupportedLanguage = request.Languages.Any() ? JsonSerializer.Serialize(request.Languages) : string.Empty,
+                        TechnicalManager = request.TechnicalManager.Name,
+                        TechnicalManagerContact = request.TechnicalManager.Number,
+                        TargetLaunchDate = request.LaunchDate,
+                        SupportedSports = request.Sports.Any() ? JsonSerializer.Serialize(request.Sports) : string.Empty,
+                        TargetMarkets = request.Markets.Any() ? JsonSerializer.Serialize(request.Markets) : string.Empty,
+                        TaskStatus = (int)TaskStatus.NotStarted,
+                    }).Entity;
 
-                var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
-                {
-                    ClientId = client.ClientId.ToString(),
-                    ClientName = request.ClientName
-                });
+                    _clientChecklistContext.SaveChanges();
 
-                return new BaseResponseDTO<string>
+                    var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
+                    {
+                        ClientId = client.ClientId.ToString(),
+                        ClientName = request.ClientName
+                    }, userToken);
+
+                    activity?.SetStatus(ActivityStatusCode.Ok);
+
+                    return new BaseResponseDTO<string>
+                    {
+                        StatusCode = StatusCode.Success,
+                        Message = $"{StatusCode.Success}",
+                        Result = token.Result
+                    };
+                }
+                catch (Exception ex)
                 {
-                    StatusCode = StatusCode.Success,
-                    Message = $"{StatusCode.Success}",
-                    Result = token.Result
-                };
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponseDTO<string>
-                {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
+                    activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+
+                    return new BaseResponseDTO<string>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                    };
+                }
             }
         }
 
-        public async Task<BaseResponseDTO<string>> UpdateClientInformation(CreateOrUpdateClientRequestDTO request)
+        public async Task<BaseResponseDTO<string>> UpdateClientInformation(UpdateClientRequestDTO request, string userToken)
         {
-            try
+            using (var activity = _activitySource.StartActivity("update.client"))
             {
-                if (!Guid.TryParse(request.ClientId, out Guid result))
+                try
+                {
+                    activity?.SetTag("request", JsonSerializer.Serialize(request));
+
+                    if (!Guid.TryParse(request.ClientId, out Guid result))
+                        return new BaseResponseDTO<string>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Invalid Client ID"
+                        };
+
+                    var client = await _clientChecklistContext.ClientInformation.FindAsync(result);
+
+                    if (client == null)
+                    {
+                        return new BaseResponseDTO<string>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Client Not Found"
+                        };
+                    }
+                    else
+                    {
+                        client.ClientName = request.ClientName;
+                        client.CustomerServiceManager = request.CustomerServiceManager.Name;
+                        client.CustomerServiceManagerContact = request.CustomerServiceManager.Number;
+                        client.FinanceManager = request.FinanceManager.Name;
+                        client.FinanceManagerContact = request.FinanceManager.Number;
+                        client.MainDecisionMaker = request.MainDecisionMaker.Name;
+                        client.MainDecisionMakerContact = request.MainDecisionMaker.Number;
+                        client.ProductManager = request.ProductManager.Name;
+                        client.ProductManagerContact = request.ProductManager.Number;
+                        client.Domain = request.Domain;
+                        client.SSLCertificate = request.SSLCert;
+                        client.ServiceTypeId = request.ServiceTypeId;
+                        client.SupportedCurrency = request.Currencies.Any() ? JsonSerializer.Serialize(request.Currencies) : string.Empty;
+                        client.SupportedLanguage = request.Languages.Any() ? JsonSerializer.Serialize(request.Languages) : string.Empty;
+                        client.TechnicalManager = request.TechnicalManager.Name;
+                        client.TechnicalManagerContact = request.TechnicalManager.Number;
+                        client.TargetLaunchDate = request.LaunchDate;
+                        client.SupportedSports = request.Sports.Any() ? JsonSerializer.Serialize(request.Sports) : string.Empty;
+                        client.TargetMarkets = request.Markets.Any() ? JsonSerializer.Serialize(request.Markets) : string.Empty;
+                        client.TaskStatus = request.TaskStatus;
+                    }
+
+                    _clientChecklistContext.SaveChanges();
+
+                    var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
+                    {
+                        ClientId = result.ToString(),
+                        ClientName = request.ClientName
+                    }, userToken);
+
+                    activity?.SetStatus(ActivityStatusCode.Ok);
+
+                    return new BaseResponseDTO<string>
+                    {
+                        StatusCode = StatusCode.Success,
+                        Message = $"{StatusCode.Success}",
+                        Result = token.Result
+                    };
+                }
+                catch (Exception ex)
+                {
+                    activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+
                     return new BaseResponseDTO<string>
                     {
                         StatusCode = StatusCode.Error,
-                        Message = $"Invalid Client ID"
-                    };
-
-                var client = await _clientChecklistContext.ClientInformation.FindAsync(result);
-
-                if (client == null)
-                {
-                    return new BaseResponseDTO<string>
-                    {
-                        StatusCode = StatusCode.Error,
-                        Message = $"Client Not Found"
+                        Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
                     };
                 }
-                else
-                {
-                    client.ClientName = request.ClientName;
-                    client.CustomerServiceManager = request.CustomerServiceManager.Name;
-                    client.CustomerServiceManagerContact = request.CustomerServiceManager.Number;
-                    client.FinanceManager = request.FinanceManager.Name;
-                    client.FinanceManagerContact = request.FinanceManager.Number;
-                    client.MainDecisionMaker = request.MainDecisionMaker.Name;
-                    client.MainDecisionMakerContact = request.MainDecisionMaker.Number;
-                    client.ProductManager = request.ProductManager.Name;
-                    client.ProductManagerContact = request.ProductManager.Number;
-                    client.Domain = request.Domain;
-                    client.SSLCertificate = request.SSLCert;
-                    client.ServiceTypeId = request.ServiceTypeId;
-                    client.SupportedCurrency = request.Currencies.Any() ? string.Join(",", request.Currencies) : string.Empty;
-                    client.SupportedLanguage = request.Languages.Any() ? string.Join(",", request.Languages) : string.Empty;
-                    client.TechnicalManager = request.TechnicalManager.Name;
-                    client.TechnicalManagerContact = request.TechnicalManager.Number;
-                    client.TargetLaunchDate = request.LaunchDate;
-                }
-
-                _clientChecklistContext.SaveChanges();
-
-                var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
-                {
-                    ClientId = result.ToString(),
-                    ClientName = request.ClientName
-                });
-
-                return new BaseResponseDTO<string>
-                {
-                    StatusCode = StatusCode.Success,
-                    Message = $"{StatusCode.Success}",
-                    Result = token.Result
-                };
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponseDTO<string>
-                {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
             }
         }
 
@@ -415,55 +452,64 @@ namespace Client.Checklist.API.Repository
 
         public async Task<BaseResponseDTO<bool>> AddClientTask(AddClientTaskRequestDTO request)
         {
-            try
+            using (var activity = _activitySource.StartActivity("add.client.task"))
             {
-                var clientId = Guid.Parse(request.ClientId);
-
-                var task = _clientChecklistContext.ClientTask.Add(new ClientTask
+                try
                 {
-                    ClientId = clientId,
-                    TaskId = request.TaskId,
-                    TaskName = request.TaskName,
-                    ServiceTypeId = request.ServiceTypeId,
-                    Environment = request.Environment,
-                    TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted),
-                    ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted),
-                    AssignedTo = request.AssignedTo,
-                    SortOrder = request.SortOrder,
-                }).Entity;
+                    activity?.SetTag("request", JsonSerializer.Serialize(request));
 
-                _clientChecklistContext.SaveChanges();
+                    var clientId = Guid.Parse(request.ClientId);
 
-                foreach (var subTask in request.SubTasks)
-                {
-                    _clientChecklistContext.ClientSubtask.Add(new ClientSubtask
+                    var task = _clientChecklistContext.ClientTask.Add(new ClientTask
                     {
-                        ClientTaskId = task.ClientTaskId,
-                        SubtaskId = subTask.SubtaskId,
-                        SubtaskName = subTask.SubtaskName,
-                        Comment = subTask.Comment,
-                        TaskStatusId = subTask.TaskStatusId,
-                        ClientTaskStatusId = subTask.ClientTaskStatusId,
-                        SortOrder = subTask.SortOrder,
-                    });
+                        ClientId = clientId,
+                        TaskId = request.TaskId,
+                        TaskName = request.TaskName,
+                        ServiceTypeId = request.ServiceTypeId,
+                        Environment = request.Environment,
+                        TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted),
+                        ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted),
+                        AssignedTo = request.AssignedTo,
+                        SortOrder = request.SortOrder,
+                    }).Entity;
+
+                    _clientChecklistContext.SaveChanges();
+
+                    foreach (var subTask in request.SubTasks)
+                    {
+                        _clientChecklistContext.ClientSubtask.Add(new ClientSubtask
+                        {
+                            ClientTaskId = task.ClientTaskId,
+                            SubtaskId = subTask.SubtaskId,
+                            SubtaskName = subTask.SubtaskName,
+                            Comment = subTask.Comment,
+                            TaskStatusId = subTask.TaskStatusId,
+                            ClientTaskStatusId = subTask.ClientTaskStatusId,
+                            SortOrder = subTask.SortOrder,
+                        });
+                    }
+
+                    _clientChecklistContext.SaveChanges();
+
+                    activity?.SetStatus(ActivityStatusCode.Ok);
+
+                    return new BaseResponseDTO<bool>
+                    {
+                        StatusCode = StatusCode.Success,
+                        Message = $"{StatusCode.Success}",
+                        Result = true
+                    };
                 }
-
-                _clientChecklistContext.SaveChanges();
-
-                return new BaseResponseDTO<bool>
+                catch (Exception ex)
                 {
-                    StatusCode = StatusCode.Success,
-                    Message = $"{StatusCode.Success}",
-                    Result = true
-                };
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponseDTO<bool>
-                {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
+                    activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+
+                    return new BaseResponseDTO<bool>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                    };
+                }
             }
         }
 

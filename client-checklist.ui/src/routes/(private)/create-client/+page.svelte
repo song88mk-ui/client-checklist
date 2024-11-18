@@ -3,6 +3,8 @@
 	import GenerateLinkButton from '$lib/GenerateLinkButton.svelte';
 	import ProgressStepper from '$lib/ProgressStepper.svelte';
 	import type Step from '$types/step';
+    import selectedIntegration from '$stores/integration'
+	import Product from '../../../utils/client';
 
 	const handleStepClick = (step: Step) => {
 		// Todo
@@ -11,23 +13,11 @@
 </script>
 
 <div class="mb-10 flex items-center justify-between">
-	<h1 class="text-3xl font-bold">Odds Feed and Live Data Integration</h1>
+	<h1 class="text-3xl font-bold">{Product[$selectedIntegration]}</h1>
 	<GenerateLinkButton />
 </div>
 <div class="mx-auto mb-10 max-w-screen-lg">
-	<ProgressStepper
-		steps={[
-			{ id: '1', title: 'Contact Information', status: 'completed' },
-			{ id: '2', title: 'Back Office', status: 'active' },
-			{ id: '3', title: 'Wallet Integration', status: 'inactive' },
-			{ id: '4', title: 'Sportsbook Player Site UI/UX', status: 'inactive' },
-			{ id: '5', title: 'Manage Trading Services', status: 'inactive' },
-			{ id: '6', title: 'Operations', status: 'inactive' },
-			{ id: '7', title: 'Business Acceptance Test', status: 'inactive' },
-			{ id: '8', title: 'Client Launch', status: 'inactive' }
-		]}
-		onClick={handleStepClick}
-	/>
+	<ProgressStepper onClick={handleStepClick} />
 </div>
 <div class="mb-10">
 	<ClientInformationForm />

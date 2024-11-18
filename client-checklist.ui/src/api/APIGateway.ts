@@ -14,6 +14,18 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const fetchClients = async (headers?: Record<string, string>): Promise<APIResponse> => {
+		const res = await fetchPrivate('GET', '/v1/clients', undefined, headers);
+		return res;
+	};
+
+	const deleteClient = async (
+		formData: Record<string, string>,
+		headers?: Record<string, string>
+	): Promise<APIResponse> => {
+		const res = await fetchPrivate('DELETE', '/v1/clients', formData, headers);
+		return res;
+	};
 	const getClientTaskStatus = async (data: Record<string, string>): Promise<APIResponse> => {
 		const {clientId,token} =  data
 		const res = await fetchPrivate("GET", `/v1/clients/${clientId}`,undefined,{"x-user-token":token})
@@ -23,6 +35,8 @@ const APIGateway = (): APIGatewayType => {
 	return {
 		login,
 		logout,
+		fetchClients,
+		deleteClient,
 		getClientTaskStatus
 	};
 };

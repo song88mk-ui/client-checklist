@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
+    import selectedIntegration from '$stores/integration';
 	import IntegrationType from '$enums/integrationType';
+	import Product from '../utils/client';
 
 	const integrationTypes = Object.values(IntegrationType);
 
@@ -10,10 +12,11 @@
 		isShow = !isShow;
 	};
 
-	const linkLabel = {
-		[IntegrationType.WALLET_INTEGRATION]: 'Wallet Integration',
-		[IntegrationType.FEED_INTEGRATION]: 'Feed Integration'
-	};
+    const selectedIntegrationType = (integration: IntegrationType) => {
+        $selectedIntegration = integration
+        isShow = false
+    }
+
 </script>
 
 <div class="relative inline-block">
@@ -38,8 +41,8 @@
 						href={`/create-client`}
 						class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 						role="menuitem"
-						on:click={toggle}
-						id="menu-item-0">{linkLabel[type]}</a
+						on:click={() => selectedIntegrationType(type)}
+						id="menu-item-0">{Product[type]}</a
 					>
 				{/each}
 			</div>

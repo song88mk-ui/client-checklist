@@ -22,5 +22,5 @@
 {#if $auth}
 	<slot />
 {:else}
-	<div>Authenticating...</div>
+	<div class="h-full flex items-center justify-center">Authenticating...</div>
 {/if}

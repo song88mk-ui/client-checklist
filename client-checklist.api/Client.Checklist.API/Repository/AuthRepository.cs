@@ -163,13 +163,17 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<string>> CreateClientToken(CreateClientTokenRequestDTO request)
+        public async Task<BaseResponseDTO<string>> CreateClientToken(CreateClientTokenRequestDTO request, string userToken)
         {
             try
             {
                 if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
                     _httpClient.DefaultRequestHeaders.Remove("x-app-id");
                 _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
+
+                if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
+                _httpClient.DefaultRequestHeaders.Add("x-operator-token", userToken);
 
                 var response = await _httpClient.PostAsync($"v1/api/user/client/token", new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json"));
 
@@ -194,6 +198,48 @@ namespace Client.Checklist.API.Repository
             catch (Exception ex)
             {
                 return new BaseResponseDTO<string>
+                {
+                    StatusCode = StatusCode.Error,
+                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                };
+            }
+        }
+
+        public async Task<BaseResponseDTO<List<ClientTokenModel>>> GetClientToken(string userToken)
+        {
+            try
+            {
+                if (_httpClient.DefaultRequestHeaders.Contains("x-app-id"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-app-id");
+                _httpClient.DefaultRequestHeaders.Add("x-app-id", $"{(int)Application.ClientChecklist}");
+
+                if (_httpClient.DefaultRequestHeaders.Contains("x-operator-token"))
+                    _httpClient.DefaultRequestHeaders.Remove("x-operator-token");
+                _httpClient.DefaultRequestHeaders.Add("x-operator-token", userToken);
+
+                var response = await _httpClient.GetAsync($"v1/api/user/client/token/list");
+
+                if (response.IsSuccessStatusCode)
+                    return JsonSerializer.Deserialize<BaseResponseDTO<List<ClientTokenModel>>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                        ?? new BaseResponseDTO<List<ClientTokenModel>>();
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
+                        return JsonSerializer.Deserialize<BaseResponseDTO<List<ClientTokenModel>>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                            ?? new BaseResponseDTO<List<ClientTokenModel>>();
+                    else
+                    {
+                        return new BaseResponseDTO<List<ClientTokenModel>>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({response.ReasonPhrase})"
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponseDTO<List<ClientTokenModel>>
                 {
                     StatusCode = StatusCode.Error,
                     Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"

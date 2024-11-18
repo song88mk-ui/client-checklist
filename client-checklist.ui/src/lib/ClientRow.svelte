@@ -1,37 +1,53 @@
 <script lang="ts">
-	import { openModal } from "../stores/modal";
+	import { openModal } from '$stores/modal';
 	import auth from '$stores/auth';
-    import ClientRowStatus from "./ClientRowStatus.svelte";
-	import DeleteClientModal from "./DeleteClientModal.svelte";
-	import { AccessType } from "$enums/role";
+	import ClientRowStatus from './ClientRowStatus.svelte';
+	import DeleteClientModal from './DeleteClientModal.svelte';
+	import GenerateLinkModal from './GenerateLinkModal.svelte';
+	import { AccessType } from '$enums/role';
+	import { format } from 'date-fns';
+	import { selectedClient } from '$stores/client';
 
-    export let client: any = {};
+	export let client: any = {};
 
-    let textCss = "pl-3 py-5 font-[400] text-[13px] text-[#202020] leading-[16.34px]"
+	let textCss = 'pl-3 py-5 font-[400] text-[13px] text-[#202020] leading-[16.34px]';
 
-    const handleShowDeleteModal = () => {
-        openModal(DeleteClientModal);
-    }
+	const handleShowDeleteModal = () => {
+		$selectedClient = client;
+		openModal(DeleteClientModal);
+	};
+
+	const handleShowGenerateLinkModal = () => {
+		$selectedClient = client;
+		openModal(GenerateLinkModal);
+	};
 </script>
 
-<div class="w-full mb-[12px] rounded-[5px] bg-[#FFF] flex flex-row items-center border-[1px] border-solid border-[#D6D6D6]">
-    <span class={`${textCss} w-[15%]`}>{client.companyName}</span> 
-    <span class={`${textCss} w-[15%]`}>{client.domain}</span> 
-    <span class={`${textCss} w-[10%]`}>{client.targetLaunchDate}</span> 
-    {#if $auth?.accessType == AccessType.READWRITE}
-        <span class={`${textCss} w-[30%]`}>{client.services}</span> 
-    {:else}
-        <span class={`${textCss} w-[40%]`}>{client.services}</span> 
-    {/if}
-    <span class={`${textCss} w-[10%]`}>{client.mainDecisionMaker}</span> 
+<div
+	class="mb-[12px] flex w-full flex-row items-center rounded-[5px] border-[1px] border-solid border-[#D6D6D6] bg-[#FFF]"
+>
+	<span class={`${textCss} w-[15%] capitalize`}>{client.companyName}</span>
+	<span class={`${textCss} w-[15%] capitalize`}>{client.domain}</span>
+	<span class={`${textCss} w-[10%]`}
+		>{format(new Date(client.targetLaunchDate), 'MMMM dd, yyyy')}</span
+	>
+	<span class={`${textCss} w-[30%]`}>{client.services}</span>
+	<span class={`${textCss} w-[10%] capitalize`}>{client.mainDecisionMaker}</span>
 
-    <span class={`${textCss} w-[10%]`}>
-        <ClientRowStatus status={client.status} />
-    </span> 
-    {#if $auth?.accessType == AccessType.READWRITE}
-        <div class="flex flex-row items-center justify-center gap-[5px] w-[10%] pl-3 py-5 cursor-pointer">
-            <img alt="" src="/icon-edit.svg" />
-            <img alt="" src="/icon-delete.svg" on:click={handleShowDeleteModal}/>
-        </div> 
-    {/if}
+	<span class={`${textCss} w-[10%]`}>
+		<ClientRowStatus status={client.status} />
+	</span>
+	<div class="flex w-[10%] cursor-pointer flex-row items-center justify-center py-5 pl-3">
+		{#if $auth?.accessType == AccessType.READWRITE}
+			<button class="cursor-pointer p-2">
+				<img alt="icon-edit" src="/icon-edit.svg" />
+			</button>
+			<button on:click={handleShowDeleteModal} class="cursor-pointer p-2">
+				<img alt="icon-delete" src="/icon-delete.svg" />
+			</button>
+		{/if}
+		<button on:click={handleShowGenerateLinkModal} class="cursor-pointer p-2">
+			<img alt="icon-link" src="/icon-link.svg" />
+		</button>
+	</div>
 </div>

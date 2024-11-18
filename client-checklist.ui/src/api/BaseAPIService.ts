@@ -43,6 +43,14 @@ const BaseAPIService = (): APIService => {
             )
 
             if (!response.ok) {
+                if (response?.status === 401) {
+                    apiError = {
+                        status: FetchStatus.UnAuthorized,
+                        statusCode: 401
+                    }
+                    throw new Error()
+                }
+                
                 if (response?.status === 400) {
                     apiError = {
                         status: FetchStatus.BadRequest,
@@ -68,9 +76,9 @@ const BaseAPIService = (): APIService => {
             }
 
             return returnValue;
-        } catch {
+        } catch (error) {
             const errorReturnValue: APIResponse = {
-                error: apiError
+                error: apiError || error
             }
 
             return errorReturnValue
