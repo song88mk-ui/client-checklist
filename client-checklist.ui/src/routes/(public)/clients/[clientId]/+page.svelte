@@ -20,7 +20,7 @@
 		inProgress: 0,
 		completed: 0
 	});
-	let error: any = $state({});
+	let error: any = $state(null);
 	let loading = true;
 
 	function calculatePercentage(items: any, itemToCheck: any):number {
