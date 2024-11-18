@@ -1,3 +1,14 @@
+<script lang="ts">
+    /* let { type, classNames, ariaLabel, disabled, click, children } = $props<{
+        type: 'button' | 'submit',
+        classNames?: string,
+        ariaLabel?: string,
+        disabled?: boolean,
+        click?: () => void
+        children: any
+    }>();*/
+</script>
+
 <div class="flex flex flex-col flex-col gap-5 divide-y rounded-md border bg-white px-6 py-[30px]">
 	<div class="flex flex-col gap-5">
 		<h2 class="text-lg font-bold italic">Client information</h2>

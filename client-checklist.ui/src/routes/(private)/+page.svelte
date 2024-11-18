@@ -2,7 +2,6 @@
 	import ClientRow from '$lib/ClientRow.svelte';
 	import auth from '$stores/auth';
 	import { clients } from '$stores/client';
-	import { AccessType } from '$enums/role';
 	import { onMount } from 'svelte';
 	import APIGateway from '$api/APIGateway';
 	import { ErrorMessages } from '$enums/ErrorMessages';
