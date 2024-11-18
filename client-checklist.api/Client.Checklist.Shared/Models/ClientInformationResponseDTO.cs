@@ -4,24 +4,24 @@
     {
         public ClientInformationResponseDTO()
         {
-            ClientTasks = new List<ClientTaskModel>();
+            ClientSteps = new List<ClientStepModel>();
         }
 
         public ClientInformationModel Client { get; set; }
-        public List<ClientTaskModel> ClientTasks { get; set; }
+        public List<ClientStepModel> ClientSteps { get; set; }
     }
 
-    public class ClientTaskModel
+    public class ClientStepModel
     {
-        public ClientTaskModel()
+        public ClientStepModel()
         {
             ClientSubtasks = new List<ClientSubtaskModel>();
         }
 
-        public long ClientTaskId { get; set; }
+        public long ClientStepId { get; set; }
         public Guid ClientId { get; set; }
-        public int TaskId { get; set; }
-        public string TaskName { get; set; }
+        public int StepId { get; set; }
+        public string StepName { get; set; }
         public int ServiceTypeId { get; set; }
         public int Environment { get; set; }
         public DateTime? TargetDateCompleted { get; set; }
@@ -37,7 +37,6 @@
         public string SubtaskName { get; set; }
         public string Comment { get; set; }
         public int TaskStatusId { get; set; }
-        public int ClientTaskStatusId { get; set; }
-        public int SortOrder { get; set; }
+        public string AssignedTo { get; set; }
     }
 }

@@ -39,7 +39,7 @@ namespace Client.Checklist.API.Repository
 
         public async Task<BaseResponseDTO<LoginResponseDTO>> Login(LogInRequestDTO request)
         {
-            using(var activity = _activitySource.StartActivity("client.login"))
+            using (var activity = _activitySource.StartActivity("client.login"))
             {
                 try
                 {
@@ -149,14 +149,14 @@ namespace Client.Checklist.API.Repository
                     };
                 }
 
-                var clientTasks = _clientChecklistContext.ClientTask.AsNoTracking().Where(c => c.ClientId == client.ClientId)
-                    .Select(s => new ClientTaskModel
+                var clientSteps = _clientChecklistContext.ClientSteps.AsNoTracking().Where(c => c.ClientId == client.ClientId)
+                    .Select(s => new ClientStepModel
                     {
-
+                        ClientStepId = s.ClientStepId,
                         AssignedTo = s.AssignedTo,
                         ClientId = s.ClientId,
-                        TaskId = s.TaskId,
-                        TaskName = s.TaskName,
+                        StepId = s.StepId,
+                        StepName = s.StepName,
                         ServiceTypeId = s.ServiceTypeId,
                         ActualDateCompleted = s.TargetDateCompleted,
                         TargetDateCompleted = s.ActualDateCompleted,
@@ -164,17 +164,17 @@ namespace Client.Checklist.API.Repository
                         SortOrder = s.SortOrder
                     }).ToList();
 
-                foreach (var task in clientTasks)
+                foreach (var task in clientSteps)
                 {
-                    var clientSubtasks = _clientChecklistContext.ClientSubtask.AsNoTracking().Where(c => c.ClientTaskId == task.ClientTaskId).Select(cs => new ClientSubtaskModel
-                    {
-                        SubtaskId = cs.SubtaskId,
-                        SubtaskName = cs.SubtaskName,
-                        TaskStatusId = cs.TaskStatusId,
-                        ClientTaskStatusId = cs.ClientTaskStatusId,
-                        Comment = cs.Comment,
-                        SortOrder = cs.SortOrder
-                    }).ToList();
+                    var clientSubtasks = _clientChecklistContext.ClientSubtask.AsNoTracking().Where(c => c.ClientStepId == task.ClientStepId)
+                        .OrderBy(o => o.SortOrder).Select(cs => new ClientSubtaskModel
+                        {
+                            SubtaskId = cs.SubtaskId,
+                            SubtaskName = cs.SubtaskName,
+                            TaskStatusId = cs.TaskStatusId,
+                            Comment = cs.Comment,
+                            AssignedTo = cs.AssignedTo
+                        }).ToList();
 
                     task.ClientSubtasks.AddRange(clientSubtasks);
                 }
@@ -209,7 +209,7 @@ namespace Client.Checklist.API.Repository
                             Markets = markets,
                             TargetLaunchDate = client.TargetLaunchDate
                         },
-                        ClientTasks = clientTasks
+                        ClientSteps = clientSteps
                     }
                 };
             }
@@ -450,7 +450,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<bool>> AddClientTask(AddClientTaskRequestDTO request)
+        public async Task<BaseResponseDTO<AddClientStepsResponseDTO>> AddClientSteps(AddClientStepsRequestDTO request)
         {
             using (var activity = _activitySource.StartActivity("add.client.task"))
             {
@@ -458,13 +458,24 @@ namespace Client.Checklist.API.Repository
                 {
                     activity?.SetTag("request", JsonSerializer.Serialize(request));
 
+                    if (!IsValidStep(request.StepId))
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Error, "Invalid Steps");
+
+                        return new BaseResponseDTO<AddClientStepsResponseDTO>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Error (Invalid Steps)"
+                        };
+                    }
+
                     var clientId = Guid.Parse(request.ClientId);
 
-                    var task = _clientChecklistContext.ClientTask.Add(new ClientTask
+                    var step = _clientChecklistContext.ClientSteps.Add(new ClientSteps
                     {
                         ClientId = clientId,
-                        TaskId = request.TaskId,
-                        TaskName = request.TaskName,
+                        StepId = request.StepId,
+                        StepName = request.StepName,
                         ServiceTypeId = request.ServiceTypeId,
                         Environment = request.Environment,
                         TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted),
@@ -475,17 +486,19 @@ namespace Client.Checklist.API.Repository
 
                     _clientChecklistContext.SaveChanges();
 
-                    foreach (var subTask in request.SubTasks)
+                    var ctr = 0;
+                    foreach (var subTask in request.ClientSubTasks)
                     {
+                        ctr++;
                         _clientChecklistContext.ClientSubtask.Add(new ClientSubtask
                         {
-                            ClientTaskId = task.ClientTaskId,
+                            ClientStepId = step.ClientStepId,
                             SubtaskId = subTask.SubtaskId,
                             SubtaskName = subTask.SubtaskName,
                             Comment = subTask.Comment,
                             TaskStatusId = subTask.TaskStatusId,
-                            ClientTaskStatusId = subTask.ClientTaskStatusId,
-                            SortOrder = subTask.SortOrder,
+                            AssignedTo = subTask.AssignedTo,
+                            SortOrder = ctr,
                         });
                     }
 
@@ -493,12 +506,102 @@ namespace Client.Checklist.API.Repository
 
                     activity?.SetStatus(ActivityStatusCode.Ok);
 
-                    return new BaseResponseDTO<bool>
+                    return new BaseResponseDTO<AddClientStepsResponseDTO>
                     {
                         StatusCode = StatusCode.Success,
                         Message = $"{StatusCode.Success}",
-                        Result = true
+                        Result = new AddClientStepsResponseDTO
+                        {
+                            Id = step.ClientStepId
+                        }
                     };
+                }
+                catch (Exception ex)
+                {
+                    activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+
+                    return new BaseResponseDTO<AddClientStepsResponseDTO>
+                    {
+                        StatusCode = StatusCode.Error,
+                        Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
+                    };
+                }
+            }
+        }
+
+        public async Task<BaseResponseDTO<bool>> UpdateClientSteps(UpdateClientStepsRequestDTO request)
+        {
+            using (var activity = _activitySource.StartActivity("add.client.task"))
+            {
+                try
+                {
+                    activity?.SetTag("request", JsonSerializer.Serialize(request));
+
+                    if (!IsValidStep(request.StepId))
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Error, "Invalid Steps");
+
+                        return new BaseResponseDTO<bool>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Error (Invalid Steps)"
+                        };
+                    }
+
+                    var clientTask = await _clientChecklistContext.ClientSteps.FindAsync(request.Id);
+
+                    if (clientTask == null)
+                        return new BaseResponseDTO<bool>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Client Task Not Found",
+                            Result = false
+                        };
+                    else
+                    {
+                        var clientId = Guid.Parse(request.ClientId);
+
+                        clientTask.ServiceTypeId = request.ServiceTypeId;
+                        clientTask.Environment = request.Environment;
+                        clientTask.TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted);
+                        clientTask.ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted);
+                        clientTask.AssignedTo = request.AssignedTo;
+                        clientTask.SortOrder = request.SortOrder;
+
+                        _clientChecklistContext.SaveChanges();
+
+                        var clientSubtasks = _clientChecklistContext.ClientSubtask.Where(c => c.ClientStepId == clientTask.ClientStepId);
+                        if (clientSubtasks.Any())
+                            _clientChecklistContext.ClientSubtask.RemoveRange(clientSubtasks);
+
+                        var ctr = 0;
+                        foreach (var subTask in request.ClientSubTasks)
+                        {
+                            ctr++;
+
+                            _clientChecklistContext.ClientSubtask.Add(new ClientSubtask
+                            {
+                                ClientStepId = clientTask.ClientStepId,
+                                SubtaskId = subTask.SubtaskId,
+                                SubtaskName = subTask.SubtaskName,
+                                Comment = subTask.Comment,
+                                TaskStatusId = subTask.TaskStatusId,
+                                AssignedTo = subTask.AssignedTo,
+                                SortOrder = ctr,
+                            });
+                        }
+
+                        _clientChecklistContext.SaveChanges();
+
+                        activity?.SetStatus(ActivityStatusCode.Ok);
+
+                        return new BaseResponseDTO<bool>
+                        {
+                            StatusCode = StatusCode.Success,
+                            Message = $"{StatusCode.Success}",
+                            Result = true
+                        };
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -513,73 +616,14 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<bool>> UpdateClientTask(UpdateClientTaskRequestDTO request)
-        {
-            try
-            {
-                var clientTask = await _clientChecklistContext.ClientTask.FindAsync(request.ClientTaskId);
-
-                if (clientTask == null)
-                    return new BaseResponseDTO<bool>
-                    {
-                        StatusCode = StatusCode.Error,
-                        Message = $"Client Task Not Found",
-                        Result = false
-                    };
-                else
-                {
-                    var clientId = Guid.Parse(request.ClientId);
-
-                    clientTask.ServiceTypeId = request.ServiceTypeId;
-                    clientTask.Environment = request.Environment;
-                    clientTask.TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted);
-                    clientTask.ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted);
-                    clientTask.AssignedTo = request.AssignedTo;
-                    clientTask.SortOrder = request.SortOrder;
-
-                    _clientChecklistContext.SaveChanges();
-
-                    var clientSubtasks = _clientChecklistContext.ClientSubtask.Where(c => c.ClientTaskId == clientTask.ClientTaskId);
-                    if (clientSubtasks.Any())
-                        _clientChecklistContext.ClientSubtask.RemoveRange(clientSubtasks);
-
-                    foreach (var subTask in request.SubTasks)
-                    {
-                        _clientChecklistContext.ClientSubtask.Add(new ClientSubtask
-                        {
-                            ClientTaskId = clientTask.ClientTaskId,
-                            SubtaskId = subTask.SubtaskId,
-                            SubtaskName = subTask.SubtaskName,
-                            Comment = subTask.Comment,
-                            TaskStatusId = subTask.TaskStatusId,
-                            ClientTaskStatusId = subTask.ClientTaskStatusId,
-                            SortOrder = subTask.SortOrder,
-                        });
-                    }
-
-                    _clientChecklistContext.SaveChanges();
-
-                    return new BaseResponseDTO<bool>
-                    {
-                        StatusCode = StatusCode.Success,
-                        Message = $"{StatusCode.Success}",
-                        Result = true
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponseDTO<bool>
-                {
-                    StatusCode = StatusCode.Error,
-                    Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} ({ex.Message})"
-                };
-            }
-        }
-
         #endregion
 
         #region Utilities
+
+        private bool IsValidStep(int stepId)
+        {
+            return Enum.IsDefined(typeof(Steps), stepId) ? true : false;
+        }
 
         #endregion
     }

@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Client.Checklist.Shared.Data.ClientChecklist.Entities
 {
-    public class ClientTask
+    public class ClientSteps
     {
         [Key]
-        public long ClientTaskId { get; set; }
+        public long ClientStepId { get; set; }
         public Guid ClientId { get; set; }
-        public int TaskId { get; set; }
-        public string TaskName { get; set; }
+        public int StepId { get; set; }
+        public string StepName { get; set; }
         public int ServiceTypeId { get; set; }
         public int Environment { get; set; }
         public DateTime? TargetDateCompleted { get; set; }

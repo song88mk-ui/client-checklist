@@ -107,19 +107,19 @@ namespace Client.Checklist.API.Controllers
         }
 
         [Authorize("Admin")]
-        [HttpPost("clients/tasks")]
-        public async Task<IActionResult> AddClientTask([FromBody] AddClientTaskRequestDTO request)
+        [HttpPost("clients/steps")]
+        public async Task<IActionResult> AddClientSteps([FromBody] AddClientStepsRequestDTO request)
         {
-            var result = await _clientRepository.AddClientTask(request);
+            var result = await _clientRepository.AddClientSteps(request);
 
             return ReturnResult(result);
         }
 
         [Authorize("Admin")]
-        [HttpPut("clients/tasks")]
-        public async Task<IActionResult> UpdateClientTask([FromBody] UpdateClientTaskRequestDTO request)
+        [HttpPut("clients/steps")]
+        public async Task<IActionResult> UpdateClientTask([FromBody] UpdateClientStepsRequestDTO request)
         {
-            var result = await _clientRepository.UpdateClientTask(request);
+            var result = await _clientRepository.UpdateClientSteps(request);
 
             return ReturnResult(result);
         }

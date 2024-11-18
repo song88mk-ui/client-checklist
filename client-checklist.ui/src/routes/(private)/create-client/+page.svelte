@@ -1,15 +1,12 @@
 <script lang="ts">
 	import ClientInformationForm from '$lib/ClientInformationForm.svelte';
 	import GenerateLinkButton from '$lib/GenerateLinkButton.svelte';
-	import ProgressStepper from '$lib/ProgressStepper.svelte';
-	import type Step from '$types/step';
+	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
     import selectedIntegration from '$stores/integration'
 	import Product from '../../../utils/client';
 
-	const handleStepClick = (step: Step) => {
-		// Todo
-		console.log(step);
-	};
+    let step = 1;
+
 </script>
 
 <div class="mb-10 flex items-center justify-between">
@@ -17,7 +14,7 @@
 	<GenerateLinkButton />
 </div>
 <div class="mx-auto mb-10 max-w-screen-lg">
-	<ProgressStepper onClick={handleStepClick} />
+	<ProgressStep bind:step={step} />
 </div>
 <div class="mb-10">
 	<ClientInformationForm />
