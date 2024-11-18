@@ -6,13 +6,13 @@ namespace Client.Checklist.Shared.Data.ClientChecklist.Entities
     public class ClientSubtask
     {
         [Key]
-        public long ClientTaskId { get; set; }
+        public long ClientStepId { get; set; }
         [Key]
         public int SubtaskId { get; set; }
         public string SubtaskName { get; set; }
         public string Comment { get; set; }
         public int TaskStatusId { get; set; }
-        public int ClientTaskStatusId { get; set; }
+        public string AssignedTo { get; set; }
         public int SortOrder { get; set; }
     }
 }

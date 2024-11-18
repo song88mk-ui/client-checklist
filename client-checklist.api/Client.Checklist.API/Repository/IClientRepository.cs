@@ -11,7 +11,7 @@ namespace Client.Checklist.API.Repository
         Task<BaseResponseDTO<string>> CreateClientInformation(CreateClientRequestDTO request, string userToken);
         Task<BaseResponseDTO<string>> UpdateClientInformation(UpdateClientRequestDTO request, string userToken);
         Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request);
-        Task<BaseResponseDTO<bool>> AddClientTask(AddClientTaskRequestDTO request);
-        Task<BaseResponseDTO<bool>> UpdateClientTask(UpdateClientTaskRequestDTO request);
+        Task<BaseResponseDTO<AddClientStepsResponseDTO>> AddClientSteps(AddClientStepsRequestDTO request);
+        Task<BaseResponseDTO<bool>> UpdateClientSteps(UpdateClientStepsRequestDTO request);
     }
 }
