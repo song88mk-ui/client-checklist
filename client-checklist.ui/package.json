@@ -42,6 +42,7 @@
     "dependencies": {
         "@iconify/svelte": "^4.0.2",
         "date-fns": "^4.1.0",
+        "date-picker-svelte": "^2.14.1",
         "svelte-forms-lib": "^2.0.1",
         "yup": "^1.4.0"
     }
