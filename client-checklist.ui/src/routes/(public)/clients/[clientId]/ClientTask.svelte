@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
+	import STEP from '$constants/step';
 	import { type ClientStep,type ClientSubtask } from './types';
 
 	const STATUS_BG: any = {
@@ -62,7 +63,7 @@
 		<div class="flex">
 			<span
 				class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
-				>{clientStep.stepName}</span
+				>{STEP[clientStep.stepId]}</span
 			>
 			<div
 				class="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#0071BC] text-[12px] font-bold font-normal leading-none text-white"

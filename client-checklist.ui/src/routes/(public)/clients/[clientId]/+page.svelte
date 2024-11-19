@@ -82,7 +82,7 @@
 			<CompanyLogo size={136} />
 		</a>
 	</h1>
-	<nav class="flex flex-1 items-center justify-between">
+	<!-- <nav class="flex flex-1 items-center justify-between">
 		<div></div>
 			<div class="flex items-center gap-3">
 				<div class="flex items-center gap-3">
@@ -95,7 +95,7 @@
 					</div>
 				</div>
 			</div>
-	</nav>
+	</nav> -->
 </header>
 
 {#if error}
