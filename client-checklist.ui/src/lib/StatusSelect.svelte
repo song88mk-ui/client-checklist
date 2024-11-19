@@ -46,7 +46,11 @@
 		</div>
 		<div class="flex items-center">
 			<button type="button" class="p-2" on:click={toggle}>
-				<img src="/icon-arrow-down.svg" alt="icon-arrow-down" class="h-[12px] w-[12px]" />
+				<img
+					src="/icon-arrow-down.svg"
+					alt="icon-arrow-down"
+					class={`h-[12px] w-[12px] ${isShow ? 'rotate-180' : ''}`}
+				/>
 			</button>
 		</div>
 	</div>
