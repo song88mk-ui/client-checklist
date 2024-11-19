@@ -1,4 +1,7 @@
-<div class="w-[811px] h-[635px] flex-shrink-0 self-start mt-[100px] bg-white">
+<script>
+  	import { closeModal } from '$stores/modal';
+</script>
+<div class="w-[811px] h-[635px] flex-shrink-0 self-start mt-[50px] bg-white">
     <div class="h-[500px] m-[24px] overflow-y-scroll">
       <div class="mt-[10px]">
         <span
@@ -71,6 +74,7 @@
     </div>
     <div class="mx-[24px] my-0">
       <button
+        onclick={closeModal}
         class="flex w-[104px] p-[10px] justify-center items-center gap-[10px] rounded-[5px] bg-[#272727] text-white text-[14px] font-normal font-bold leading-none justify-self-end"
       >
         Close

@@ -7,6 +7,8 @@
 	import ClientDetails from './ClientDetails.svelte';
 	import ClientTaskComponent from './ClientTask.svelte';
 	import ClientProgressBar from './ClientProgressBar.svelte';
+	import ClientOnBoarding from './ClientOnBoarding.svelte';
+	import { openModal } from '$stores/modal';
 	import { type ClientInformation, type ClientStep, type ClientProgressStatus } from './types';
 
 	const { clientId } = $page.params;
@@ -56,6 +58,7 @@
 
 	onMount(async () => {
 		try {
+			openModal(ClientOnBoarding);
 			const response = await getClientTaskStatus({ clientId,token: queryToken ? queryToken : '' });
 			if(response?.error){
 				error = response.error
