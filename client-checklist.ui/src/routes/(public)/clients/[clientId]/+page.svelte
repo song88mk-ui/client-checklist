@@ -3,6 +3,7 @@
 	import APIGateway from '$api/APIGateway';
 	import { page } from '$app/stores';
     import CompanyLogo from '$lib/CompanyLogo.svelte';
+	import services from '$constants/services';
 	import ClientDetails from './ClientDetails.svelte';
 	import ClientTaskComponent from './ClientTask.svelte';
 	import ClientProgressBar from './ClientProgressBar.svelte';
@@ -112,6 +113,7 @@
 				month: 'long',
 				day: 'numeric'
 			})}
+			ServiceToProvide={services[client.serviceTypeId]}
 		/>
 		<ClientProgressBar
 			InProgress={clientProgress.inProgress}
