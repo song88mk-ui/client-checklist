@@ -4,26 +4,26 @@ import type Step from "$types/step";
 
 export const STATUS_COLORS = {
     [StepStatus.Active]: {
-		bg: 'bg-white',
-		icon: 'text-blue-600',
-		border: 'border-blue-600',
-		line: 'bg-gray-300',
-		text: 'text-blue-600'
-	},
-	[StepStatus.Completed]: {
-		bg: 'bg-blue-600',
-		icon: 'text-white',
-		border: 'border-blue-600',
-		line: 'bg-blue-600',
-		text: 'text-blue-600'
-	},
-	[StepStatus.Inactive]: {
-		bg: 'bg-white',
-		icon: 'text-gray-300',
-		border: 'border-gray-300',
-		line: 'bg-gray-300',
-		text: 'text-gray-300'
-	}
+        bg: 'bg-blue-600',
+        icon: 'text-white',
+        border: 'border-blue-600',
+        line: 'bg-blue-600',
+        text: 'text-blue-600'
+    },
+    [StepStatus.Completed]: {
+        bg: 'bg-white',
+        icon: 'text-blue-600',
+        border: 'border-blue-500',
+        line: 'bg-blue-600',
+        text: 'text-blue-600'
+    },
+    [StepStatus.Inactive]: {
+        bg: 'bg-white',
+        icon: 'text-gray-300',
+        border: 'border-gray-300',
+        line: 'bg-gray-300',
+        text: 'text-gray-300'
+    }
 }
 
 const WALLET_INTEGRATION_STEPS: Step[] = [
