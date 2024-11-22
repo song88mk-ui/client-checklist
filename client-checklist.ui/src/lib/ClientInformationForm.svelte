@@ -1,14 +1,51 @@
 <script lang="ts">
-    /* let { type, classNames, ariaLabel, disabled, click, children } = $props<{
-        type: 'button' | 'submit',
-        classNames?: string,
-        ariaLabel?: string,
-        disabled?: boolean,
-        click?: () => void
-        children: any
-    }>();*/
+	import APIGateway from '$api/APIGateway';
+    import { createForm } from 'svelte-forms-lib'
+
+    const { createClient } = APIGateway()
+    let {back, next} = $props()
+    const { form, handleSubmit } = createForm({
+        initialValues: {
+            clientName: '',
+            domain: '',
+            sslCert: '',
+            serviceTypeId: '',
+            languages: '',
+            currencies: '',
+            sports: '',
+            markets: '',
+            launchDate: '',
+            mainDecisionMakerName: '',
+            mainDecisionMakerNumber: '',
+            financeManagerName: '',
+            financeManagerNumber: '',
+            productManagerName: '',
+            productManagerNumber: '',
+            marketManagerName: '',
+            marketManagerNumber: '',
+            technicalManagerName: '',
+            technicalManagerNumber: '',
+            customerServiceManagerName: '',
+            customerServiceManagerNumber: '',
+        },
+        onSubmit: async (values) => {
+            const { 
+                clientName, domain, sslCert, serviceTypeId, languages,
+                currencies, sports, markets, launchDate, mainDecisionMakerName,
+                mainDecisionMakerNumber, financeManagerName, financeManagerNumber,
+                productManagerName, productManagerNumber, marketManagerName,
+                marketManagerNumber, technicalManagerName, technicalManagerNumber,
+                customerServiceManagerName, customerServiceManagerNumber
+             } = values
+
+             const response: any = await createClient(values);
+
+             console.log(response)
+        }
+    })
 </script>
 
+<form onsubmit={handleSubmit}>
 <div class="flex flex flex-col flex-col gap-5 divide-y rounded-md border bg-white px-6 py-[30px]">
 	<div class="flex flex-col gap-5">
 		<h2 class="text-lg font-bold italic">Client information</h2>
@@ -19,9 +56,10 @@
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="companyName"
+					id="clientName"
 					type="text"
 					placeholder="Enter Company Name"
+                    bind:value={$form.clientName}
 				/>
 			</div>
 			<div class="flex-1">
@@ -33,6 +71,7 @@
 					id="domain"
 					type="text"
 					placeholder="Enter Domain"
+                    bind:value={$form.domain}
 				/>
 			</div>
 			<div class="flex-1">
@@ -44,6 +83,7 @@
 					id="sslCertificate"
 					type="text"
 					placeholder="Enter SSL Certificate (s)"
+                    bind:value={$form.sslCert}
 				/>
 			</div>
 		</div>
@@ -57,6 +97,7 @@
 					id="servicesToProvide"
 					type="text"
 					placeholder="Enter Services to Provide"
+                    bind:value={$form.serviceTypeId}
 				/>
 			</div>
 			<div class="flex-1">
@@ -68,6 +109,7 @@
 					id="targetLaunchDate"
 					type="text"
 					placeholder="Enter Target Launch Date"
+                    bind:value={$form.launchDate}
 				/>
 			</div>
 		</div>
@@ -81,6 +123,7 @@
 					id="languagesSupported"
 					type="text"
 					placeholder="Enter Languages Supported"
+                    bind:value={$form.languages}
 				/>
 			</div>
 			<div class="flex-1">
@@ -92,6 +135,7 @@
 					id="currencySupported"
 					type="text"
 					placeholder="Enter Currencies Supported"
+                    bind:value={$form.currencies}
 				/>
 			</div>
 		</div>
@@ -105,6 +149,7 @@
 					id="sports"
 					type="text"
 					placeholder="Enter Sports"
+                    bind:value={$form.sports}
 				/>
 			</div>
 			<div class="flex-1">
@@ -116,6 +161,7 @@
 					id="targetMarket"
 					type="text"
 					placeholder="Enter Target Market"
+                    bind:value={$form.markets}
 				/>
 			</div>
 		</div>
@@ -130,15 +176,17 @@
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="mainDecisionMakerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.mainDecisionMakerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="mainDecisionMakerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.mainDecisionMakerNumber}
 					/>
 				</div>
 			</div>
@@ -149,15 +197,17 @@
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="financeManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.financeManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="financeManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.financeManagerNumber}
 					/>
 				</div>
 			</div>
@@ -168,15 +218,17 @@
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="productManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.productManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="productManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.productManagerNumber}
 					/>
 				</div>
 			</div>
@@ -189,15 +241,17 @@
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="marketManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.marketManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="marketManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.marketManagerNumber}
 					/>
 				</div>
 			</div>
@@ -208,15 +262,17 @@
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="technicalManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.technicalManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="technicalManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.technicalManagerNumber}
 					/>
 				</div>
 			</div>
@@ -227,18 +283,33 @@
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="customerServiceManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.customerServiceManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="customerServiceManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.customerServiceManagerNumber}
 					/>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<div class="text-right">
+	<div class="inline-flex gap-2">
+		<button
+			class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
+            onclick={back}
+			>Back</button
+		>
+		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
+            onclick={next}
+        >Next</button>
+	</div>
+</div>
+</form>

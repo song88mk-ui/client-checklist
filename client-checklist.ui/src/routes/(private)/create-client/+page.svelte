@@ -24,17 +24,6 @@
 	<ProgressStep bind:step={step} />
 </div>
 <div class="mb-10">
-	<ClientInformationForm />
+	<ClientInformationForm back={back} next={next}/>
 </div>
-<div class="text-right">
-	<div class="inline-flex gap-2">
-		<button
-			class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
-            onclick={back}
-			>Back</button
-		>
-		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
-            onclick={next}
-        >Next</button>
-	</div>
-</div>
+
