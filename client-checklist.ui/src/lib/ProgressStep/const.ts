@@ -4,17 +4,17 @@ import type Step from "$types/step";
 
 export const STATUS_COLORS = {
     [StepStatus.Active]: {
+        bg: 'bg-white',
+        icon: 'text-blue-600',
+        border: 'border-blue-600',
+        line: 'bg-gray-300',
+        text: 'text-blue-600'
+    },
+    [StepStatus.Completed]: {
         bg: 'bg-blue-600',
         icon: 'text-white',
         border: 'border-blue-600',
         line: 'bg-blue-600',
-        text: 'text-blue-600'
-    },
-    [StepStatus.Completed]: {
-        bg: 'bg-white',
-        icon: 'text-blue-600',
-        border: 'border-blue-500',
-        line: 'bg-gray-300',
         text: 'text-blue-600'
     },
     [StepStatus.Inactive]: {

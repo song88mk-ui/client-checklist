@@ -861,6 +861,11 @@ date-fns@^4.1.0:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
   integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
 
+date-picker-svelte@^2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/date-picker-svelte/-/date-picker-svelte-2.14.1.tgz#59143edcb1a4dad1b7ff9a69b6d792574b593e23"
+  integrity sha512-7u6e432BLsqnXQ/p/jAZQ3uDceZzTF2rdxsqWcsRnTm3QxlypwajKRuPh6Un9cZo5HjQPQinG/RVwAN0jYsKFA==
+
 debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.3.7:
   version "4.3.7"
   resolved "https://registry.npmjs.org/debug/-/debug-4.3.7.tgz"
