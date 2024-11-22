@@ -1,6 +1,7 @@
 <script lang="ts">
-	import APIGateway from '$api/APIGateway';
+	import APIGateway from '$api/APIGateway'
     import { createForm } from 'svelte-forms-lib'
+	import auth from '$stores/auth';
 
     const { createClient } = APIGateway()
     let {back, next} = $props()
@@ -14,7 +15,7 @@
             currencies: '',
             sports: '',
             markets: '',
-            launchDate: '',
+            launchDate: "2024-11-22T00:00:00",
             mainDecisionMakerName: '',
             mainDecisionMakerNumber: '',
             financeManagerName: '',
@@ -38,11 +39,29 @@
                 customerServiceManagerName, customerServiceManagerNumber
              } = values
 
-             const response: any = await createClient(values);
-
-             console.log(response)
+             const response: any = await createClient({
+                ...values,
+                languages: languages.split(' '),
+                currencies: currencies.split(' '),
+                sports: sports.split(' '),
+                markets: markets.split(' '),
+                mainDecisionMaker: { name: mainDecisionMakerName, number: mainDecisionMakerNumber },
+                financeManager: { name: financeManagerName, number: financeManagerNumber },
+                productManager: { name: productManagerName, number: productManagerNumber },
+                marketManager: { name: marketManagerName, number: marketManagerNumber },
+                technicalManager: { name: technicalManagerName, number: technicalManagerNumber },
+                customerServiceManager: { name: customerServiceManagerName, number: customerServiceManagerNumber }
+             }, {
+				'x-user-token': $auth?.userToken as string
+             });
         }
     })
+
+    const disableSubmit = () => {
+        return $form.clientName === '' || $form.serviceTypeId === '' || 
+            $form.languages === '' || $form.currencies === '' || 
+            $form.sports === '' || $form.markets === ''
+    }
 </script>
 
 <form onsubmit={handleSubmit}>
@@ -64,7 +83,7 @@
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="domain">
-					Domain <span class="text-red-500">*</span>
+					Domain
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -76,7 +95,7 @@
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="sslCertificate">
-					SSL Certificate (s) <span class="text-red-500">*</span>
+					SSL Certificate (s)
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -102,7 +121,7 @@
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="targetLaunchDate">
-					Target Launch Date <span class="text-red-500">*</span>
+					Target Launch Date
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -171,7 +190,7 @@
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Main Decision Maker <span class="text-red-500">*</span>
+					Main Decision Maker
 				</label>
 				<div class="flex gap-3">
 					<input
@@ -192,7 +211,7 @@
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Finance Manager <span class="text-red-500">*</span>
+					Finance Manager
 				</label>
 				<div class="flex gap-3">
 					<input
@@ -213,7 +232,7 @@
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Product Manager <span class="text-red-500">*</span>
+					Product Manager
 				</label>
 				<div class="flex gap-3">
 					<input
@@ -236,7 +255,7 @@
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Market Manager <span class="text-red-500">*</span>
+					Market Manager
 				</label>
 				<div class="flex gap-3">
 					<input
@@ -257,7 +276,7 @@
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Technical Manager <span class="text-red-500">*</span>
+					Technical Manager
 				</label>
 				<div class="flex gap-3">
 					<input
@@ -278,7 +297,7 @@
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Customer Service Manager <span class="text-red-500">*</span>
+					Customer Service Manager
 				</label>
 				<div class="flex gap-3">
 					<input
@@ -305,10 +324,12 @@
 		<button
 			class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
             onclick={back}
+            disabled={disableSubmit()}
 			>Back</button
 		>
 		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
             onclick={next}
+            disabled={disableSubmit()}
         >Next</button>
 	</div>
 </div>
