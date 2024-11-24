@@ -1,11 +1,12 @@
 <script lang="ts">
-	import APIGateway from '$api/APIGateway'
     import { createForm } from 'svelte-forms-lib'
+    import * as yup from 'yup'
+	import APIGateway from '$api/APIGateway'
 	import auth from '$stores/auth';
 
     const { createClient } = APIGateway()
     let {back, next} = $props()
-    const { form, handleSubmit } = createForm({
+    const { form, handleSubmit, errors } = createForm({
         initialValues: {
             clientName: '',
             domain: '',
@@ -28,6 +29,29 @@
             technicalManagerNumber: '',
             customerServiceManagerName: '',
             customerServiceManagerNumber: '',
+        },
+        validate: values => {
+            let errs: any = {}
+            if (values.clientName === '') {
+                errs['clientName'] = 'Company name is required'
+            }
+            if (values.serviceTypeId === '') {
+                errs['serviceTypeId'] = 'Service Type is required'
+            }
+            if (values.languages === '') {
+                errs['languages'] = 'Language is required'
+            }
+            if (values.currencies === '') {
+                errs['currencies'] = 'Currency is required'
+            }
+            if (values.sports === '') {
+                errs['sports'] = 'Sports is required'
+            }
+            if (values.markets === '') {
+                errs['markets'] = 'markets is required'
+            }
+
+            return errs
         },
         onSubmit: async (values) => {
             const { 
@@ -71,7 +95,11 @@
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Company Name <span class="text-red-500">*</span>
+					Company Name 
+                    <span class="text-red-500">*</span>
+                    {#if $errors.clientName}
+                        <small class='text-red-500'>{$errors.clientName}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -110,6 +138,9 @@
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="servicesToProvide">
 					Services to Provide <span class="text-red-500">*</span>
+                    {#if $errors.serviceTypeId}
+                        <small class='text-red-500'>{$errors.serviceTypeId}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -136,6 +167,9 @@
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="languagesSupported">
 					Languages Supported <span class="text-red-500">*</span>
+                    {#if $errors.languages}
+                        <small class='text-red-500'>{$errors.languages}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -148,6 +182,9 @@
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="currencySupported">
 					Currencies Supported <span class="text-red-500">*</span>
+                    {#if $errors.currencies}
+                        <small class='text-red-500'>{$errors.currencies}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -162,6 +199,9 @@
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="sports">
 					Sports <span class="text-red-500">*</span>
+                    {#if $errors.sports}
+                        <small class='text-red-500'>{$errors.sports}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -174,6 +214,9 @@
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="targetMarket">
 					Target Market <span class="text-red-500">*</span>
+                    {#if $errors.markets}
+                        <small class='text-red-500'>{$errors.markets}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -323,13 +366,19 @@
 	<div class="inline-flex gap-2">
 		<button
 			class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
-            onclick={back}
-            disabled={disableSubmit()}
+            onclick={() => {
+                if ($form.clientName !== '') {
+                    back()
+                }
+            }}
 			>Back</button
 		>
 		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
-            onclick={next}
-            disabled={disableSubmit()}
+            onclick={() => {
+                if ($form.clientName !== '') {
+                    next()
+                }
+            }}
         >Next</button>
 	</div>
 </div>
