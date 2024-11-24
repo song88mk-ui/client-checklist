@@ -27,7 +27,7 @@ export type LoginResponse = {
 
 export type EndpointNoBody = (headers?: Record<string, string>) => Promise<APIResponse>;
 export type EndpointWithBody = (
-    data: Record<string, string>,
+    data: Record<string, unknown>,
     headers?: Record<string, string>
 ) => Promise<APIResponse>;
 
