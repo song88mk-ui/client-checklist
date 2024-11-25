@@ -6,16 +6,36 @@
 	import type { ClientRowStatus } from '$enums/ClientRowStatus';
 	import { AssignedTo } from '$enums/AssignedTo';
 
-	let { initialValues, back, onSubmit } = $props<{
+	let {
+		initialValues,
+		back,
+		onSubmit,
+		onError,
+		formEl = $bindable()
+	} = $props<{
 		initialValues: ProductFormType;
 		back?: () => void;
 		onSubmit: (values: ProductFormType) => void;
+		onError?: (values: ProductFormType) => void;
+		formEl?: HTMLFormElement;
 	}>();
 
-	const { form, errors, handleChange, handleSubmit, updateField } = createForm({
+	$effect(() => {
+		if (initialValues) {
+			form.set(initialValues);
+		}
+	});
+
+	const { form, errors, handleChange, handleSubmit, updateField, isValid } = createForm({
 		initialValues,
 		validationSchema,
 		onSubmit
+	});
+
+	$effect(() => {
+		if (!$isValid) {
+			onError($errors);
+		}
 	});
 
 	const handleSelectDate = (field: keyof ProductFormType, selectedDate: Date) => {
@@ -28,7 +48,7 @@
 
 	const assignedToOptions = [
 		AssignedTo.BACKEND_DEVELOPMENT_TEAM,
-		AssignedTo.BACKEND_DEVELOPMENT_TEAM,
+		AssignedTo.FRONTEND_DEVELOPMENT_TEAM,
 		AssignedTo.UI_UX_DESIGN_TEAM,
 		AssignedTo.QA,
 		AssignedTo.BUSINESS_ANALYST_TEAM,
@@ -37,16 +57,13 @@
 	];
 </script>
 
-<form onsubmit={handleSubmit} class="flex flex-col gap-7">
+<form onsubmit={handleSubmit} class="flex flex-col gap-7" bind:this={formEl}>
 	<div class="flex flex flex-col flex-col gap-5 rounded-md border bg-white px-6 py-[30px]">
 		<div class="flex flex-col gap-5">
 			<h2 class="text-lg font-bold italic">Song88 Back Office</h2>
 			<div class="flex gap-3">
 				<div class="flex-1">
-					<label
-						class="mb-2 block text-xs font-semibold text-gray-700"
-						for="backendDevelopmentTeam"
-					>
+					<label class="mb-2 block text-xs font-semibold text-gray-700" for="assignedTo">
 						Assigned To <span class="text-red-500">*</span>
 					</label>
 					<select
@@ -111,6 +128,8 @@
 						<td class="w-[50%] whitespace-nowrap px-2 py-4 text-sm text-gray-900">
 							<input
 								class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+								name={`clientSubTasks.${index}.comment`}
+								onchange={handleChange}
 								type="text"
 								placeholder="Comments"
 								value={subTask.comment}

@@ -1,14 +1,13 @@
 <script lang="ts">
 	import Environment from '$enums/Environment';
-
-	let { environment = $bindable() } = $props<{ environment: Environment }>();
+	import environment from '$stores/environment';
 
 	const handleEnvironmentChange = (env: Environment) => {
-		environment = env;
+		$environment = env;
 	};
 
 	const isActiveEnvironment = (env: string) => {
-		return environment === env ? 'bg-[#09387B] text-white' : 'bg-[#ECECEC] text-[#949090]';
+		return $environment === env ? 'bg-[#09387B] text-white' : 'bg-[#ECECEC] text-[#949090]';
 	};
 </script>
 

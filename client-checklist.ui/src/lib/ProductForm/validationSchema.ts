@@ -19,7 +19,7 @@ function getMinDate() {
 }
 
 export default yup.object().shape({
-	assignedTo: yup.string(),
+	assignedTo: yup.string().min(1).required(),
 	targetDateCompleted: yup
 		.date()
 		.min(getMinDate(), `Min date is ${getMinDate()}`)
