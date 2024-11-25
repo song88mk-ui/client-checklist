@@ -1,9 +1,18 @@
 <script lang="ts">
-	export let CompanyName: string = '';
-	export let Domain: string = '';
-	export let ServiceToProvide: string = '';
-	export let LangSupported: string[] = [];
-	export let LaunchDate: string = '';
+	type Props = {
+		CompanyName: string;
+		Domain: string;
+		ServiceToProvide: string;
+		LangSupported: string[];
+		LaunchDate: string;
+	};
+	let {
+		CompanyName = '',
+		Domain = '',
+		ServiceToProvide = '',
+		LangSupported = [],
+		LaunchDate = ''
+	}: Props = $props();
 </script>
 
 <div class="flex flex-col items-start rounded-[4px] border border-[#E1E1E1] bg-white p-6">
@@ -11,7 +20,9 @@
 		<div>
 			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Company Name</span>
 			<br />
-			<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]"> {CompanyName}</span>
+			<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				{CompanyName}</span
+			>
 		</div>
 		<div>
 			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Domain(s)</span>
@@ -26,18 +37,14 @@
 			>
 		</div>
 		<div>
-			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]"
-				>Languages Supported</span
-			>
+			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Languages Supported</span>
 			<br />
 			<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
 				{LangSupported}</span
 			>
 		</div>
 		<div>
-			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]"
-				>Currencies Supported</span
-			>
+			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span>
 			<br />
 			<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
 				{LangSupported}</span

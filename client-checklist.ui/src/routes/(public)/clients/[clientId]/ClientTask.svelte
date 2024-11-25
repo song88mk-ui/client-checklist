@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import STEP from '$constants/step';
-	import { type ClientStep,type ClientSubtask } from './types';
+	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
+	import { type ClientStep, type ClientSubtask } from './types';
 
 	const STATUS_BG: any = {
 		0: 'bg-[#E3E3E3]',
@@ -13,23 +13,34 @@
 		1: 'text-[#EF7E1D]',
 		2: 'text-[#2DBE22]'
 	};
+	const STATUS_MESSAGE:any = {
+		0:'Not Started',
+		1:'In Progress',
+		2:'Completed'
+	}
 	export let clientStep: ClientStep;
 	let isOpen = false;
 	let status: number = 0;
-	status = clientStep.sortOrder;
- 	let percentage = '';
+	let percentage = '';
 
 	function toggle() {
 		isOpen = !isOpen;
 	}
-  function calculateProgress(clientSubtasks: ClientSubtask[]) {
-    if(clientSubtasks.length > 0){
-      const taskProgress = clientSubtasks.map((item) => item.taskStatusId);
-		  const totalPercentage = calculatePercentage(taskProgress,2)
-      percentage = totalPercentage.toFixed(0)
-    }
+	function calculateProgress(clientSubtasks: ClientSubtask[]) {
+		if (clientSubtasks.length > 0) {
+			const taskProgress = clientSubtasks.map((item) => item.taskStatusId);
+			const totalPercentage = calculatePercentage(taskProgress, 2);
+			percentage = totalPercentage.toFixed(0);
+			if (totalPercentage > 0 && totalPercentage < 100) {
+				status = 1;
+				return;
+			}
+			if (totalPercentage === 100) {
+				status = 1;
+			}
+		}
 	}
-  function calculatePercentage(items: any, itemToCheck: any):number {
+	function calculatePercentage(items: any, itemToCheck: any): number {
 		if (!Array.isArray(items) || items.length === 0) {
 			return 0;
 		}
@@ -45,13 +56,11 @@
 		return `
           <div
               class="mx-[10px] rounded-[24px] ${STATUS_BG[status]} flex px-[2px] justify-center items-center ${STATUS_TEXT[status]} text-[12px] font-normal font-semibold leading-none h-[23px] self-center">
-              ${status === 0 ? '<span>Not Started</span>' : ''}    
-			  ${status === 1 ? '<span>In Progress</span>' : ''} 
-              ${status === 2 ? '<span>Completed</span>' : ''}        
+			  ${STATUS_MESSAGE[status]}       
           </div>
       `;
 	}
-  calculateProgress(clientStep.clientSubtasks)
+	calculateProgress(clientStep.clientSubtasks);
 </script>
 
 <div
@@ -63,7 +72,9 @@
 		<div class="flex">
 			<span
 				class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
-				>{STEP[clientStep.stepId]}</span
+				>{INTEGRATION_STEPS[
+					clientStep.serviceTypeId === 0 ? 'wallet-integration' : 'feed-integration'
+				][clientStep.stepId].title}</span
 			>
 			<div
 				class="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#0071BC] text-[12px] font-bold font-normal leading-none text-white"
@@ -94,15 +105,7 @@
 			<div
 				class={`mx-[10px] rounded-[24px] ${STATUS_BG[status]} flex items-center justify-center px-[12px] ${STATUS_TEXT[status]} h-[23px] self-center text-[12px] font-normal font-semibold leading-none`}
 			>
-				{#if status === 1}
-					<span>In Progress</span>
-				{/if}
-				{#if status === 0}
-					<span>Not Started</span>
-				{/if}
-				{#if status === 2}
-					<span>Completed</span>
-				{/if}
+				{STATUS_MESSAGE[status]}       
 			</div>
 			<img src={`/${isOpen ? 'arrow-up' : 'arrow-down'}.svg`} alt="logo" />
 		</div>

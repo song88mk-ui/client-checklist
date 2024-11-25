@@ -1,8 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	export let NotStarted: number = 0;
-	export let InProgress: number = 0;
-	export let Completed: number = 0;
+	type Props = {
+		NotStarted: number;
+		InProgress: number;
+		Completed: number;
+	};
+	let {
+		NotStarted = 0,
+		InProgress = 0,
+		Completed = 0,
+	}: Props = $props();
 
 	// @ts-ignore
 	function createKeyframes(name, fromWidth, toWidth) {
