@@ -30,7 +30,7 @@
 		isLoading = false;
 
 		if (response.error) {
-			error = ErrorMessages.DeleteClientFailed;
+			error = ErrorMessages.LogoutFailed;
 			return;
 		}
 
