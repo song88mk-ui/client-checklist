@@ -46,6 +46,7 @@ export type APIGatewayType = {
     fetchClients: EndpointNoBody;
     deleteClient: EndpointWithBody;
     createClient: EndpointWithBody;
+    getClientTaskStatus:EndpointWithBody;
 };
 
 export type APIErrorObject = {

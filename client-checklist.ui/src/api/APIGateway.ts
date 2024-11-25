@@ -31,13 +31,19 @@ const APIGateway = (): APIGatewayType => {
         const res = await fetchPrivate('POST', '/v1/clients', formData, headers);
         return res;
     };
+    const getClientTaskStatus = async (data: Record<string, string>): Promise<APIResponse> => {
+		const {clientId,token} =  data
+		const res = await fetchPrivate("GET", `/v1/clients/${clientId}`,undefined,{"x-user-token":token})
+		return res;
+    }
 
     return {
         login,
         logout,
         fetchClients,
         deleteClient,
-        createClient
+        createClient,
+        getClientTaskStatus
     };
 };
 
