@@ -1,20 +1,16 @@
 <script lang="ts">
 	import DateInput from '../DateInput.svelte';
 	import { createForm } from 'svelte-forms-lib';
-	import validationSchema, { type BackOfficeFormType, type SubTaskType } from './validationSchema';
-	import backOfficeSubTasks from '$constants/backOfficeSubTasks';
+	import validationSchema, { type ProductFormType } from './validationSchema';
 	import StatusSelect from '$lib/StatusSelect.svelte';
 	import type { ClientRowStatus } from '$enums/ClientRowStatus';
 	import { AssignedTo } from '$enums/AssignedTo';
 
-	export const initialValues: BackOfficeFormType = {
-		assignedTo: '',
-		targetDateCompleted: new Date().toISOString(),
-		actualDateCompleted: new Date().toISOString(),
-		clientSubTasks: backOfficeSubTasks
-	};
-
-	export let onSubmit: (values: BackOfficeFormType) => void;
+	let { initialValues, back, onSubmit } = $props<{
+		initialValues: ProductFormType;
+		back?: () => void;
+		onSubmit: (values: ProductFormType) => void;
+	}>();
 
 	const { form, errors, handleChange, handleSubmit, updateField } = createForm({
 		initialValues,
@@ -22,12 +18,12 @@
 		onSubmit
 	});
 
-	const handleSelectDate = (field: keyof BackOfficeFormType, selectedDate: Date) => {
+	const handleSelectDate = (field: keyof ProductFormType, selectedDate: Date) => {
 		updateField(field, selectedDate.toISOString());
 	};
 
 	const handleSelectStatus = (index: number, status: ClientRowStatus) => {
-		updateField(`clientSubTasks.${index}.taskStatusId` as keyof BackOfficeFormType, status);
+		updateField(`clientSubTasks.${index}.taskStatusId` as keyof ProductFormType, status);
 	};
 
 	const assignedToOptions = [
@@ -41,7 +37,7 @@
 	];
 </script>
 
-<form on:submit={handleSubmit} class="flex flex-col gap-7">
+<form onsubmit={handleSubmit} class="flex flex-col gap-7">
 	<div class="flex flex flex-col flex-col gap-5 rounded-md border bg-white px-6 py-[30px]">
 		<div class="flex flex-col gap-5">
 			<h2 class="text-lg font-bold italic">Song88 Back Office</h2>
@@ -56,7 +52,7 @@
 					<select
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 						id="assignedTo"
-						on:change={handleChange}
+						onchange={handleChange}
 						value={$form.assignedTo}
 					>
 						<option value="">Select an option</option>
@@ -136,7 +132,7 @@
 			<button
 				type="button"
 				class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
-				>Back</button
+				onclick={back}>Back</button
 			>
 			<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
 				>Next</button

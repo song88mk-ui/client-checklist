@@ -20,6 +20,7 @@ const config = {
 			$types: './src/types',
 			$api: './src/api',
 			$constants: './src/constants',
+			$utils: './src/utils'
 		}
 	}
 };

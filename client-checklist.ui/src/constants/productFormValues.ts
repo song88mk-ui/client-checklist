@@ -1,6 +1,6 @@
 import { ClientRowStatus } from '$enums/ClientRowStatus';
 
-const backOfficeTasks = [
+const backOfficeSubTasks = [
 	{
 		subtaskName: 'Client Account Set Up',
 		comment: 'Test #1',
@@ -15,4 +15,13 @@ const backOfficeTasks = [
 	}
 ];
 
-export default backOfficeTasks;
+const defaultValues = {
+	assignedTo: '',
+	targetDateCompleted: new Date().toISOString(),
+	actualDateCompleted: new Date().toISOString()
+};
+
+export const backOfficeValues = {
+	...defaultValues,
+	clientSubTasks: backOfficeSubTasks
+};

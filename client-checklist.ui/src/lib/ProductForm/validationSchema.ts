@@ -1,17 +1,17 @@
 import * as yup from 'yup';
 
-export type SubTaskType = {
+export type ClientSubTaskFormType = {
 	subtaskName: string;
 	comment: string;
 	taskStatusId: number;
 	assignedTo: string;
 };
 
-export type BackOfficeFormType = {
+export type ProductFormType = {
 	assignedTo: string;
 	targetDateCompleted: string;
 	actualDateCompleted: string;
-	clientSubTasks: SubTaskType[];
+	clientSubTasks: ClientSubTaskFormType[];
 };
 
 function getMinDate() {
@@ -19,7 +19,7 @@ function getMinDate() {
 }
 
 export default yup.object().shape({
-	assignedTo: yup.string().min(1).required('Assigned to is required'),
+	assignedTo: yup.string(),
 	targetDateCompleted: yup
 		.date()
 		.min(getMinDate(), `Min date is ${getMinDate()}`)
