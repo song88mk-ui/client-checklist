@@ -13,8 +13,10 @@
 		next: () => void;
 	}>();
 
-	let productionValues = backOfficeValues;
-	let stagingValues = backOfficeValues;
+	let environmentValues = {
+		[Environment.PRODUCTION]: backOfficeValues,
+		[Environment.STAGING]: backOfficeValues
+	};
 
 	let initialValues = $state(backOfficeValues);
 
@@ -33,19 +35,16 @@
 	});
 
 	const handleSubmit = (values: ProductFormType) => {
-		if (prevEnvironment === Environment.PRODUCTION) {
-			productionValues = values;
-		} else {
-			stagingValues = values;
-		}
-		// API call
+		environmentValues[prevEnvironment] = $state.snapshot(values);
+
 		if (hasChangedEnv) {
 			hasChangedEnv = false;
-			initialValues = $environment === Environment.PRODUCTION ? productionValues : stagingValues;
+			initialValues = environmentValues[$environment];
 			prevEnvironment = $environment;
 			return;
 		}
 
+		// API call
 		next();
 	};
 
