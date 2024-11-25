@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import type Step from '$types/step';
     import selectedIntegration from '$stores/integration'
 	import { INTEGRATION_STEPS, STATUS_COLORS } from './const';
 	import StepStatus from '$enums/StepStatus';
@@ -38,6 +37,7 @@
             step = steps.length - 1;
         }
     })
+
 </script>
 
 <div class="flex">

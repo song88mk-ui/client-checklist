@@ -1,49 +1,136 @@
 <script lang="ts">
-    /* let { type, classNames, ariaLabel, disabled, click, children } = $props<{
-        type: 'button' | 'submit',
-        classNames?: string,
-        ariaLabel?: string,
-        disabled?: boolean,
-        click?: () => void
-        children: any
-    }>();*/
+    import { createForm } from 'svelte-forms-lib'
+    import * as yup from 'yup'
+	import APIGateway from '$api/APIGateway'
+	import auth from '$stores/auth';
+
+    const { createClient } = APIGateway()
+    let {back, next} = $props()
+    const { form, handleSubmit, errors } = createForm({
+        initialValues: {
+            clientName: '',
+            domain: '',
+            sslCert: '',
+            serviceTypeId: '',
+            languages: '',
+            currencies: '',
+            sports: '',
+            markets: '',
+            launchDate: "2024-11-22T00:00:00",
+            mainDecisionMakerName: '',
+            mainDecisionMakerNumber: '',
+            financeManagerName: '',
+            financeManagerNumber: '',
+            productManagerName: '',
+            productManagerNumber: '',
+            marketManagerName: '',
+            marketManagerNumber: '',
+            technicalManagerName: '',
+            technicalManagerNumber: '',
+            customerServiceManagerName: '',
+            customerServiceManagerNumber: '',
+        },
+        validate: values => {
+            let errs: any = {}
+            if (values.clientName === '') {
+                errs['clientName'] = 'Company name is required'
+            }
+            if (values.serviceTypeId === '') {
+                errs['serviceTypeId'] = 'Service Type is required'
+            }
+            if (values.languages === '') {
+                errs['languages'] = 'Language is required'
+            }
+            if (values.currencies === '') {
+                errs['currencies'] = 'Currency is required'
+            }
+            if (values.sports === '') {
+                errs['sports'] = 'Sports is required'
+            }
+            if (values.markets === '') {
+                errs['markets'] = 'markets is required'
+            }
+
+            return errs
+        },
+        onSubmit: async (values) => {
+            const { 
+                clientName, domain, sslCert, serviceTypeId, languages,
+                currencies, sports, markets, launchDate, mainDecisionMakerName,
+                mainDecisionMakerNumber, financeManagerName, financeManagerNumber,
+                productManagerName, productManagerNumber, marketManagerName,
+                marketManagerNumber, technicalManagerName, technicalManagerNumber,
+                customerServiceManagerName, customerServiceManagerNumber
+             } = values
+
+             const response: any = await createClient({
+                ...values,
+                languages: languages.split(' '),
+                currencies: currencies.split(' '),
+                sports: sports.split(' '),
+                markets: markets.split(' '),
+                mainDecisionMaker: { name: mainDecisionMakerName, number: mainDecisionMakerNumber },
+                financeManager: { name: financeManagerName, number: financeManagerNumber },
+                productManager: { name: productManagerName, number: productManagerNumber },
+                marketManager: { name: marketManagerName, number: marketManagerNumber },
+                technicalManager: { name: technicalManagerName, number: technicalManagerNumber },
+                customerServiceManager: { name: customerServiceManagerName, number: customerServiceManagerNumber }
+             }, {
+				'x-user-token': $auth?.userToken as string
+             });
+        }
+    })
+
+    const disableSubmit = () => {
+        return $form.clientName === '' || $form.serviceTypeId === '' || 
+            $form.languages === '' || $form.currencies === '' || 
+            $form.sports === '' || $form.markets === ''
+    }
 </script>
 
+<form onsubmit={handleSubmit}>
 <div class="flex flex flex-col flex-col gap-5 divide-y rounded-md border bg-white px-6 py-[30px]">
 	<div class="flex flex-col gap-5">
 		<h2 class="text-lg font-bold italic">Client information</h2>
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Company Name <span class="text-red-500">*</span>
+					Company Name 
+                    <span class="text-red-500">*</span>
+                    {#if $errors.clientName}
+                        <small class='text-red-500'>{$errors.clientName}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="companyName"
+					id="clientName"
 					type="text"
 					placeholder="Enter Company Name"
+                    bind:value={$form.clientName}
 				/>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="domain">
-					Domain <span class="text-red-500">*</span>
+					Domain
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 					id="domain"
 					type="text"
 					placeholder="Enter Domain"
+                    bind:value={$form.domain}
 				/>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="sslCertificate">
-					SSL Certificate (s) <span class="text-red-500">*</span>
+					SSL Certificate (s)
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 					id="sslCertificate"
 					type="text"
 					placeholder="Enter SSL Certificate (s)"
+                    bind:value={$form.sslCert}
 				/>
 			</div>
 		</div>
@@ -51,23 +138,28 @@
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="servicesToProvide">
 					Services to Provide <span class="text-red-500">*</span>
+                    {#if $errors.serviceTypeId}
+                        <small class='text-red-500'>{$errors.serviceTypeId}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 					id="servicesToProvide"
 					type="text"
 					placeholder="Enter Services to Provide"
+                    bind:value={$form.serviceTypeId}
 				/>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="targetLaunchDate">
-					Target Launch Date <span class="text-red-500">*</span>
+					Target Launch Date
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 					id="targetLaunchDate"
 					type="text"
 					placeholder="Enter Target Launch Date"
+                    bind:value={$form.launchDate}
 				/>
 			</div>
 		</div>
@@ -75,23 +167,31 @@
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="languagesSupported">
 					Languages Supported <span class="text-red-500">*</span>
+                    {#if $errors.languages}
+                        <small class='text-red-500'>{$errors.languages}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 					id="languagesSupported"
 					type="text"
 					placeholder="Enter Languages Supported"
+                    bind:value={$form.languages}
 				/>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="currencySupported">
 					Currencies Supported <span class="text-red-500">*</span>
+                    {#if $errors.currencies}
+                        <small class='text-red-500'>{$errors.currencies}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 					id="currencySupported"
 					type="text"
 					placeholder="Enter Currencies Supported"
+                    bind:value={$form.currencies}
 				/>
 			</div>
 		</div>
@@ -99,23 +199,31 @@
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="sports">
 					Sports <span class="text-red-500">*</span>
+                    {#if $errors.sports}
+                        <small class='text-red-500'>{$errors.sports}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 					id="sports"
 					type="text"
 					placeholder="Enter Sports"
+                    bind:value={$form.sports}
 				/>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="targetMarket">
 					Target Market <span class="text-red-500">*</span>
+                    {#if $errors.markets}
+                        <small class='text-red-500'>{$errors.markets}</small>
+                    {/if}
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 					id="targetMarket"
 					type="text"
 					placeholder="Enter Target Market"
+                    bind:value={$form.markets}
 				/>
 			</div>
 		</div>
@@ -125,58 +233,64 @@
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Main Decision Maker <span class="text-red-500">*</span>
+					Main Decision Maker
 				</label>
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="mainDecisionMakerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.mainDecisionMakerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="mainDecisionMakerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.mainDecisionMakerNumber}
 					/>
 				</div>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Finance Manager <span class="text-red-500">*</span>
+					Finance Manager
 				</label>
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="financeManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.financeManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="financeManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.financeManagerNumber}
 					/>
 				</div>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Product Manager <span class="text-red-500">*</span>
+					Product Manager
 				</label>
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="productManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.productManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="productManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.productManagerNumber}
 					/>
 				</div>
 			</div>
@@ -184,61 +298,88 @@
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Market Manager <span class="text-red-500">*</span>
+					Market Manager
 				</label>
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="marketManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.marketManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="marketManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.marketManagerNumber}
 					/>
 				</div>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Technical Manager <span class="text-red-500">*</span>
+					Technical Manager
 				</label>
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="technicalManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.technicalManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="technicalManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.technicalManagerNumber}
 					/>
 				</div>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Customer Service Manager <span class="text-red-500">*</span>
+					Customer Service Manager
 				</label>
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="customerServiceManagerName"
 						type="text"
 						placeholder="Enter Name"
+                        bind:value={$form.customerServiceManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="companyName"
+						id="customerServiceManagerNumber"
 						type="text"
 						placeholder="Enter Number"
+                        bind:value={$form.customerServiceManagerNumber}
 					/>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<div class="text-right">
+	<div class="inline-flex gap-2">
+		<button
+			class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
+            onclick={() => {
+                if ($form.clientName !== '') {
+                    back()
+                }
+            }}
+			>Back</button
+		>
+		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
+            onclick={() => {
+                if ($form.clientName !== '') {
+                    next()
+                }
+            }}
+        >Next</button>
+	</div>
+</div>
+</form>

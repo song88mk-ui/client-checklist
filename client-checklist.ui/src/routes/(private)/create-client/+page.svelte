@@ -24,10 +24,6 @@
 	const handleSubmit = (values: ProductFormType) => {
 		next();
 	};
-
-	const handleStepBack = () => {
-		back();
-	};
 </script>
 
 <div class="mb-10 flex items-center justify-between">
@@ -39,12 +35,8 @@
 </div>
 <div class="mb-10">
 	{#if step === 0}
-		<ClientInformationForm />
+		<ClientInformationForm {back} {next} />
 	{:else if step === 1}
-		<ProductForm
-			initialValues={backOfficeValues}
-			onSubmit={handleSubmit}
-			onStepBack={handleStepBack}
-		/>
+		<ProductForm initialValues={backOfficeValues} onSubmit={handleSubmit} {back} />
 	{/if}
 </div>

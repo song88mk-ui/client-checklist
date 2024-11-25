@@ -6,9 +6,9 @@
 	import type { ClientRowStatus } from '$enums/ClientRowStatus';
 	import { AssignedTo } from '$enums/AssignedTo';
 
-	let { initialValues, onStepBack, onSubmit } = $props<{
+	let { initialValues, back, onSubmit } = $props<{
 		initialValues: ProductFormType;
-		onStepBack?: () => void;
+		back?: () => void;
 		onSubmit: (values: ProductFormType) => void;
 	}>();
 
@@ -132,7 +132,7 @@
 			<button
 				type="button"
 				class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
-				onclick={onStepBack}>Back</button
+				onclick={back}>Back</button
 			>
 			<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
 				>Next</button

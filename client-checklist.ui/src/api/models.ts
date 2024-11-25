@@ -6,7 +6,7 @@ export enum ResponseMessage {
 export enum FetchStatus {
 	BadRequest = 'BadRequest',
 	ServerError = 'ServerError',
-    UnAuthorized = 'UnAuthorized'
+	UnAuthorized = 'UnAuthorized'
 }
 
 export type APIResponse = {
@@ -27,7 +27,7 @@ export type LoginResponse = {
 
 export type EndpointNoBody = (headers?: Record<string, string>) => Promise<APIResponse>;
 export type EndpointWithBody = (
-	data: Record<string, string>,
+	data: Record<string, unknown>,
 	headers?: Record<string, string>
 ) => Promise<APIResponse>;
 
@@ -45,6 +45,7 @@ export type APIGatewayType = {
 	logout: EndpointWithBody;
 	fetchClients: EndpointNoBody;
 	deleteClient: EndpointWithBody;
+	createClient: EndpointWithBody;
 };
 
 export type APIErrorObject = {
