@@ -6,36 +6,42 @@
 
     let {step = $bindable()} = $props<{step: number}>()
 
-    let steps = $state(INTEGRATION_STEPS[$selectedIntegration]);
-
-    steps[step].status = StepStatus.Active
-
+    let steps = $state(INTEGRATION_STEPS[$selectedIntegration])
+    
     const updateStep = (index: number) => {
         const prevActive = steps.find(x => x.status === StepStatus.Active);
-
+        
         if (prevActive) {
             prevActive.status = StepStatus.Completed;
         }
-
+        
         step = index;
     }
-
+    
     $effect(() => {
         const isActiveNextStep = step + 1 < steps.length && steps[step + 1] != undefined && steps[step + 1].status === StepStatus.Active;
-
+        
         if (isActiveNextStep) {
             steps[step + 1].status = StepStatus.Completed
         }
         
         steps[step === 0 ? 0 : step - 1].status = StepStatus.Completed
-
+        
         if (step < steps.length) {
             steps[step].status = StepStatus.Active
         }
-
+        
         if (step === steps.length) {
             step = steps.length - 1;
         }
+    })
+    
+    $effect(() => {
+        steps[step].status = StepStatus.Active
+    })
+
+    $effect(() => {
+        steps = INTEGRATION_STEPS[$selectedIntegration]
     })
 
 </script>

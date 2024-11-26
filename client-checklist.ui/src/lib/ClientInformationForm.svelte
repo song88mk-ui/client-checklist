@@ -3,20 +3,22 @@
     import * as yup from 'yup'
 	import APIGateway from '$api/APIGateway'
 	import auth from '$stores/auth';
+	import DateInput from './DateInput.svelte';
+    import selectedIntegration from '$stores/integration'
+	import Product from '../utils/client';
 
     const { createClient } = APIGateway()
     let {back, next} = $props()
-    const { form, handleSubmit, errors } = createForm({
+    const { form, handleSubmit, errors, updateField } = createForm({
         initialValues: {
             clientName: '',
             domain: '',
             sslCert: '',
-            serviceTypeId: '',
             languages: '',
             currencies: '',
             sports: '',
             markets: '',
-            launchDate: "2024-11-22T00:00:00",
+            launchDate: new Date(),
             mainDecisionMakerName: '',
             mainDecisionMakerNumber: '',
             financeManagerName: '',
@@ -35,9 +37,6 @@
             if (values.clientName === '') {
                 errs['clientName'] = 'Company name is required'
             }
-            if (values.serviceTypeId === '') {
-                errs['serviceTypeId'] = 'Service Type is required'
-            }
             if (values.languages === '') {
                 errs['languages'] = 'Language is required'
             }
@@ -48,14 +47,14 @@
                 errs['sports'] = 'Sports is required'
             }
             if (values.markets === '') {
-                errs['markets'] = 'markets is required'
+                errs['markets'] = 'Markets is required'
             }
 
             return errs
         },
         onSubmit: async (values) => {
             const { 
-                clientName, domain, sslCert, serviceTypeId, languages,
+                clientName, domain, sslCert, languages,
                 currencies, sports, markets, launchDate, mainDecisionMakerName,
                 mainDecisionMakerNumber, financeManagerName, financeManagerNumber,
                 productManagerName, productManagerNumber, marketManagerName,
@@ -65,6 +64,7 @@
 
              const response: any = await createClient({
                 ...values,
+                serviceTpeId: $selectedIntegration,
                 languages: languages.split(' '),
                 currencies: currencies.split(' '),
                 sports: sports.split(' '),
@@ -78,11 +78,19 @@
              }, {
 				'x-user-token': $auth?.userToken as string
              });
+
+             if (response.ok) {
+                 next();
+             }
         }
     })
 
+    const handleSelectDate = (selectedDate: Date) => {
+		updateField('launchDate', selectedDate.toISOString());
+	};
+
     const disableSubmit = () => {
-        return $form.clientName === '' || $form.serviceTypeId === '' || 
+        return $form.clientName === '' || 
             $form.languages === '' || $form.currencies === '' || 
             $form.sports === '' || $form.markets === ''
     }
@@ -97,17 +105,17 @@
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
 					Company Name 
                     <span class="text-red-500">*</span>
-                    {#if $errors.clientName}
-                        <small class='text-red-500'>{$errors.clientName}</small>
-                    {/if}
 				</label>
 				<input
-					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="clientName"
-					type="text"
-					placeholder="Enter Company Name"
+                    class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+                    id="clientName"
+                    type="text"
+                    placeholder="Enter Company Name"
                     bind:value={$form.clientName}
 				/>
+                {#if $errors.clientName}
+                    <small class='text-red-500 text-xs font-bold'>{$errors.clientName}</small>
+                {/if}
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="domain">
@@ -137,94 +145,84 @@
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="servicesToProvide">
-					Services to Provide <span class="text-red-500">*</span>
-                    {#if $errors.serviceTypeId}
-                        <small class='text-red-500'>{$errors.serviceTypeId}</small>
-                    {/if}
+					Services to Provide
 				</label>
-				<input
-					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="servicesToProvide"
-					type="text"
-					placeholder="Enter Services to Provide"
-                    bind:value={$form.serviceTypeId}
-				/>
+                <div
+                    class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+                >{Product[$selectedIntegration]}</div>
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="targetLaunchDate">
 					Target Launch Date
 				</label>
-				<input
-					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="targetLaunchDate"
-					type="text"
-					placeholder="Enter Target Launch Date"
-                    bind:value={$form.launchDate}
-				/>
+                <DateInput
+                    value={new Date($form.launchDate)}
+                    onSelectDate={(selectedDate) => handleSelectDate(selectedDate)}
+                />
 			</div>
 		</div>
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="languagesSupported">
 					Languages Supported <span class="text-red-500">*</span>
-                    {#if $errors.languages}
-                        <small class='text-red-500'>{$errors.languages}</small>
-                    {/if}
 				</label>
 				<input
-					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="languagesSupported"
-					type="text"
-					placeholder="Enter Languages Supported"
+                    class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+                    id="languagesSupported"
+                    type="text"
+                    placeholder="Enter Languages Supported"
                     bind:value={$form.languages}
 				/>
+                {#if $errors.languages}
+                    <small class='text-red-500 text-xs font-bold'>{$errors.languages}</small>
+                {/if}
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="currencySupported">
 					Currencies Supported <span class="text-red-500">*</span>
-                    {#if $errors.currencies}
-                        <small class='text-red-500'>{$errors.currencies}</small>
-                    {/if}
 				</label>
 				<input
-					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="currencySupported"
-					type="text"
-					placeholder="Enter Currencies Supported"
+                    class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+                    id="currencySupported"
+                    type="text"
+                    placeholder="Enter Currencies Supported"
                     bind:value={$form.currencies}
 				/>
+                {#if $errors.currencies}
+                    <small class='text-red-500 text-xs font-bold'>{$errors.currencies}</small>
+                {/if}
 			</div>
 		</div>
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="sports">
 					Sports <span class="text-red-500">*</span>
-                    {#if $errors.sports}
-                        <small class='text-red-500'>{$errors.sports}</small>
-                    {/if}
 				</label>
 				<input
-					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="sports"
-					type="text"
-					placeholder="Enter Sports"
+                    class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+                    id="sports"
+                    type="text"
+                    placeholder="Enter Sports"
                     bind:value={$form.sports}
 				/>
+                {#if $errors.sports}
+                    <small class='text-red-500 text-xs font-bold'>{$errors.sports}</small>
+                {/if}
 			</div>
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="targetMarket">
 					Target Market <span class="text-red-500">*</span>
-                    {#if $errors.markets}
-                        <small class='text-red-500'>{$errors.markets}</small>
-                    {/if}
 				</label>
 				<input
-					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-					id="targetMarket"
-					type="text"
-					placeholder="Enter Target Market"
+                    class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+                    id="targetMarket"
+                    type="text"
+                    placeholder="Enter Target Market"
                     bind:value={$form.markets}
 				/>
+                {#if $errors.markets}
+                    <small class='text-red-500 text-xs font-bold'>{$errors.markets}</small>
+                {/if}
 			</div>
 		</div>
 	</div>
@@ -365,20 +363,10 @@
 <div class="text-right">
 	<div class="inline-flex gap-2">
 		<button
-			class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
-            onclick={() => {
-                if ($form.clientName !== '') {
-                    back()
-                }
-            }}
+			class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none" type="button"
 			>Back</button
 		>
-		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
-            onclick={() => {
-                if ($form.clientName !== '') {
-                    next()
-                }
-            }}
+		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white" type="submit"
         >Next</button>
 	</div>
 </div>
