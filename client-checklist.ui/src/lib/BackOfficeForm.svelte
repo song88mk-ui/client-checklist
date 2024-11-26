@@ -1,56 +1,28 @@
 <script lang="ts">
 	import { backOfficeValues } from '$constants/productFormValues';
 	import Environment from '$enums/Environment';
+	import Steps from '$enums/Step';
 	import ProductForm, { type ProductFormType } from './ProductForm';
-	import environment from '$stores/environment';
+	import selectedIntegration from '$stores/integration';
+	import { INTEGRATION_STEPS } from './ProgressStep/const';
 
-	let prevEnvironment: Environment;
-	let hasMounted = false;
-	let hasChangedEnv = false;
-
-	let { back, next } = $props<{
+	const { back, next } = $props<{
 		back: () => void;
 		next: () => void;
 	}>();
 
-	let environmentValues = {
+	const steps = INTEGRATION_STEPS[$selectedIntegration];
+	const title = steps[Steps.BackOffice].title;
+
+	const initialValues = {
 		[Environment.PRODUCTION]: backOfficeValues,
 		[Environment.STAGING]: backOfficeValues
 	};
 
-	let initialValues = $state(backOfficeValues);
-
-	let formEl: HTMLFormElement | undefined = $state();
-
-	$effect(() => {
-		if (!hasMounted) {
-			hasMounted = true;
-			prevEnvironment = $environment;
-			return;
-		}
-		if (prevEnvironment !== $environment) {
-			hasChangedEnv = true;
-			formEl?.requestSubmit();
-		}
-	});
-
 	const handleSubmit = (values: ProductFormType) => {
-		environmentValues[prevEnvironment] = $state.snapshot(values);
-
-		if (hasChangedEnv) {
-			hasChangedEnv = false;
-			initialValues = environmentValues[$environment];
-			prevEnvironment = $environment;
-			return;
-		}
-
-		// API call
+		// API call here
 		next();
-	};
-
-	const handleError = () => {
-		$environment = prevEnvironment;
 	};
 </script>
 
-<ProductForm bind:formEl {initialValues} {back} onSubmit={handleSubmit} onError={handleError} />
+<ProductForm {title} {initialValues} {back} onSubmit={handleSubmit} />

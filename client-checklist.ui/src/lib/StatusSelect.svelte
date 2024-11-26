@@ -42,10 +42,10 @@
 >
 	<div class="flex px-3 py-2 pr-1">
 		<div class="flex-1">
-			<ClientRowStatus className="w-full" status={value} />
+			<ClientRowStatus className="w-full !py-1" status={value} />
 		</div>
 		<div class="flex items-center">
-			<button type="button" class="p-2" on:click={toggle}>
+			<button type="button" class="p-1" on:click={toggle}>
 				<img
 					src="/icon-arrow-down.svg"
 					alt="icon-arrow-down"
