@@ -1,13 +1,10 @@
 <script lang="ts">
-	import APIGateway from '$api/APIGateway';
 	import { closeModal } from '$stores/modal';
 	import Button from './Button.svelte';
 	import Alert from './Alert.svelte';
 	import auth from '$stores/auth';
-	import { LocalStorage } from './storage';
 	import { ErrorMessages } from '$enums/ErrorMessages';
-
-	const { logout } = APIGateway();
+	import logout from '$utils/logout';
 
 	const handleCancel = () => {
 		closeModal();
@@ -18,27 +15,11 @@
 
 	const handleLogout = async () => {
 		isLoading = true;
-		const response = await logout(
-			{
-				userToken: $auth?.userToken as string
-			},
-			{
-				'x-user-token': $auth?.userToken as string
-			}
-		);
-
-		isLoading = false;
-
+		const response = await logout($auth?.userToken as string);
 		if (response.error) {
-			error = ErrorMessages.DeleteClientFailed;
-			return;
+			error = ErrorMessages.LogoutFailed;
 		}
-
-		$auth = null;
-		LocalStorage.removeValue('userToken');
-		LocalStorage.removeValue('accessType');
-		LocalStorage.removeValue('username');
-
+		isLoading = false;
 		closeModal();
 	};
 

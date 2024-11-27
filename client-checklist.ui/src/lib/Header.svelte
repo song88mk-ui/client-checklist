@@ -6,9 +6,23 @@
 	import auth from '$stores/auth';
 	import { openModal } from '$stores/modal';
 	import LogoutModal from '$lib/LogoutModal.svelte';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import logout from '$utils/logout';
+
+	let isLoading = false;
+	let error = '';
 
 	const handleLogout = async () => {
-		openModal(LogoutModal);
+		if (AccessType.READWRITE === $auth?.accessType) {
+			openModal(LogoutModal);
+		} else {
+			isLoading = true;
+			const response = await logout($auth?.userToken as string);
+			if (response.error) {
+				error = ErrorMessages.LogoutFailed;
+			}
+			isLoading = false;
+		}
 	};
 </script>
 
@@ -34,7 +48,7 @@
 						J
 					</div>
 				</div>
-				<button on:click={handleLogout}>
+				<button on:click={handleLogout} disabled={isLoading}>
 					<Icon icon="mdi:logout" height={24} />
 				</button>
 			</div>
