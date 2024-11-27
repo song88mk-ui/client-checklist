@@ -1,5 +1,4 @@
 <script lang="ts">
-	import APIGateway from '$api/APIGateway';
 	import CompanyLogo from '$lib/CompanyLogo.svelte';
 	import Icon from '@iconify/svelte';
 	import { AccessType } from '$enums/role';
@@ -7,10 +6,8 @@
 	import auth from '$stores/auth';
 	import { openModal } from '$stores/modal';
 	import LogoutModal from '$lib/LogoutModal.svelte';
-	import { LocalStorage } from './storage';
 	import { ErrorMessages } from '$enums/ErrorMessages';
-
-	const { logout } = APIGateway();
+	import logout from '$utils/logout';
 
 	let isLoading = false;
 	let error = '';
@@ -20,26 +17,11 @@
 			openModal(LogoutModal);
 		} else {
 			isLoading = true;
-			const response = await logout(
-				{
-					userToken: $auth?.userToken as string
-				},
-				{
-					'x-user-token': $auth?.userToken as string
-				}
-			);
-
-			isLoading = false;
-
+			const response = await logout($auth?.userToken as string);
 			if (response.error) {
 				error = ErrorMessages.LogoutFailed;
-				return;
 			}
-
-			$auth = null;
-			LocalStorage.removeValue('userToken');
-			LocalStorage.removeValue('accessType');
-			LocalStorage.removeValue('username');
+			isLoading = false;
 		}
 	};
 </script>
