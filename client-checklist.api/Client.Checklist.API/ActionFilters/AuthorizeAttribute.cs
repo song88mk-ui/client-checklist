@@ -62,7 +62,7 @@ namespace Client.Checklist.API.ActionFilters
 
                 if (!string.IsNullOrEmpty(_requiredRole) && _requiredRole == "Admin")
                 {
-                    if (!authResponse.Result.RoleName.Contains("Super Admin"))
+                    if (!(authResponse.Result?.RoleName.Contains("Super Admin") ?? false))
                     {
                         context.Result = new JsonResult(new { StatusCode = HttpStatusCode.Forbidden, Message = "Insufficient access permission" })
                         {
