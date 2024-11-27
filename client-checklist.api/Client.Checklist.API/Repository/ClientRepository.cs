@@ -316,7 +316,7 @@ namespace Client.Checklist.API.Repository
                     {
                         StatusCode = StatusCode.Success,
                         Message = $"{StatusCode.Success}",
-                        Result = token.Result
+                        Result = client.ClientId.ToString().ToUpper()
                     };
                 }
                 catch (Exception ex)
