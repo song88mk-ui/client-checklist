@@ -471,6 +471,17 @@ namespace Client.Checklist.API.Repository
 
                     var clientId = Guid.Parse(request.ClientId);
 
+                    var client = await _clientChecklistContext.ClientInformation.FindAsync(clientId);
+
+                    if (client == null)
+                    {
+                        return new BaseResponseDTO<AddClientStepsResponseDTO>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Error (Client Not Found)"
+                        };
+                    }
+
                     var step = _clientChecklistContext.ClientSteps.Add(new ClientSteps
                     {
                         ClientId = clientId,
@@ -548,6 +559,19 @@ namespace Client.Checklist.API.Repository
                         };
                     }
 
+                    var clientId = Guid.Parse(request.ClientId);
+
+                    var client = await _clientChecklistContext.ClientInformation.FindAsync(clientId);
+
+                    if (client == null)
+                    {
+                        return new BaseResponseDTO<bool>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Error (Client Not Found)"
+                        };
+                    }
+
                     var clientTask = await _clientChecklistContext.ClientSteps.FindAsync(request.Id);
 
                     if (clientTask == null)
@@ -559,8 +583,6 @@ namespace Client.Checklist.API.Repository
                         };
                     else
                     {
-                        var clientId = Guid.Parse(request.ClientId);
-
                         clientTask.ServiceTypeId = request.ServiceTypeId;
                         clientTask.Environment = request.Environment;
                         clientTask.TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted);
