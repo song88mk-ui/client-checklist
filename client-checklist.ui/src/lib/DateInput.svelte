@@ -2,11 +2,14 @@
 	import { DatePicker } from 'date-picker-svelte';
 	import { format } from 'date-fns';
 
-	export let value = new Date();
-	export let onSelectDate: (selectedDate: Date) => void;
+	let { value, onSelectDate } = $props<{
+		value: string;
+		onSelectDate?: (selectedDate: Date) => void;
+	}>();
 
-	let isShowDatePicker = false;
-	let formattedValue = format(value, 'MMMM d, yyyy');
+	let isShowDatePicker = $state(false);
+	let valueAsDate = $state(value ? new Date(value) : new Date());
+	let formattedValue = $state(value instanceof Date ? format(value, 'MMMM d, yyyy') : '');
 
 	const handleFocusOut = (e: FocusEvent) => {
 		if (
@@ -17,7 +20,10 @@
 		) {
 			return;
 		} else {
-			isShowDatePicker = false;
+			const target = e.target as HTMLInputElement | null;
+			if (target && !target.value) {
+				isShowDatePicker = false;
+			}
 		}
 	};
 
@@ -26,37 +32,38 @@
 	};
 
 	const handleSelectDate = (e: CustomEvent<Date>) => {
-		if (onSelectDate) onSelectDate(e.detail);
+		onSelectDate(e.detail);
+		formattedValue = format(e.detail, 'MMMM d, yyyy');
 		isShowDatePicker = false;
 	};
 
 	const handleChangeDate = (e: Event) => {
+		e.preventDefault();
 		const newValue = new Date((e.target as HTMLInputElement).value);
 		if (!isNaN(newValue.getTime())) {
 			formattedValue = format(newValue, 'MMMM d, yyyy');
 			onSelectDate(newValue);
 		} else {
-			formattedValue = format(value, 'MMMM d, yyyy');
+			formattedValue = format(value || new Date(), 'MMMM d, yyyy');
 		}
 	};
-
-	$: formattedValue = format(value, 'MMMM d, yyyy');
 </script>
 
-<div class="relative" on:focusout={handleFocusOut}>
+<div class="relative" onfocusout={handleFocusOut}>
 	<input
 		class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 		id="backendDevelopmentTeam"
 		type="text"
+		autocomplete="off"
 		placeholder="Backend Development Team"
-		on:click={handleShowDatePicker}
-		on:change={handleChangeDate}
-		bind:value={formattedValue}
+		onclick={handleShowDatePicker}
+		onchange={handleChangeDate}
+		value={formattedValue}
 	/>
 
 	{#if isShowDatePicker}
-		<div class="absolute">
-			<DatePicker {value} on:focusout={handleFocusOut} on:select={handleSelectDate} />
+		<div class="absolute z-10">
+			<DatePicker value={valueAsDate} on:focusout={handleFocusOut} on:select={handleSelectDate} />
 		</div>
 	{/if}
 </div>

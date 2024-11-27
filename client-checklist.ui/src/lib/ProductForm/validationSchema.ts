@@ -1,3 +1,4 @@
+import Environment from '$enums/Environment';
 import * as yup from 'yup';
 
 export type ClientSubTaskFormType = {
@@ -7,32 +8,37 @@ export type ClientSubTaskFormType = {
 	assignedTo: string;
 };
 
-export type ProductFormType = {
+export type ClientTaskFormType = {
 	assignedTo: string;
 	targetDateCompleted: string;
 	actualDateCompleted: string;
 	clientSubTasks: ClientSubTaskFormType[];
 };
 
-function getMinDate() {
-	return new Date(2000, 1, 1);
-}
+export type ProductFormType = {
+	[Environment.STAGING]: ClientTaskFormType;
+	[Environment.PRODUCTION]: ClientTaskFormType;
+};
 
-export default yup.object().shape({
-	assignedTo: yup.string(),
-	targetDateCompleted: yup
-		.date()
-		.min(getMinDate(), `Min date is ${getMinDate()}`)
-		.max(yup.ref('actualDateCompleted'), 'Must be earlier than the actual date'),
-	actualDateCompleted: yup
-		.date()
-		.min(yup.ref('targetDateCompleted'), 'Must be later than target date'),
-	clientSubTasks: yup.array().of(
-		yup.object().shape({
-			subtaskName: yup.string().required(),
-			comment: yup.string().required(),
-			taskStatusId: yup.number().required(),
-			assignedTo: yup.string()
-		})
-	)
+const clientSubTaskFormSchema = yup.array().of(
+	yup.object().shape({
+		subtaskName: yup.string(),
+		comment: yup.string(),
+		taskStatusId: yup.number(),
+		assignedTo: yup.string()
+	})
+);
+
+const clientTaskFormSchema = yup.object().shape({
+	assignedTo: yup.string().min(1, 'Assigned to is required'),
+	targetDateCompleted: yup.string(),
+	actualDateCompleted: yup.string(),
+	clientSubTasks: clientSubTaskFormSchema
 });
+
+const productFormSchema = yup.object().shape({
+	[Environment.STAGING]: clientTaskFormSchema,
+	[Environment.PRODUCTION]: clientTaskFormSchema
+});
+
+export default productFormSchema;
