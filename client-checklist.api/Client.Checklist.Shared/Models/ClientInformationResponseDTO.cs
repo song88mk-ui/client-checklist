@@ -37,6 +37,5 @@
         public string SubtaskName { get; set; }
         public string Comment { get; set; }
         public int TaskStatusId { get; set; }
-        public string AssignedTo { get; set; }
     }
 }
