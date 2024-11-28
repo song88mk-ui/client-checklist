@@ -12,7 +12,6 @@ namespace Client.Checklist.Shared.Data.ClientChecklist.Entities
         public string SubtaskName { get; set; }
         public string Comment { get; set; }
         public int TaskStatusId { get; set; }
-        public string AssignedTo { get; set; }
         public int SortOrder { get; set; }
     }
 }

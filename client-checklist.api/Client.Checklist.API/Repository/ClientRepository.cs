@@ -176,8 +176,7 @@ namespace Client.Checklist.API.Repository
                             SubtaskId = cs.SubtaskId,
                             SubtaskName = cs.SubtaskName,
                             TaskStatusId = cs.TaskStatusId,
-                            Comment = cs.Comment,
-                            AssignedTo = cs.AssignedTo
+                            Comment = cs.Comment
                         }).ToList();
 
                     task.ClientSubtasks.AddRange(clientSubtasks);
@@ -538,7 +537,6 @@ namespace Client.Checklist.API.Repository
                         TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted),
                         ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted),
                         AssignedTo = request.AssignedTo,
-                        SortOrder = request.SortOrder,
                     }).Entity;
 
                     _clientChecklistContext.SaveChanges();
@@ -554,7 +552,6 @@ namespace Client.Checklist.API.Repository
                             SubtaskName = subTask.SubtaskName,
                             Comment = subTask.Comment,
                             TaskStatusId = subTask.TaskStatusId,
-                            AssignedTo = subTask.AssignedTo,
                             SortOrder = ctr,
                         });
                     }
@@ -594,41 +591,6 @@ namespace Client.Checklist.API.Repository
                 {
                     activity?.SetTag("request", JsonSerializer.Serialize(request));
 
-
-                    var validators = new List<IRequestValidator>
-                    {
-                        new ServiceTypeValidator(request.ServiceTypeId),
-                        new EnvironmentValidator(request.Environment),
-                        new StepValidator(request.StepId)
-                    };
-
-                    _compositeValidator = new CompositeValidator(validators);
-
-                    var validate = _compositeValidator.Validate();
-                    if (validate.StatusCode != StatusCode.Success)
-                    {
-                        activity?.SetStatus(ActivityStatusCode.Error, validate.Message);
-
-                        return new BaseResponseDTO<bool>
-                        {
-                            StatusCode = StatusCode.Error,
-                            Message = validate.Message
-                        };
-                    }
-
-                    var clientId = Guid.Parse(request.ClientId);
-
-                    var client = await _clientChecklistContext.ClientInformation.FindAsync(clientId);
-
-                    if (client == null)
-                    {
-                        return new BaseResponseDTO<bool>
-                        {
-                            StatusCode = StatusCode.Error,
-                            Message = $"Error (Client Not Found)"
-                        };
-                    }
-
                     var clientTask = await _clientChecklistContext.ClientSteps.FindAsync(request.Id);
 
                     if (clientTask == null)
@@ -640,12 +602,9 @@ namespace Client.Checklist.API.Repository
                         };
                     else
                     {
-                        clientTask.ServiceTypeId = request.ServiceTypeId;
-                        clientTask.Environment = request.Environment;
                         clientTask.TargetDateCompleted = string.IsNullOrEmpty(request.TargetDateCompleted) ? null : Convert.ToDateTime(request.TargetDateCompleted);
                         clientTask.ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted);
                         clientTask.AssignedTo = request.AssignedTo;
-                        clientTask.SortOrder = request.SortOrder;
 
                         _clientChecklistContext.SaveChanges();
 
@@ -665,7 +624,6 @@ namespace Client.Checklist.API.Repository
                                 SubtaskName = subTask.SubtaskName,
                                 Comment = subTask.Comment,
                                 TaskStatusId = subTask.TaskStatusId,
-                                AssignedTo = subTask.AssignedTo,
                                 SortOrder = ctr,
                             });
                         }
