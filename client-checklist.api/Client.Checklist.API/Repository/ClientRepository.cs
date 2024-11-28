@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Text.Json;
 using TaskStatus = Client.Checklist.Shared.Enums.TaskStatus;
 using System.Collections.Generic;
+using Environment = Client.Checklist.Shared.Enums.Environment;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Client.Checklist.API.Repository
 {
@@ -20,6 +22,8 @@ namespace Client.Checklist.API.Repository
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
         private readonly ActivitySource _activitySource;
+        private CompositeValidator _compositeValidator;
+
 
         #endregion
 
@@ -278,6 +282,25 @@ namespace Client.Checklist.API.Repository
                 {
                     activity?.SetTag("request", JsonSerializer.Serialize(request));
 
+                    var validators = new List<IRequestValidator>
+                    {
+                        new ServiceTypeValidator(request.ServiceTypeId)
+                    };
+
+                    _compositeValidator = new CompositeValidator(validators);
+
+                    var validate = _compositeValidator.Validate();
+                    if (validate.StatusCode != StatusCode.Success)
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Error, validate.Message);
+
+                        return new BaseResponseDTO<string>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = validate.Message
+                        };
+                    }
+
                     var client = _clientChecklistContext.ClientInformation.Add(new ClientInformation
                     {
                         ClientName = request.ClientName,
@@ -340,14 +363,27 @@ namespace Client.Checklist.API.Repository
                 {
                     activity?.SetTag("request", JsonSerializer.Serialize(request));
 
-                    if (!Guid.TryParse(request.ClientId, out Guid result))
+                    var validators = new List<IRequestValidator>
+                    {
+                        new ClientIdValidator(request.ClientId),
+                        new ServiceTypeValidator(request.ServiceTypeId)
+                    };
+
+                    _compositeValidator = new CompositeValidator(validators);
+
+                    var validate = _compositeValidator.Validate();
+                    if (validate.StatusCode != StatusCode.Success)
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Error, validate.Message);
+
                         return new BaseResponseDTO<string>
                         {
                             StatusCode = StatusCode.Error,
-                            Message = $"Invalid Client ID"
+                            Message = validate.Message
                         };
+                    }
 
-                    var client = await _clientChecklistContext.ClientInformation.FindAsync(result);
+                    var client = await _clientChecklistContext.ClientInformation.FindAsync(Guid.Parse(request.ClientId));
 
                     if (client == null)
                     {
@@ -385,7 +421,7 @@ namespace Client.Checklist.API.Repository
 
                     var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
                     {
-                        ClientId = result.ToString(),
+                        ClientId = client.ClientId.ToString(),
                         ClientName = request.ClientName
                     }, userToken);
 
@@ -395,7 +431,7 @@ namespace Client.Checklist.API.Repository
                     {
                         StatusCode = StatusCode.Success,
                         Message = $"{StatusCode.Success}",
-                        Result = token.Result
+                        Result = client.ClientId.ToString().ToUpper()
                     };
                 }
                 catch (Exception ex)
@@ -458,14 +494,24 @@ namespace Client.Checklist.API.Repository
                 {
                     activity?.SetTag("request", JsonSerializer.Serialize(request));
 
-                    if (!IsValidStep(request.StepId))
+                    var validators = new List<IRequestValidator>
                     {
-                        activity?.SetStatus(ActivityStatusCode.Error, "Invalid Steps");
+                        new ServiceTypeValidator(request.ServiceTypeId),
+                        new EnvironmentValidator(request.Environment),
+                        new StepValidator(request.StepId)
+                    };
+
+                    _compositeValidator = new CompositeValidator(validators);
+
+                    var validate = _compositeValidator.Validate();
+                    if (validate.StatusCode != StatusCode.Success)
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Error, validate.Message);
 
                         return new BaseResponseDTO<AddClientStepsResponseDTO>
                         {
                             StatusCode = StatusCode.Error,
-                            Message = $"Error (Invalid Steps)"
+                            Message = validate.Message
                         };
                     }
 
@@ -548,14 +594,25 @@ namespace Client.Checklist.API.Repository
                 {
                     activity?.SetTag("request", JsonSerializer.Serialize(request));
 
-                    if (!IsValidStep(request.StepId))
+
+                    var validators = new List<IRequestValidator>
                     {
-                        activity?.SetStatus(ActivityStatusCode.Error, "Invalid Steps");
+                        new ServiceTypeValidator(request.ServiceTypeId),
+                        new EnvironmentValidator(request.Environment),
+                        new StepValidator(request.StepId)
+                    };
+
+                    _compositeValidator = new CompositeValidator(validators);
+
+                    var validate = _compositeValidator.Validate();
+                    if (validate.StatusCode != StatusCode.Success)
+                    {
+                        activity?.SetStatus(ActivityStatusCode.Error, validate.Message);
 
                         return new BaseResponseDTO<bool>
                         {
                             StatusCode = StatusCode.Error,
-                            Message = $"Error (Invalid Steps)"
+                            Message = validate.Message
                         };
                     }
 
@@ -645,6 +702,16 @@ namespace Client.Checklist.API.Repository
         private bool IsValidStep(int stepId)
         {
             return Enum.IsDefined(typeof(Steps), stepId) ? true : false;
+        }
+
+        private bool IsValidServiceType(int serviceTypeId)
+        {
+            return Enum.IsDefined(typeof(ServiceType), serviceTypeId) ? true : false;
+        }
+
+        private bool IsValidEnvironment(int environmentId)
+        {
+            return Enum.IsDefined(typeof(Environment), environmentId) ? true : false;
         }
 
         #endregion
