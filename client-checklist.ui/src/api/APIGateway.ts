@@ -38,7 +38,7 @@ const APIGateway = (): APIGatewayType => {
     };
 
     const createProduct = async (formData: Record<string, unknown>, headers?: Record<string, string>): Promise<APIResponse> => {
-        const res = await fetchPrivate('POST', '/v1/1clients/steps', formData, headers);
+        const res = await fetchPrivate('POST', '/v1/clients/steps', formData, headers);
         return res;
     }
 
