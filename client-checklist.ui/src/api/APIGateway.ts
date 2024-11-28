@@ -35,6 +35,11 @@ const APIGateway = (): APIGatewayType => {
 		const {clientId,token} =  data
 		const res = await fetchPrivate("GET", `/v1/clients/${clientId}`,undefined,{"x-user-token":token})
 		return res;
+    };
+
+    const createProduct = async (formData: Record<string, unknown>, headers?: Record<string, string>): Promise<APIResponse> => {
+        const res = await fetchPrivate('POST', '/v1/1clients/steps', formData, headers);
+        return res;
     }
 
     return {
@@ -43,7 +48,8 @@ const APIGateway = (): APIGatewayType => {
         fetchClients,
         deleteClient,
         createClient,
-        getClientTaskStatus
+        getClientTaskStatus,
+        createProduct
     };
 };
 

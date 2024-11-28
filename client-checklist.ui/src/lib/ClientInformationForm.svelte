@@ -6,6 +6,7 @@
 	import DateInput from './DateInput.svelte';
     import selectedIntegration from '$stores/integration'
 	import Product from '../utils/client';
+	import { selectedClientId } from '$stores/client';
 
     const { createClient } = APIGateway()
     let {back, next} = $props()
@@ -18,7 +19,7 @@
             currencies: '',
             sports: '',
             markets: '',
-            launchDate: new Date(),
+            launchDate: '',
             mainDecisionMakerName: '',
             mainDecisionMakerNumber: '',
             financeManagerName: '',
@@ -79,7 +80,8 @@
 				'x-user-token': $auth?.userToken as string
              });
 
-             if (response.ok) {
+             if (response.data) {
+								$selectedClientId = response.data;
                  next();
              }
         }
@@ -156,7 +158,7 @@
 					Target Launch Date
 				</label>
                 <DateInput
-                    value={new Date($form.launchDate)}
+                    value={$form.launchDate}
                     onSelectDate={(selectedDate) => handleSelectDate(selectedDate)}
                 />
 			</div>

@@ -4,10 +4,11 @@
 	import ClientTask from './ClientTask.svelte';
 	import Environment from '$enums/Environment';
 
-	let { title, initialValues, back, onSubmit } = $props<{
+	let { title, initialValues, back, isLoading, onSubmit } = $props<{
 		title: string;
 		initialValues: ProductFormType;
 		back?: () => void;
+		isLoading?: boolean;
 		onSubmit: (values: ProductFormType) => void;
 	}>();
 
@@ -38,10 +39,12 @@
 			<button
 				type="button"
 				class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
+				disabled={isLoading}
 				onclick={back}>Back</button
 			>
-			<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
-				>Next</button
+			<button
+				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
+				disabled={isLoading}>Next</button
 			>
 		</div>
 	</div>
