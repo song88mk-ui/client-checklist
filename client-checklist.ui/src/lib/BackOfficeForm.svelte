@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { backOfficeValues } from '$constants/productFormValues';
 	import Environment from '$enums/Environment';
-	import Steps from '$enums/Step';
 	import ProductForm, { type ProductFormType } from './ProductForm';
 	import selectedIntegration from '$stores/integration';
 	import { INTEGRATION_STEPS } from './ProgressStep/const';
 
-	const { back, next } = $props<{
-		back: () => void;
-		next: () => void;
+	const { back, next, step } = $props<{
+		back: () => void
+		next: () => void
+        step: number
 	}>();
 
 	const steps = INTEGRATION_STEPS[$selectedIntegration];
-	const title = steps[Steps.BackOffice].title;
+	const title = steps[step].title;
 
 	const initialValues = {
 		[Environment.PRODUCTION]: backOfficeValues,

@@ -18,7 +18,7 @@
             currencies: '',
             sports: '',
             markets: '',
-            launchDate: new Date(),
+            launchDate: (new Date()).toISOString(),
             mainDecisionMakerName: '',
             mainDecisionMakerNumber: '',
             financeManagerName: '',
@@ -156,7 +156,7 @@
 					Target Launch Date
 				</label>
                 <DateInput
-                    value={new Date($form.launchDate)}
+                    value={(new Date($form.launchDate)).toISOString()}
                     onSelectDate={(selectedDate) => handleSelectDate(selectedDate)}
                 />
 			</div>
