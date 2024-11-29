@@ -4,6 +4,9 @@
 	import selectedIntegration from '$stores/integration';
 	import Product from '$utils/client';
 	import BackOfficeForm from '$lib/BackOfficeForm.svelte';
+	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
+	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
+    
 	let step = $state(0);
 
 	const back = () => {
@@ -15,6 +18,8 @@
 	const next = () => {
 		step++;
 	};
+    
+	const steps = INTEGRATION_STEPS[$selectedIntegration];
 </script>
 
 <div class="mb-10">
@@ -27,6 +32,8 @@
 	{#if step === 0}
 		<ClientInformationForm {back} {next} />
 	{:else if step === 1}
-		<BackOfficeForm {back} {next} />
+		<BackOfficeForm {back} {next} {step}/>
+	{:else if step === 2 }
+		<WalletIntegrationForm {back} {next} {step}/>
 	{/if}
 </div>
