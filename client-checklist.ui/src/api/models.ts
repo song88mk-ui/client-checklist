@@ -1,4 +1,5 @@
-import type { ProductEndpointWithBody } from "./product.model";
+import type { LoginEndpointWithBody } from './auth.model';
+import type { ProductEndpointWithBody } from './product.model';
 
 export enum ResponseMessage {
 	Success = 'Success',
@@ -12,22 +13,13 @@ export enum FetchStatus {
 }
 
 export type APIResponse = {
-	data?: unknown;
-	message?: string;
-	statusCode?: number;
+	data: unknown;
+	message: string;
+	statusCode: number;
 	error?: {
 		message: string;
 		statusCode: number;
 	};
-};
-
-export type LoginResponse = {
-	data: {
-		accessType: number;
-		roleName: string;
-		userToken: string;
-	};
-	message: ResponseMessage;
 };
 
 export type EndpointNoBody = (headers?: Record<string, string>) => Promise<APIResponse>;
@@ -46,7 +38,7 @@ export type APIService = {
 };
 
 export type APIGatewayType = {
-	login: EndpointWithBody;
+	login: LoginEndpointWithBody;
 	logout: EndpointWithBody;
 	fetchClients: EndpointNoBody;
 	deleteClient: EndpointWithBody;

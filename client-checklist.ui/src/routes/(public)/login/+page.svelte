@@ -7,48 +7,34 @@
 	import auth from '$stores/auth';
 	import { FetchStatus } from '$api/models';
 	import { ErrorMessages } from '$enums/ErrorMessages';
+	import AuthService from '$services/AuthService';
 
 	let initialValues = { username: '', password: '', rememberMe: false };
-
-	const { login } = APIGateway();
 
 	let error = '';
 	let isLoading = false;
 
+	const { login } = AuthService;
+
 	const handleSubmit = async (values: LoginFormType): Promise<void> => {
 		const { username, password, rememberMe } = values;
 		isLoading = true;
-		const response: any = await login({ username, password });
+		const response: any = await login(username, password, rememberMe);
 
 		if (response?.error) {
 			isLoading = false;
 
-            switch (response.error.status) {
-                case FetchStatus.BadRequest:
-                    error = ErrorMessages.LoginIncorrectUsernamePassword;
-                    break;
-                case FetchStatus.ServerError:
-                    error = ErrorMessages.LoginFailed;
-                    break;
-                default:
-                    break;
-            }
+			switch (response.error.status) {
+				case FetchStatus.BadRequest:
+					error = ErrorMessages.LoginIncorrectUsernamePassword;
+					break;
+				case FetchStatus.ServerError:
+					error = ErrorMessages.LoginFailed;
+					break;
+				default:
+					break;
+			}
 			return;
-		}
-
-		const { userToken, roleName, accessType } = response.data;
-
-		$auth = {
-			username: values.username,
-			userToken,
-			roleName,
-			accessType
-		};
-
-		if (rememberMe) {
-			LocalStorage.setValue('userToken', JSON.stringify(userToken));
-            LocalStorage.setValue('accessType', JSON.stringify(accessType));
-            LocalStorage.setValue('username', JSON.stringify(username));
 		}
 
 		goto('/');
@@ -57,7 +43,6 @@
 	const handleRemoveError = () => {
 		error = '';
 	};
-
 </script>
 
 <div class="h-[100svh] flex-1 content-center">

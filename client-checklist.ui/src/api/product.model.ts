@@ -11,7 +11,7 @@ export type ProductFormDataType = ClientTaskFormType & {
 };
 
 export type ProductAPIResponse = APIResponse & {
-  result: {
+  data: {
     id: string;
   }
 };

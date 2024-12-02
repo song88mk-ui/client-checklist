@@ -9,9 +9,10 @@
 	import { deletedClient } from '$stores/client';
 	import Alert from '$lib/Alert.svelte';
 	import { goto } from '$app/navigation';
-	import removeAuth from '$utils/removeAuth';
+	import AuthService from '$services/AuthService';
 
 	const { fetchClients } = APIGateway();
+	const { removeAuth } = AuthService;
 
 	let isLoading = false;
 	let error = '';
