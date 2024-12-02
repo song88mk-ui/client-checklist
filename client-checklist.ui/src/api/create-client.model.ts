@@ -2,7 +2,7 @@ export type CreateClientRequest = {
     ClientName: string
     Domain: string
     SSLCert: string
-    ServiceTypeId: string
+    ServiceTypeId: number
     Languages: string[]
     Currencies: string[]
     Sports: string[]

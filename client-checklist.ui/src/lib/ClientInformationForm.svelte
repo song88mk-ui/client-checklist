@@ -1,11 +1,14 @@
 <script lang="ts">
     import { createForm } from 'svelte-forms-lib'
-    import * as yup from 'yup'
 	import APIGateway from '$api/APIGateway'
 	import auth from '$stores/auth';
 	import DateInput from './DateInput.svelte';
     import selectedIntegration from '$stores/integration'
 	import Product from '../utils/client';
+	import IntegrationType from '$enums/integrationType';
+	import { ResponseMessage, StatusCode } from '$api/models';
+	import { goto } from '$app/navigation';
+	import { LocalStorage } from './storage';
 
     const { createClient } = APIGateway()
     let {back, next} = $props()
@@ -64,7 +67,7 @@
 
              const response: any = await createClient({
                 ...values,
-                serviceTpeId: $selectedIntegration,
+                serviceTypeId: $selectedIntegration === IntegrationType.WALLET_INTEGRATION ? 1 : 2,
                 languages: languages.split(' '),
                 currencies: currencies.split(' '),
                 sports: sports.split(' '),
@@ -79,9 +82,18 @@
 				'x-user-token': $auth?.userToken as string
              });
 
-             if (response.ok) {
+             if (response.statusCode === StatusCode.Success) {
                  next();
              }
+
+            if ((response.error as any)?.statusCode === StatusCode.UnAuthorized) {
+                $auth = null
+                LocalStorage.removeValue('userToken')
+                LocalStorage.removeValue('accessType')
+                LocalStorage.removeValue('username')
+                goto("/login")
+                return;
+            }
         }
     })
 
@@ -296,7 +308,7 @@
 		<div class="flex gap-3">
 			<div class="flex-1">
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
-					Market Manager
+					Account Manager
 				</label>
 				<div class="flex gap-3">
 					<input
