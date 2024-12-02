@@ -13,7 +13,6 @@ export enum FetchStatus {
 }
 
 export type APIResponse = {
-<<<<<<< HEAD
 	data: unknown;
 	message: string;
 	statusCode: number;
@@ -21,21 +20,6 @@ export type APIResponse = {
 		message: string;
 		statusCode: number;
 	};
-=======
-    data?: unknown;
-    message?: string;
-    statusCode?: number;
-    error?: unknown;
-};
-
-export type LoginResponse = {
-    data: {
-        accessType: number;
-        roleName: string;
-        userToken: string;
-    };
-    message: ResponseMessage;
->>>>>>> d286304c3b9fc738a15ca965e5ab845181ecacc9
 };
 
 export type EndpointNoBody = (headers?: Record<string, string>) => Promise<APIResponse>;
@@ -54,7 +38,6 @@ export type APIService = {
 };
 
 export type APIGatewayType = {
-<<<<<<< HEAD
 	login: LoginEndpointWithBody;
 	logout: EndpointWithBody;
 	fetchClients: EndpointNoBody;
@@ -62,14 +45,6 @@ export type APIGatewayType = {
 	createClient: EndpointWithBody;
 	getClientTaskStatus: EndpointWithBody;
 	createProduct: ProductEndpointWithBody;
-=======
-    login: EndpointWithBody;
-    logout: EndpointWithBody;
-    fetchClients: EndpointNoBody;
-    deleteClient: EndpointWithBody;
-    createClient: EndpointWithBody;
-    getClientTaskStatus: EndpointWithBody;
->>>>>>> d286304c3b9fc738a15ca965e5ab845181ecacc9
 };
 
 export type APIErrorObject = {
