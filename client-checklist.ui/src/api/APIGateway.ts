@@ -1,12 +1,14 @@
+import type { LoginAPIResponse, LoginFormDataType } from './auth.model';
 import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
+import type { ProductAPIResponse, ProductFormDataType } from './product.model';
 
 const APIGateway = (): APIGatewayType => {
     const { fetchPrivate } = BaseAPIService();
 
-    const login = async (formData: Record<string, unknown>): Promise<APIResponse> => {
+    const login = async (formData: LoginFormDataType): Promise<LoginAPIResponse> => {
         const res = await fetchPrivate('POST', '/v1/users/login', formData);
-        return res;
+        return res as LoginAPIResponse;
     };
 
     const logout = async (formData: Record<string, unknown>): Promise<APIResponse> => {
@@ -35,6 +37,11 @@ const APIGateway = (): APIGatewayType => {
 		const {clientId,token} =  data
 		const res = await fetchPrivate("GET", `/v1/clients/${clientId}`,undefined,{"x-user-token":token})
 		return res;
+    };
+
+    const createProduct = async (formData: ProductFormDataType, headers?: Record<string, string>): Promise<ProductAPIResponse> => {
+        const res = await fetchPrivate('POST', '/v1/clients/steps', formData, headers);
+        return res as ProductAPIResponse;
     }
 
     return {
@@ -43,7 +50,8 @@ const APIGateway = (): APIGatewayType => {
         fetchClients,
         deleteClient,
         createClient,
-        getClientTaskStatus
+        getClientTaskStatus,
+        createProduct
     };
 };
 

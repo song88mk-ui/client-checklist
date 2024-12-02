@@ -1,4 +1,4 @@
-enum Steps     {
+enum Step     {
     ClientInformation,
     BackOffice,
     WalletIntegration,
@@ -11,4 +11,4 @@ enum Steps     {
     ClientLaunch,
 }
 
-export default Steps
+export default Step

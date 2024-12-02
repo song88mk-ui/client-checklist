@@ -4,7 +4,7 @@
 	import Alert from './Alert.svelte';
 	import auth from '$stores/auth';
 	import { ErrorMessages } from '$enums/ErrorMessages';
-	import logout from '$utils/logout';
+	import AuthService from '$services/AuthService';
 
 	const handleCancel = () => {
 		closeModal();
@@ -12,6 +12,8 @@
 
 	let isLoading = false;
 	let error = '';
+
+	const { logout } = AuthService;
 
 	const handleLogout = async () => {
 		isLoading = true;

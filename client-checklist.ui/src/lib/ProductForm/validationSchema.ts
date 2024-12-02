@@ -2,6 +2,7 @@ import Environment from '$enums/Environment';
 import * as yup from 'yup';
 
 export type ClientSubTaskFormType = {
+	subtaskId: number;
 	subtaskName: string;
 	comment: string;
 	taskStatusId: number;
@@ -22,6 +23,7 @@ export type ProductFormType = {
 
 const clientSubTaskFormSchema = yup.array().of(
 	yup.object().shape({
+		subtaskId: yup.number(),
 		subtaskName: yup.string(),
 		comment: yup.string(),
 		taskStatusId: yup.number(),

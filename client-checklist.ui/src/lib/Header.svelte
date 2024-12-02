@@ -7,11 +7,13 @@
 	import { openModal } from '$stores/modal';
 	import LogoutModal from '$lib/LogoutModal.svelte';
 	import { ErrorMessages } from '$enums/ErrorMessages';
-	import logout from '$utils/logout';
+	import AuthService from '$services/AuthService';
 
 	let isLoading = false;
 	let error = '';
 
+	const { logout } = AuthService;
+	
 	const handleLogout = async () => {
 		if (AccessType.READWRITE === $auth?.accessType) {
 			openModal(LogoutModal);

@@ -9,7 +9,7 @@
 
 	let isShowDatePicker = $state(false);
 	let valueAsDate = $state(value ? new Date(value) : new Date());
-	let formattedValue = $state(value instanceof Date ? format(value, 'MMMM d, yyyy') : '');
+	let formattedValue = $state(format(valueAsDate, 'MMMM d, yyyy') || '');
 
 	const handleFocusOut = (e: FocusEvent) => {
 		if (

@@ -5,6 +5,7 @@
 	import DateInput from './DateInput.svelte';
     import selectedIntegration from '$stores/integration'
 	import Product from '../utils/client';
+	import { selectedClientId } from '$stores/client';
 	import IntegrationType from '$enums/integrationType';
 	import { ResponseMessage, StatusCode } from '$api/models';
 	import { goto } from '$app/navigation';
@@ -83,7 +84,8 @@
              });
 
              if (response.statusCode === StatusCode.Success) {
-                 next();
+								$selectedClientId = response.data;
+                next();
              }
 
             if ((response.error as any)?.statusCode === StatusCode.UnAuthorized) {

@@ -9,9 +9,10 @@
 	import { deletedClient } from '$stores/client';
 	import Alert from '$lib/Alert.svelte';
 	import { goto } from '$app/navigation';
-	import { LocalStorage } from '$lib/storage';
+	import AuthService from '$services/AuthService';
 
 	const { fetchClients } = APIGateway();
+	const { removeAuth } = AuthService;
 
 	let isLoading = false;
 	let error = '';
@@ -26,18 +27,14 @@
 		isLoading = false;
 
 		if (response.error) {
-            const UNAUTHORIZED = 401
-            if ((response.error as any)?.statusCode === UNAUTHORIZED) {
-                $auth = null
-                LocalStorage.removeValue('userToken')
-                LocalStorage.removeValue('accessType')
-                LocalStorage.removeValue('username')
-                goto("/login")
-                return;
-            }
+			const { statusCode } = response.error;
+			if (statusCode === 401) {
+				await removeAuth();
+				await goto('/login');
+			}
 
-            error = ErrorMessages.FetchClientsFailed;
-            return;
+			error = ErrorMessages.FetchClientsFailed;
+			return;
 		}
 
 		$clients = (response.data as { clients: any[] }).clients.map((client) => ({
