@@ -3,6 +3,11 @@ export enum ResponseMessage {
     Failed = 'Failed'
 }
 
+export enum StatusCode {
+    Success = 100,
+    UnAuthorized = 401
+}
+
 export enum FetchStatus {
     BadRequest = 'BadRequest',
     ServerError = 'ServerError',
