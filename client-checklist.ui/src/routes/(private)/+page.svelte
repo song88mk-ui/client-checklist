@@ -8,6 +8,8 @@
 	import services from '$constants/services';
 	import { deletedClient } from '$stores/client';
 	import Alert from '$lib/Alert.svelte';
+	import { goto } from '$app/navigation';
+	import removeAuth from '$utils/removeAuth';
 
 	const { fetchClients } = APIGateway();
 
@@ -24,6 +26,12 @@
 		isLoading = false;
 
 		if (response.error) {
+			const { statusCode } = response.error;
+			if (statusCode === 401) {
+				await removeAuth();
+				await goto('/login');
+			}
+
 			error = ErrorMessages.FetchClientsFailed;
 			return;
 		}

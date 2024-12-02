@@ -15,7 +15,10 @@ export type APIResponse = {
 	data?: unknown;
 	message?: string;
 	statusCode?: number;
-	error?: unknown;
+	error?: {
+		message: string;
+		statusCode: number;
+	};
 };
 
 export type LoginResponse = {

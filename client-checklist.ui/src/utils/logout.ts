@@ -1,6 +1,5 @@
 import APIGateway from '$api/APIGateway';
-import { LocalStorage } from '$lib/storage';
-import auth from '$stores/auth';
+import removeAuth from './removeAuth';
 
 const { logout: logoutAPI } = APIGateway();
 
@@ -15,10 +14,7 @@ export const logout = async (userToken: string) => {
 	);
 
 	if (!response?.error) {
-		auth.set(null);
-		LocalStorage.removeValue('userToken');
-		LocalStorage.removeValue('accessType');
-		LocalStorage.removeValue('username');
+		removeAuth();
 	}
 
 	return response;
