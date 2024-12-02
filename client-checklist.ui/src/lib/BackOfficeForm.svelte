@@ -10,6 +10,7 @@
 	import { selectedClientId } from '$stores/client';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
+	import Step from '$enums/Step';
 
 	const { createProduct } = APIGateway();
 
@@ -35,7 +36,7 @@
 		const stagingProduct = createProduct(
 			{
 				clientId: $selectedClientId as string,
-				stepId: Steps.BackOffice,
+				stepId: Step.BackOffice,
 				stepName: '',
 				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
 				sortOrder: 0,
@@ -50,7 +51,7 @@
 		const productionProduct = createProduct(
 			{
 				clientId: $selectedClientId as string,
-				stepId: Steps.BackOffice,
+				stepId: Step.BackOffice,
 				stepName: '',
 				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
 				sortOrder: 0,
