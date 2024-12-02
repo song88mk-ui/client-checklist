@@ -1,3 +1,5 @@
+import type { ProductEndpointWithBody } from "./product.model";
+
 export enum ResponseMessage {
 	Success = 'Success',
 	Failed = 'Failed'
@@ -47,7 +49,7 @@ export type APIGatewayType = {
 	deleteClient: EndpointWithBody;
 	createClient: EndpointWithBody;
 	getClientTaskStatus: EndpointWithBody;
-	createProduct: EndpointWithBody;
+	createProduct: ProductEndpointWithBody;
 };
 
 export type APIErrorObject = {

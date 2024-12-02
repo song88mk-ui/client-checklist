@@ -34,7 +34,7 @@
 		isLoading = true;
 		const stagingProduct = createProduct(
 			{
-				clientId: $selectedClientId,
+				clientId: $selectedClientId as string,
 				stepId: Steps.BackOffice,
 				stepName: '',
 				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
@@ -49,7 +49,7 @@
 
 		const productionProduct = createProduct(
 			{
-				clientId: $selectedClientId,
+				clientId: $selectedClientId as string,
 				stepId: Steps.BackOffice,
 				stepName: '',
 				serviceTypeId: Services.LIVE_DATA_INTEGRATION,

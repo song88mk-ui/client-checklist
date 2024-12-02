@@ -1,5 +1,6 @@
 import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
+import type { ProductFormDataType } from './product.model';
 
 const APIGateway = (): APIGatewayType => {
     const { fetchPrivate } = BaseAPIService();
@@ -37,7 +38,7 @@ const APIGateway = (): APIGatewayType => {
 		return res;
     };
 
-    const createProduct = async (formData: Record<string, unknown>, headers?: Record<string, string>): Promise<APIResponse> => {
+    const createProduct = async (formData: ProductFormDataType, headers?: Record<string, string>): Promise<APIResponse> => {
         const res = await fetchPrivate('POST', '/v1/clients/steps', formData, headers);
         return res;
     }
