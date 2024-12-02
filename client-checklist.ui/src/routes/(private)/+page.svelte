@@ -8,6 +8,8 @@
 	import services from '$constants/services';
 	import { deletedClient } from '$stores/client';
 	import Alert from '$lib/Alert.svelte';
+	import { goto } from '$app/navigation';
+	import { LocalStorage } from '$lib/storage';
 
 	const { fetchClients } = APIGateway();
 
@@ -24,8 +26,18 @@
 		isLoading = false;
 
 		if (response.error) {
-			error = ErrorMessages.FetchClientsFailed;
-			return;
+            const UNAUTHORIZED = 401
+            if ((response.error as any)?.statusCode === UNAUTHORIZED) {
+                $auth = null
+                LocalStorage.removeValue('userToken')
+                LocalStorage.removeValue('accessType')
+                LocalStorage.removeValue('username')
+                goto("/login")
+                return;
+            }
+
+            error = ErrorMessages.FetchClientsFailed;
+            return;
 		}
 
 		$clients = (response.data as { clients: any[] }).clients.map((client) => ({
