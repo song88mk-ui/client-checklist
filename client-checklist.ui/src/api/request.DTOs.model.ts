@@ -1,3 +1,4 @@
+import type Services from "$enums/Services";
 import type { Manager } from "./response.DTOs.model";
 
 export type LoginFormDataType = {
@@ -42,3 +43,24 @@ export type CreateClientFormDataType = {
 	technicalManagerName: string,
 	technicalManagerNumber: string
 };
+
+export type ClientSubtask = {
+    assignedTo: string;
+    comment: string;
+    subtaskId: number;
+    subtaskName: string;
+    taskStatusId: number;
+}
+
+export type CreateProductFormDataType = {
+    actualDateCompleted: string;
+    assignedTo: string;
+    clientId: string;
+    clientSubTasks: ClientSubtask[];
+    environment: number;
+    serviceTypeId: Services;
+    sortOrder: number;
+    stepId: number;
+    stepName: string;
+    targetDateCompleted: string;
+}

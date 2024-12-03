@@ -1,7 +1,7 @@
 import type {
 	CreateClientFormDataType,
+	CreateProductFormDataType,
 	DeleteClientFormDataType,
-	GetClientTaskStatusQueryType,
 	LoginFormDataType,
 	LogoutFormDataType
 } from './request.DTOs.model';
@@ -9,6 +9,7 @@ import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
 import type {
 	CreateClientResponse,
+	CreateProductResponse,
 	DeleteClientResponse,
 	FetchClientsResponse,
 	GetClientTaskStatusResponse,
@@ -83,6 +84,19 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const createProduct = async (
+		formData: CreateProductFormDataType,
+		headers: Record<string, string>
+	): Promise<APIResponse<CreateProductResponse>> => {
+		const res = await fetchPrivate<CreateProductFormDataType, CreateProductResponse>(
+			'POST',
+			'/v1/clients/steps',
+			formData,
+			headers
+		);
+		return res;
+	};
+
 	// const logout = async (formData: Record<string, unknown>): Promise<APIResponse> => {
 	//     const res = await fetchPrivate('POST', '/v1/users/logout', formData);
 	//     return res;
@@ -122,7 +136,8 @@ const APIGateway = (): APIGatewayType => {
 		fetchClients,
 		deleteClient,
 		createClient,
-        getClientTaskStatus
+		getClientTaskStatus,
+        createProduct
 	};
 };
 

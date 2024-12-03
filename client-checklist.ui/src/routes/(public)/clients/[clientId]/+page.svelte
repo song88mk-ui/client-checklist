@@ -59,8 +59,8 @@
 	onMount(async () => {
 		try {
 			openModal(ClientOnBoarding);
-			const response = await getClientTaskStatus({ clientId,token: queryToken ? queryToken : '' });
-			if(response?.error){
+			const response = await getClientTaskStatus(clientId, { 'x-user-token': queryToken ? queryToken : '' });
+			if(response?.error) {
 				error = response.error
 				return
 			}

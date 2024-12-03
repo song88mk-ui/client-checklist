@@ -54,3 +54,7 @@ export type GetClientTaskStatusResponse = {
 		clientSteps: unknown[];
 	};
 };
+
+export type CreateProductResponse = {
+    data: unknown;
+}
