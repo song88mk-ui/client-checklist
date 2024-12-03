@@ -1,5 +1,5 @@
-import type { LoginEndpointWithBody } from './auth.model';
-import type { ProductEndpointWithBody } from './product.model';
+import type { LoginFormDataType } from "./request.DTOs.model";
+import type { LoginAPIResponse } from "./response.DTOs.model";
 
 export enum ResponseMessage {
     Success = 'Success',
@@ -11,48 +11,34 @@ export enum StatusCode {
     UnAuthorized = 401
 }
 
-export enum FetchStatus {
+export enum FetchErrorStatus {
     BadRequest = 'BadRequest',
     ServerError = 'ServerError',
     UnAuthorized = 'UnAuthorized'
 }
 
-export type APIResponse = {
-	data: unknown;
-	message: string;
-	statusCode: number;
+export type APIResponse<T> = {
+	data?: T;
+	message?: string;
+	statusCode?: number;
 	error?: {
-		message: string;
+		status: FetchErrorStatus;
 		statusCode: number;
 	};
 };
 
-export type EndpointNoBody = (headers?: Record<string, string>) => Promise<APIResponse>;
-export type EndpointWithBody = (
-    data: Record<string, unknown>,
-    headers?: Record<string, string>
-) => Promise<APIResponse>;
-
 export type APIService = {
-    fetchPrivate: (
-        method: string,
+    fetchPrivate<B, T>(method: string,
         url: string,
-        body?: Record<string, unknown>,
-        headers?: Record<string, string>
-    ) => Promise<APIResponse>;
+        body?: B,
+        headers?: Record<string, string>): Promise<APIResponse<T>>;
 };
 
 export type APIGatewayType = {
-	login: LoginEndpointWithBody;
-	logout: EndpointWithBody;
-	fetchClients: EndpointNoBody;
-	deleteClient: EndpointWithBody;
-	createClient: EndpointWithBody;
-	getClientTaskStatus: EndpointWithBody;
-	createProduct: ProductEndpointWithBody;
+	login: (formData: LoginFormDataType) => Promise<APIResponse<LoginAPIResponse>>;
 };
 
 export type APIErrorObject = {
-    status: FetchStatus;
+    status: FetchErrorStatus;
     statusCode: number;
 };
