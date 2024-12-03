@@ -1,5 +1,6 @@
 
 <script lang="ts">
+    import { MTSValues } from '$constants/productFormValues';
 	import { ClientRowStatus } from "$enums/ClientRowStatus";
 	import Environment from "$enums/Environment";
 	import selectedIntegration from '$stores/integration';
@@ -11,64 +12,9 @@
 	const steps = INTEGRATION_STEPS[$selectedIntegration];
 	const title = steps[step].title;
 
-    const walletIntegrationValues = {
-        assignedTo: '',
-        targetDateCompleted: ''                                                                                                                                                          ,
-        actualDateCompleted: '',
-        clientSubTasks: [
-            {
-                subtaskName: 'Max Bet',
-                comment: '',
-                taskStatusId: ClientRowStatus.NotStarted,
-                assignedTo: ''
-            },
-            {
-                subtaskName: 'Max Bet(Client)',
-                comment: '',
-                taskStatusId: ClientRowStatus.NotStarted,
-                assignedTo: ''
-            },
-            {
-                subtaskName: 'Max Payout',
-                comment: '',
-                taskStatusId: ClientRowStatus.NotStarted,
-                assignedTo: ''
-            },
-            {
-                subtaskName: 'Max Payout(Client)',
-                comment: '',
-                taskStatusId: ClientRowStatus.NotStarted,
-                assignedTo: ''
-            },
-            {
-                subtaskName: 'Player CCF and Groupings',
-                comment: '',
-                taskStatusId: ClientRowStatus.NotStarted,
-                assignedTo: ''
-            },
-            {
-                subtaskName: 'Player CCF and Groupings(Client)',
-                comment: '',
-                taskStatusId: ClientRowStatus.NotStarted,
-                assignedTo: ''
-            },
-            {
-                subtaskName: 'Bet Validation',
-                comment: '',
-                taskStatusId: ClientRowStatus.NotStarted,
-                assignedTo: ''
-            },
-            {
-                subtaskName: 'Bet Validation(Client)',
-                comment: '',
-                taskStatusId: ClientRowStatus.NotStarted,
-                assignedTo: ''
-            },
-        ]
-    }
     const initialValues = {
-        [Environment.STAGING]: walletIntegrationValues,
-        [Environment.PRODUCTION]: walletIntegrationValues
+        [Environment.STAGING]: MTSValues,
+        [Environment.PRODUCTION]: MTSValues
     }
 
     const handleSubmit = (values: ProductFormType) => {
