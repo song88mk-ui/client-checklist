@@ -17,17 +17,6 @@ const backOfficeSubTasks = [
 	}
 ];
 
-const defaultValues = {
-	assignedTo: '',
-	targetDateCompleted: '',
-	actualDateCompleted: ''
-};
-
-export const backOfficeValues = {
-	...defaultValues,
-	clientSubTasks: backOfficeSubTasks
-};
-
 const MTSSubTasks = [
 	{
 		subtaskName: 'Max Bet',
@@ -79,7 +68,41 @@ const MTSSubTasks = [
 	},
 ];
 
+const operationsSubTasks = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Back Office-Customer Training',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'External Provider Customer Support Set Up',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	}
+];
+
+
+const defaultValues = {
+	assignedTo: '',
+	targetDateCompleted: '',
+	actualDateCompleted: ''
+};
+
+export const backOfficeValues = {
+	...defaultValues,
+	clientSubTasks: backOfficeSubTasks
+};
+
+
 export const MTSValues = {
 	...defaultValues,
 	clientSubTasks: MTSSubTasks
+};
+export const operationsValues = {
+	...defaultValues,
+	clientSubTasks: operationsSubTasks
 };

@@ -7,6 +7,7 @@
 	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
 	import MTSForm from '$lib/MTSForm.svelte';
+	import OperationsForm from '$lib/OperationsForm.svelte';
 
 	let step = $state(0);
 
@@ -40,5 +41,7 @@
 		<WalletIntegrationForm {back} {next} {step}/>
 	{:else if step === 4 }
 		<MTSForm {back} {next} {step}/>
+	{:else if step === 6 }
+		<OperationsForm {back} {next} {step}/>
 	{/if}
 </div>
