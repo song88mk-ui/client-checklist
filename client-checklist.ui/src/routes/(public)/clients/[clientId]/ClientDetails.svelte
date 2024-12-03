@@ -4,6 +4,7 @@
 		Domain: string;
 		ServiceToProvide: string;
 		LangSupported: string[];
+		CurrencySupported:string[];
 		LaunchDate: string;
 	};
 	let {
@@ -11,6 +12,7 @@
 		Domain = '',
 		ServiceToProvide = '',
 		LangSupported = [],
+		CurrencySupported,
 		LaunchDate = ''
 	}: Props = $props();
 </script>
@@ -47,7 +49,7 @@
 			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span>
 			<br />
 			<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
-				{LangSupported}</span
+				{CurrencySupported}</span
 			>
 		</div>
 		<div>
