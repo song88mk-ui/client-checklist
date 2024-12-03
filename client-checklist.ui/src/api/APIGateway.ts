@@ -97,39 +97,6 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
-	// const logout = async (formData: Record<string, unknown>): Promise<APIResponse> => {
-	//     const res = await fetchPrivate('POST', '/v1/users/logout', formData);
-	//     return res;
-	// };
-
-	// const fetchClients = async (headers?: Record<string, string>): Promise<APIResponse> => {
-	//     const res = await fetchPrivate('GET', '/v1/clients', undefined, headers);
-	//     return res;
-	// };
-
-	// const deleteClient = async (
-	//     formData: Record<string, unknown>,
-	//     headers?: Record<string, string>
-	// ): Promise<APIResponse> => {
-	//     const res = await fetchPrivate('DELETE', '/v1/clients', formData, headers);
-	//     return res;
-	// };
-
-	// const createClient = async (formData: Record<string, unknown>, headers?: Record<string, string>): Promise<APIResponse> => {
-	//     const res = await fetchPrivate('POST', '/v1/clients', formData, headers);
-	//     return res;
-	// };
-	// const getClientTaskStatus = async (data: Record<string, string>): Promise<APIResponse> => {
-	// 	const {clientId,token} =  data
-	// 	const res = await fetchPrivate("GET", `/v1/clients/${clientId}`,undefined,{"x-user-token":token})
-	// 	return res;
-	// };
-
-	// const createProduct = async (formData: ProductFormDataType, headers?: Record<string, string>): Promise<ProductAPIResponse> => {
-	//     const res = await fetchPrivate('POST', '/v1/clients/steps', formData, headers);
-	//     return res as ProductAPIResponse;
-	// }
-
 	return {
 		login,
 		logout,
@@ -137,7 +104,7 @@ const APIGateway = (): APIGatewayType => {
 		deleteClient,
 		createClient,
 		getClientTaskStatus,
-        createProduct
+		createProduct
 	};
 };
 
