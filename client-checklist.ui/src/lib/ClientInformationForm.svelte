@@ -10,9 +10,12 @@
 	import { ResponseMessage, StatusCode } from '$api/models';
 	import { goto } from '$app/navigation';
 	import { LocalStorage } from './storage';
+	import steps from '$stores/steps';
+	import Step from '$enums/Step';
 
     const { createClient } = APIGateway()
-    let {back, next} = $props()
+    let {next} = $props()
+		let isLoading = $state(false);
     const { form, handleSubmit, errors, updateField } = createForm({
         initialValues: {
             clientName: '',
@@ -57,6 +60,7 @@
             return errs
         },
         onSubmit: async (values) => {
+						isLoading = true;
             const { 
                 clientName, domain, sslCert, languages,
                 currencies, sports, markets, launchDate, mainDecisionMakerName,
@@ -82,9 +86,10 @@
              }, {
 				'x-user-token': $auth?.userToken as string
              });
+						 isLoading = false;
 
              if (response.statusCode === StatusCode.Success) {
-								$selectedClientId = response.data;
+								$steps[Step.ClientInformation].id = response.data;
                 next();
              }
 
@@ -376,11 +381,7 @@
 </div>
 <div class="text-right">
 	<div class="inline-flex gap-2">
-		<button
-			class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none" type="button"
-			>Back</button
-		>
-		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white" type="submit"
+		<button class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white" type="submit" disabled={isLoading}
         >Next</button>
 	</div>
 </div>
