@@ -6,6 +6,8 @@
 	import BackOfficeForm from '$lib/BackOfficeForm.svelte';
 	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
+	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
+    
 	import MTSForm from '$lib/MTSForm.svelte';
 	import OperationsForm from '$lib/OperationsForm.svelte';
 
@@ -37,8 +39,10 @@
 		<ClientInformationForm {back} {next} />
 	{:else if step === 1}
 		<BackOfficeForm {back} {next} {step}/>
-	{:else if step === 2 }
+	{:else if step === 2}
 		<WalletIntegrationForm {back} {next} {step}/>
+    {:else if step === 3}
+        <SportsbookPlayerSiteUiuxForm {back} {next} {step} />
 	{:else if step === 4 }
 		<MTSForm {back} {next} {step}/>
 	{:else if step === 6 }
