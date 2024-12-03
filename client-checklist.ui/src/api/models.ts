@@ -1,11 +1,15 @@
 import type {
+	CreateClientFormDataType,
 	DeleteClientFormDataType,
+	GetClientTaskStatusQueryType,
 	LoginFormDataType,
 	LogoutFormDataType
 } from './request.DTOs.model';
 import type {
+	CreateClientResponse,
 	DeleteClientResponse,
 	FetchClientsResponse,
+	GetClientTaskStatusResponse,
 	LoginAPIResponse,
 	LogoutAPIResponse
 } from './response.DTOs.model';
@@ -58,4 +62,12 @@ export type APIGatewayType = {
 		formData: DeleteClientFormDataType,
 		headers: Record<string, string>
 	) => Promise<APIResponse<DeleteClientResponse>>;
+	createClient: (
+		formData: CreateClientFormDataType,
+		headers: Record<string, string>
+	) => Promise<APIResponse<CreateClientResponse>>;
+	getClientTaskStatus: (
+		clientId: string,
+        headers: Record<string, string>
+	) => Promise<APIResponse<GetClientTaskStatusResponse>>;
 };

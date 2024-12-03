@@ -9,37 +9,48 @@ export type LogoutAPIResponse = {
 };
 
 export type Manager = {
-    Name: string
-    Number: number
-}
+	name: string;
+	number: string;
+};
 
 export type ClientFetch = {
-    clientId: string;
-    clientName: string;
-    clientToken: string;
-    currencies: string[];
-    customerServiceManager: Manager;
-    domain: string;
-    financeManager: Manager;
-    isActive: boolean;
-    languages: string[];
-    mainDecisionMaker: Manager;
-    markets: string[];
-    productManager: Manager;
-    serviceTypeId: number;
-    sports: string[];
-    sslCertificate: string;
-    targetLaunchDate: string;
-    taskStatus: number;
-    technicalManager: Manager;
-}
+	clientId: string;
+	clientName: string;
+	clientToken: string;
+	currencies: string[];
+	customerServiceManager: Manager;
+	domain: string;
+	financeManager: Manager;
+	isActive: boolean;
+	languages: string[];
+	mainDecisionMaker: Manager;
+	markets: string[];
+	productManager: Manager;
+	serviceTypeId: number;
+	sports: string[];
+	sslCertificate: string;
+	targetLaunchDate: string;
+	taskStatus: number;
+	technicalManager: Manager;
+};
 
 export type FetchClientsResponse = {
-    data: {
-        clients: ClientFetch[];
-    }
-}
+	data: {
+		clients: ClientFetch[];
+	};
+};
 
 export type DeleteClientResponse = {
-    data: null;
-}
+	data: null;
+};
+
+export type CreateClientResponse = {
+	data: string;
+};
+
+export type GetClientTaskStatusResponse = {
+	data: {
+		client: ClientFetch[];
+		clientSteps: unknown[];
+	};
+};
