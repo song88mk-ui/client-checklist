@@ -8,6 +8,9 @@
 	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
 	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
     
+	import MTSForm from '$lib/MTSForm.svelte';
+	import OperationsForm from '$lib/OperationsForm.svelte';
+
 	let step = $state(0);
 
 	const back = () => {
@@ -19,6 +22,8 @@
 	const next = () => {
 		step++;
 	};
+
+	$inspect(step)
     
 	const steps = INTEGRATION_STEPS[$selectedIntegration];
 </script>
@@ -38,5 +43,9 @@
 		<WalletIntegrationForm {back} {next} {step}/>
     {:else if step === 3}
         <SportsbookPlayerSiteUiuxForm {back} {next} {step} />
+	{:else if step === 4 }
+		<MTSForm {back} {next} {step}/>
+	{:else if step === 6 }
+		<OperationsForm {back} {next} {step}/>
 	{/if}
 </div>

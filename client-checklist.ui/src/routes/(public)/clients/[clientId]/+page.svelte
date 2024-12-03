@@ -111,6 +111,7 @@
 			CompanyName={client.clientName}
 			Domain={client?.domain}
 			LangSupported={client?.languages}
+			CurrencySupported={client?.currencies}
 			LaunchDate={new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
 				year: 'numeric',
 				month: 'long',
