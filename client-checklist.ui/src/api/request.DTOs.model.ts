@@ -1,4 +1,3 @@
-import type Services from "$enums/Services";
 import type { Manager } from "./response.DTOs.model";
 
 export type LoginFormDataType = {
@@ -58,7 +57,7 @@ export type CreateProductFormDataType = {
     clientId: string;
     clientSubTasks: ClientSubtask[];
     environment: number;
-    serviceTypeId: Services;
+    serviceTypeId: number;
     sortOrder: number;
     stepId: number;
     stepName: string;
