@@ -78,7 +78,7 @@ const BaseAPIService = (): APIService => {
 
             return returnValue;
         } catch (error: unknown) {
-            console.log("Catch error", error)
+            console.log("Catch exception error", error)
 
             const errorReturnValue: APIResponse<T> = {
                 error: apiError
