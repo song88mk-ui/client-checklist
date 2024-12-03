@@ -447,7 +447,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request)
+        public async Task<BaseResponse> EnableDisableClient(ClientStatusRequestDTO request)
         {
             try
             {
@@ -465,7 +465,15 @@ namespace Client.Checklist.API.Repository
                 }
                 else
                 {
-                    client.IsDeleted = true;
+                    var statuses = new int[] { 0, 1 };
+                    if(!statuses.Contains(request.StatusId))
+                        return new BaseResponse
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Invalid Status"
+                        };
+
+                    client.IsDeleted = request.StatusId == 0;
                 }
 
                 _clientChecklistContext.SaveChanges();
