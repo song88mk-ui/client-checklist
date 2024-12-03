@@ -42,30 +42,28 @@ const BaseAPIService = (): APIService => {
                 options
             )
 
-            if (!response.ok) {
-                if (response?.status === 401) {
-                    apiError = {
-                        status: FetchStatus.UnAuthorized,
-                        statusCode: 401
-                    }
-                    throw new Error()
+            if (response?.status === 400) {
+                apiError = {
+                    status: FetchStatus.BadRequest,
+                    statusCode: 400
                 }
-                
-                if (response?.status === 400) {
-                    apiError = {
-                        status: FetchStatus.BadRequest,
-                        statusCode: 400
-                    }
-                    throw new Error()
-                }
+                throw new Error()
+            }
 
-                if (response?.status >= 500) {
-                    apiError = {
-                        status: FetchStatus.ServerError,
-                        statusCode: 500
-                    }
-                    throw new Error()
+            if (response?.status === 401) {
+                apiError = {
+                    status: FetchStatus.UnAuthorized,
+                    statusCode: 401
                 }
+                throw new Error()
+            }
+
+            if (response?.status >= 400) {
+                apiError = {
+                    status: FetchStatus.ServerError,
+                    statusCode: 500
+                }
+                throw new Error()
             }
 
             const resJson: any = await response.json()
