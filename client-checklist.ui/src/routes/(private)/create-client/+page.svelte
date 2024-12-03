@@ -6,7 +6,8 @@
 	import BackOfficeForm from '$lib/BackOfficeForm.svelte';
 	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
-    
+	import MTSForm from '$lib/MTSForm.svelte';
+
 	let step = $state(0);
 
 	const back = () => {
@@ -18,6 +19,8 @@
 	const next = () => {
 		step++;
 	};
+
+	$inspect(step)
     
 	const steps = INTEGRATION_STEPS[$selectedIntegration];
 </script>
@@ -35,5 +38,7 @@
 		<BackOfficeForm {back} {next} {step}/>
 	{:else if step === 2 }
 		<WalletIntegrationForm {back} {next} {step}/>
+	{:else if step === 4 }
+		<MTSForm {back} {next} {step}/>
 	{/if}
 </div>

@@ -27,3 +27,59 @@ export const backOfficeValues = {
 	...defaultValues,
 	clientSubTasks: backOfficeSubTasks
 };
+
+const MTSSubTasks = [
+	{
+		subtaskName: 'Max Bet',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskName: 'Max Bet(Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskName: 'Max Payout',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskName: 'Max Payout(Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskName: 'Player CCF and Groupings',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskName: 'Player CCF and Groupings(Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskName: 'Bet Validation',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskName: 'Bet Validation(Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+];
+
+export const MTSValues = {
+	...defaultValues,
+	clientSubTasks: MTSSubTasks
+};
