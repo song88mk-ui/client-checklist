@@ -5,7 +5,7 @@
 	import type { LoginFormType } from '$lib/LoginForm/validationSchema';
 	import APIGateway from '$api/APIGateway';
 	import auth from '$stores/auth';
-	import { FetchStatus } from '$api/models';
+	import { FetchErrorStatus } from '$api/models';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import AuthService from '$services/AuthService';
 
@@ -25,10 +25,10 @@
 			isLoading = false;
 
 			switch (response.error.status) {
-				case FetchStatus.BadRequest:
+				case FetchErrorStatus.BadRequest:
 					error = ErrorMessages.LoginIncorrectUsernamePassword;
 					break;
-				case FetchStatus.ServerError:
+				case FetchErrorStatus.ServerError:
 					error = ErrorMessages.LoginFailed;
 					break;
 				default:
