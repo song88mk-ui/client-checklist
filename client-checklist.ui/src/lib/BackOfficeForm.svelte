@@ -6,11 +6,11 @@
 	import selectedIntegration from '$stores/integration';
 	import { INTEGRATION_STEPS } from './ProgressStep/const';
 	import APIGateway from '$api/APIGateway';
-	import Services from '$enums/Services';
 	import { selectedClientId } from '$stores/client';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
 	import Step from '$enums/Step';
+	import { servicesTypeId } from '$constants/services';
 
 	const { createProduct } = APIGateway();
 
@@ -38,7 +38,7 @@
 				clientId: $selectedClientId as string,
 				stepId: Step.BackOffice,
 				stepName: '',
-				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
+				serviceTypeId: servicesTypeId[$selectedIntegration],
 				sortOrder: 0,
 				environment: 0,
 				...values[Environment.STAGING]
@@ -53,7 +53,7 @@
 				clientId: $selectedClientId as string,
 				stepId: Step.BackOffice,
 				stepName: '',
-				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
+				serviceTypeId: servicesTypeId[$selectedIntegration],
 				sortOrder: 0,
 				environment: 1,
 				...values[Environment.PRODUCTION]
