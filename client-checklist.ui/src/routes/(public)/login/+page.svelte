@@ -1,12 +1,9 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import LoginForm from '$lib/LoginForm/LoginForm.svelte';
-	import { LocalStorage } from '$lib/storage';
-	import type { LoginFormType } from '$lib/LoginForm/validationSchema';
-	import APIGateway from '$api/APIGateway';
-	import auth from '$stores/auth';
 	import { FetchErrorStatus } from '$api/models';
+	import { goto } from '$app/navigation';
 	import { ErrorMessages } from '$enums/ErrorMessages';
+	import LoginForm from '$lib/LoginForm/LoginForm.svelte';
+	import type { LoginFormType } from '$lib/LoginForm/validationSchema';
 	import AuthService from '$services/AuthService';
 
 	let initialValues = { username: '', password: '', rememberMe: false };

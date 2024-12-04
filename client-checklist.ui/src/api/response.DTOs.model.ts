@@ -1,12 +1,12 @@
 import type Role from '$enums/role';
 
 export type LoginAPIResponse = {
-	data: { userToken: string; roleName: Role; accessType: number };
+	userToken: string;
+	roleName: Role;
+	accessType: number;
 };
 
-export type LogoutAPIResponse = {
-	data: null;
-};
+export type LogoutAPIResponse = null;
 
 export type Manager = {
 	name: string;
@@ -35,28 +35,18 @@ export type ClientFetch = {
 };
 
 export type FetchClientsResponse = {
-	data: {
-		clients: ClientFetch[];
-	};
+	clients: ClientFetch[];
 };
 
-export type SetClientActiveStatusResponse = {
-	data: null;
-};
+export type SetClientActiveStatusResponse = null;
 
-export type CreateClientResponse = {
-	data: string;
-};
+export type CreateClientResponse = string;
 
 export type GetClientTaskStatusResponse = {
-	data: {
-		client: ClientFetch[];
-		clientSteps: unknown[];
-	};
+	client: ClientFetch[];
+	clientSteps: unknown[];
 };
 
 export type CreateProductResponse = {
-    data: {
-        id: number;
-    };
-}
+	id: number;
+};
