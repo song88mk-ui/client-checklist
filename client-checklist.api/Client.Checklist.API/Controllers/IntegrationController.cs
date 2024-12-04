@@ -99,7 +99,7 @@ namespace Client.Checklist.API.Controllers
 
         [Authorize("Admin")]
         [HttpPut("clients/status")]
-        public async Task<IActionResult> EnableDisableClient([FromRoute] ClientStatusRequestDTO request)
+        public async Task<IActionResult> EnableDisableClient([FromBody] ClientStatusRequestDTO request)
         {
             var result = await _clientRepository.EnableDisableClient(request);
 
