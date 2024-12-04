@@ -15,9 +15,6 @@ const logout = async (userToken: string) => {
 	const response = await logoutAPI(
 		{
 			userToken
-		},
-		{
-			'x-user-token': userToken
 		}
 	);
 
@@ -34,22 +31,26 @@ const login = async (username: string, password: string, rememberMe: boolean) =>
 		password
 	});
 
-	const { userToken, roleName, accessType } = response.data;
+    if (response?.error) return response;
 
-	auth.set({
-		username,
-		userToken,
-		roleName,
-		accessType
-	});
-
-	if (rememberMe) {
-		LocalStorage.setValue('userToken', JSON.stringify(userToken));
-		LocalStorage.setValue('accessType', JSON.stringify(accessType));
-		LocalStorage.setValue('username', JSON.stringify(username));
-	}
-
-	return response;
+    if (response?.data !== undefined && response?.data !== null) {
+            const { userToken, roleName, accessType } = response.data;
+        
+            auth.set({
+                username,
+                userToken,
+                roleName,
+                accessType
+            });
+        
+            if (rememberMe) {
+                LocalStorage.setValue('userToken', JSON.stringify(userToken));
+                LocalStorage.setValue('accessType', JSON.stringify(accessType));
+                LocalStorage.setValue('username', JSON.stringify(username));
+            }
+        
+            return response;
+    }
 };
 
 const AuthService = { removeAuth, logout, login };

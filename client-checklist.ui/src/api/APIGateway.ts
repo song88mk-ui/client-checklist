@@ -1,58 +1,111 @@
-import type { LoginAPIResponse, LoginFormDataType } from './auth.model';
+import type {
+	CreateClientFormDataType,
+	CreateProductFormDataType,
+	LoginFormDataType,
+	LogoutFormDataType,
+    SetClientActiveStatusFormDataType
+} from './request.DTOs.model';
 import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
-import type { ProductAPIResponse, ProductFormDataType } from './product.model';
+import type {
+	CreateClientResponse,
+	CreateProductResponse,
+	FetchClientsResponse,
+	GetClientTaskStatusResponse,
+	LoginAPIResponse,
+	LogoutAPIResponse,
+    SetClientActiveStatusResponse
+} from './response.DTOs.model';
 
 const APIGateway = (): APIGatewayType => {
-    const { fetchPrivate } = BaseAPIService();
+	const { fetchPrivate } = BaseAPIService();
 
-    const login = async (formData: LoginFormDataType): Promise<LoginAPIResponse> => {
-        const res = await fetchPrivate('POST', '/v1/users/login', formData);
-        return res as LoginAPIResponse;
-    };
-
-    const logout = async (formData: Record<string, unknown>): Promise<APIResponse> => {
-        const res = await fetchPrivate('POST', '/v1/users/logout', formData);
-        return res;
-    };
-
-    const fetchClients = async (headers?: Record<string, string>): Promise<APIResponse> => {
-        const res = await fetchPrivate('GET', '/v1/clients', undefined, headers);
-        return res;
-    };
-
-    const deleteClient = async (
-        formData: Record<string, unknown>,
-        headers?: Record<string, string>
-    ): Promise<APIResponse> => {
-        const res = await fetchPrivate('DELETE', '/v1/clients', formData, headers);
-        return res;
-    };
-
-    const createClient = async (formData: Record<string, unknown>, headers?: Record<string, string>): Promise<APIResponse> => {
-        const res = await fetchPrivate('POST', '/v1/clients', formData, headers);
-        return res;
-    };
-    const getClientTaskStatus = async (data: Record<string, string>): Promise<APIResponse> => {
-		const {clientId,token} =  data
-		const res = await fetchPrivate("GET", `/v1/clients/${clientId}`,undefined,{"x-user-token":token})
+	const login = async (formData: LoginFormDataType): Promise<APIResponse<LoginAPIResponse>> => {
+		const res = await fetchPrivate<LoginFormDataType, LoginAPIResponse>(
+			'POST',
+			'/v1/users/login',
+			formData
+		);
 		return res;
-    };
+	};
 
-    const createProduct = async (formData: ProductFormDataType, headers?: Record<string, string>): Promise<ProductAPIResponse> => {
-        const res = await fetchPrivate('POST', '/v1/clients/steps', formData, headers);
-        return res as ProductAPIResponse;
-    }
+	const logout = async (formData: LogoutFormDataType): Promise<APIResponse<LogoutAPIResponse>> => {
+		const res = await fetchPrivate<LogoutFormDataType, LogoutAPIResponse>(
+			'POST',
+			'/v1/users/logout',
+			formData
+		);
+		return res;
+	};
 
-    return {
-        login,
-        logout,
-        fetchClients,
-        deleteClient,
-        createClient,
-        getClientTaskStatus,
-        createProduct
-    };
+	const fetchClients = async (
+		headers: Record<string, string>
+	): Promise<APIResponse<FetchClientsResponse>> => {
+		const res = await fetchPrivate<null, FetchClientsResponse>('GET', '/v1/clients', null, headers);
+		return res;
+	};
+
+    const setClientActiveStatus = async (
+		formData: SetClientActiveStatusFormDataType,
+		headers: Record<string, string>
+	): Promise<APIResponse<SetClientActiveStatusResponse>> => {
+		const res = await fetchPrivate<SetClientActiveStatusFormDataType, SetClientActiveStatusResponse>(
+			'PUT',
+			'/v1/clients/status',
+			formData,
+			headers
+		);
+		return res;
+	};
+
+	const createClient = async (
+		formData: CreateClientFormDataType,
+		headers: Record<string, string>
+	): Promise<APIResponse<CreateClientResponse>> => {
+		const res = await fetchPrivate<CreateClientFormDataType, CreateClientResponse>(
+			'POST',
+			'/v1/clients',
+			formData,
+			headers
+		);
+		return res;
+	};
+
+	const getClientTaskStatus = async (
+		clientId: string,
+		headers: Record<string, string>
+	): Promise<APIResponse<GetClientTaskStatusResponse>> => {
+		const res = await fetchPrivate<null, GetClientTaskStatusResponse>(
+			'GET',
+			`/v1/clients/${clientId}`,
+			undefined,
+			headers
+		);
+		return res;
+	};
+
+	const createProduct = async (
+		formData: CreateProductFormDataType,
+		headers: Record<string, string>
+	): Promise<APIResponse<CreateProductResponse>> => {
+		const res = await fetchPrivate<CreateProductFormDataType, CreateProductResponse>(
+			'POST',
+			'/v1/clients/steps',
+			formData,
+			headers
+		);
+		return res;
+	};
+
+	return {
+		login,
+		logout,
+		fetchClients,
+        setClientActiveStatus,
+		createClient,
+		getClientTaskStatus,
+		createProduct
+	};
 };
 
 export default APIGateway;
