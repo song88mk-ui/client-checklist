@@ -7,7 +7,7 @@
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import { clients, selectedClient, deletedClient } from '$stores/client';
 
-	const { deleteClient } = APIGateway();
+	// const { deleteClient } = APIGateway();
 
 	const handleCancel = () => {
 		closeModal();
@@ -17,25 +17,25 @@
 	let error = '';
 
 	const handleDelete = async () => {
-		isLoading = true;
-		const response = await deleteClient(
-			{
-				clientId: $selectedClient?.id as string
-			},
-			{
-				'x-user-token': $auth?.userToken as string
-			}
-		);
-		isLoading = false;
+		// isLoading = true;
+		// const response = await deleteClient(
+		// 	{
+		// 		clientId: $selectedClient?.id as string
+		// 	},
+		// 	{
+		// 		'x-user-token': $auth?.userToken as string
+		// 	}
+		// );
+		// isLoading = false;
 
-		if (response.error) {
-			error = ErrorMessages.DeleteClientFailed;
-			return;
-		}
+		// if (response.error) {
+		// 	error = ErrorMessages.DeleteClientFailed;
+		// 	return;
+		// }
 
-		$clients = $clients.filter((client) => client.id !== $selectedClient?.id);
-		$deletedClient = $selectedClient;
-		$selectedClient = null;
+		// $clients = $clients.filter((client) => client.id !== $selectedClient?.id);
+		// $deletedClient = $selectedClient;
+		// $selectedClient = null;
 
 		closeModal();
 	};
