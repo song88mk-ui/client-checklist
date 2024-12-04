@@ -11,6 +11,7 @@
 	import Step from '$enums/Step';
 	import Services from '$enums/Services';
 	import { ErrorMessages } from '$enums/ErrorMessages';
+	import { servicesTypeId } from '$constants/services';
 
     const initialValues = {
         [Environment.STAGING]: MTSValues,
@@ -36,7 +37,7 @@
 				clientId: $selectedClientId as string,
 				stepId: Step.Operations,
 				stepName: '',
-				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
+				serviceTypeId: servicesTypeId[$selectedIntegration],
 				sortOrder: 0,
 				environment: 0,
 				...values[Environment.STAGING]
@@ -51,7 +52,7 @@
 				clientId: $selectedClientId as string,
 				stepId: Step.Operations,
 				stepName: '',
-				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
+				serviceTypeId: servicesTypeId[$selectedIntegration],
 				sortOrder: 0,
 				environment: 1,
 				...values[Environment.PRODUCTION]
