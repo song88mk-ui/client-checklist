@@ -1,24 +1,76 @@
 
 <script lang="ts">
     import { MTSValues } from '$constants/productFormValues';
-	import { ClientRowStatus } from "$enums/ClientRowStatus";
+    import APIGateway from '$api/APIGateway';
 	import Environment from "$enums/Environment";
 	import selectedIntegration from '$stores/integration';
 	import ProductForm, { type ProductFormType } from "./ProductForm";
 	import { INTEGRATION_STEPS } from "./ProgressStep/const";
-    
-    const { step, next, back } = $props()
-
-	const steps = INTEGRATION_STEPS[$selectedIntegration];
-	const title = steps[step].title;
+    import { selectedClientId } from '$stores/client';
+    import auth from '$stores/auth';
+	import Step from '$enums/Step';
+	import Services from '$enums/Services';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import { servicesTypeId } from '$constants/services';
 
     const initialValues = {
         [Environment.STAGING]: MTSValues,
         [Environment.PRODUCTION]: MTSValues
     }
 
-    const handleSubmit = (values: ProductFormType) => {
-        next()
+    const { step, next, back } = $props()
+
+	const steps = INTEGRATION_STEPS[$selectedIntegration];
+	const title = steps[step].title;
+
+    let error = $state('');
+	let isLoading = $state(false);
+
+    const { createProduct } = APIGateway();
+
+
+
+    const handleSubmit = async (values: ProductFormType) => {
+		isLoading = true;
+		const stagingProduct = createProduct(
+			{
+				clientId: $selectedClientId as string,
+				stepId: Step.Operations,
+				stepName: '',
+				serviceTypeId: servicesTypeId[$selectedIntegration],
+				sortOrder: 0,
+				environment: 0,
+				...values[Environment.STAGING]
+			},
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const productionProduct = createProduct(
+			{
+				clientId: $selectedClientId as string,
+				stepId: Step.Operations,
+				stepName: '',
+				serviceTypeId: servicesTypeId[$selectedIntegration],
+				sortOrder: 0,
+				environment: 1,
+				...values[Environment.PRODUCTION]
+			},
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+		
+		const response = await Promise.all([stagingProduct, productionProduct]);
+		isLoading = false;
+		
+		if (response.some((res) => res.error)) {
+			error = ErrorMessages.CreateProductFailed;
+			return;
+		}
+
+		next();   
     }
 </script>
 

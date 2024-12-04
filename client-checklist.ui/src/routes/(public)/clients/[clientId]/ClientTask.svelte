@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import { type ClientStep, type ClientSubtask } from './types';
 
 	const STATUS_BG: any = {
@@ -13,11 +12,11 @@
 		1: 'text-[#EF7E1D]',
 		2: 'text-[#2DBE22]'
 	};
-	const STATUS_MESSAGE:any = {
-		0:'Not Started',
-		1:'In Progress',
-		2:'Completed'
-	}
+	const STATUS_MESSAGE: any = {
+		0: 'Not Started',
+		1: 'In Progress',
+		2: 'Completed'
+	};
 	export let clientStep: ClientStep;
 	let isOpen = false;
 	let status: number = 0;
@@ -71,11 +70,8 @@
 	<div class="flex items-center justify-between p-6">
 		<div class="flex">
 			<span
-				class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
-				>{INTEGRATION_STEPS[
-					clientStep.serviceTypeId === 0 ? 'wallet-integration' : 'feed-integration'
-				][clientStep.stepId].title}</span
-			>
+			class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
+			>{clientStep.stepName}</span>
 			<div
 				class="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#0071BC] text-[12px] font-bold font-normal leading-none text-white"
 			>
@@ -105,7 +101,7 @@
 			<div
 				class={`mx-[10px] rounded-[24px] ${STATUS_BG[status]} flex items-center justify-center px-[12px] ${STATUS_TEXT[status]} h-[23px] self-center text-[12px] font-normal font-semibold leading-none`}
 			>
-				{STATUS_MESSAGE[status]}       
+				{STATUS_MESSAGE[status]}
 			</div>
 			<img src={`/${isOpen ? 'arrow-up' : 'arrow-down'}.svg`} alt="logo" />
 		</div>

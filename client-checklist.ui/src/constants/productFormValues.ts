@@ -19,48 +19,56 @@ const backOfficeSubTasks = [
 
 const MTSSubTasks = [
 	{
+		subtaskId: 1,
 		subtaskName: 'Max Bet',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
+		subtaskId: 2,
 		subtaskName: 'Max Bet(Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
+		subtaskId: 3,
 		subtaskName: 'Max Payout',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
+		subtaskId: 4,
 		subtaskName: 'Max Payout(Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
+		subtaskId: 5,
 		subtaskName: 'Player CCF and Groupings',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
+		subtaskId: 6,
 		subtaskName: 'Player CCF and Groupings(Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
+		subtaskId: 7,
 		subtaskName: 'Bet Validation',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
+		subtaskId: 8,
 		subtaskName: 'Bet Validation(Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
