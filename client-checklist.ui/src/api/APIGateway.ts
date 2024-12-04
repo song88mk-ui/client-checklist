@@ -1,20 +1,20 @@
 import type {
 	CreateClientFormDataType,
 	CreateProductFormDataType,
-	DeleteClientFormDataType,
 	LoginFormDataType,
-	LogoutFormDataType
+	LogoutFormDataType,
+    SetClientActiveStatusFormDataType
 } from './request.DTOs.model';
 import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
 import type {
 	CreateClientResponse,
 	CreateProductResponse,
-	DeleteClientResponse,
 	FetchClientsResponse,
 	GetClientTaskStatusResponse,
 	LoginAPIResponse,
-	LogoutAPIResponse
+	LogoutAPIResponse,
+    SetClientActiveStatusResponse
 } from './response.DTOs.model';
 
 const APIGateway = (): APIGatewayType => {
@@ -45,13 +45,13 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
-	const deleteClient = async (
-		formData: DeleteClientFormDataType,
+    const setClientActiveStatus = async (
+		formData: SetClientActiveStatusFormDataType,
 		headers: Record<string, string>
-	): Promise<APIResponse<DeleteClientResponse>> => {
-		const res = await fetchPrivate<DeleteClientFormDataType, DeleteClientResponse>(
-			'DELETE',
-			'/v1/clients',
+	): Promise<APIResponse<SetClientActiveStatusResponse>> => {
+		const res = await fetchPrivate<SetClientActiveStatusFormDataType, SetClientActiveStatusResponse>(
+			'PUT',
+			'/v1/clients/status',
 			formData,
 			headers
 		);
@@ -101,7 +101,7 @@ const APIGateway = (): APIGatewayType => {
 		login,
 		logout,
 		fetchClients,
-		deleteClient,
+        setClientActiveStatus,
 		createClient,
 		getClientTaskStatus,
 		createProduct

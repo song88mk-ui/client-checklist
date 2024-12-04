@@ -1,18 +1,18 @@
 import type {
-	CreateClientFormDataType,
-	CreateProductFormDataType,
-	DeleteClientFormDataType,
-	LoginFormDataType,
-	LogoutFormDataType
+    CreateClientFormDataType,
+    CreateProductFormDataType,
+    LoginFormDataType,
+    LogoutFormDataType,
+    SetClientActiveStatusFormDataType
 } from './request.DTOs.model';
 import type {
-	CreateClientResponse,
-	CreateProductResponse,
-	DeleteClientResponse,
-	FetchClientsResponse,
-	GetClientTaskStatusResponse,
-	LoginAPIResponse,
-	LogoutAPIResponse
+    CreateClientResponse,
+    CreateProductResponse,
+    FetchClientsResponse,
+    GetClientTaskStatusResponse,
+    LoginAPIResponse,
+    LogoutAPIResponse,
+    SetClientActiveStatusResponse
 } from './response.DTOs.model';
 
 export enum ResponseMessage {
@@ -59,10 +59,10 @@ export type APIGatewayType = {
 	login: (formData: LoginFormDataType) => Promise<APIResponse<LoginAPIResponse>>;
 	logout: (formData: LogoutFormDataType) => Promise<APIResponse<LogoutAPIResponse>>;
 	fetchClients: (headers: Record<string, string>) => Promise<APIResponse<FetchClientsResponse>>;
-	deleteClient: (
-		formData: DeleteClientFormDataType,
+	setClientActiveStatus: (
+		formData: SetClientActiveStatusFormDataType,
 		headers: Record<string, string>
-	) => Promise<APIResponse<DeleteClientResponse>>;
+	) => Promise<APIResponse<SetClientActiveStatusResponse>>;
 	createClient: (
 		formData: CreateClientFormDataType,
 		headers: Record<string, string>

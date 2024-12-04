@@ -9,8 +9,14 @@ export type LogoutFormDataType = {
 	userToken: string;
 };
 
-export type DeleteClientFormDataType = {
+export enum ClientActiveStatus {
+    Inactive,
+    Active
+}
+
+export type SetClientActiveStatusFormDataType = {
 	clientId: string;
+    statusId: ClientActiveStatus
 };
 
 export type CreateClientFormDataType = {

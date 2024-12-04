@@ -40,7 +40,7 @@ export type FetchClientsResponse = {
 	};
 };
 
-export type DeleteClientResponse = {
+export type SetClientActiveStatusResponse = {
 	data: null;
 };
 
@@ -56,5 +56,7 @@ export type GetClientTaskStatusResponse = {
 };
 
 export type CreateProductResponse = {
-    data: unknown;
+    data: {
+        id: number;
+    };
 }
