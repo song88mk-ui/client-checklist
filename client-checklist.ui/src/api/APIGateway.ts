@@ -1,10 +1,10 @@
 import type {
-	CreateClientFormDataType,
-	CreateProductFormDataType,
-	LoginFormDataType,
-	LogoutFormDataType,
-    SetClientActiveStatusFormDataType
-} from './request.DTOs.model';
+	CreateClientPayload,
+	CreateProductPayload,
+	LoginPayload,
+	LogoutPayload,
+    ClientStatusPayload
+} from './request.DTO.model';
 import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
 import type {
@@ -14,14 +14,14 @@ import type {
 	GetClientTaskStatusResponse,
 	LoginAPIResponse,
 	LogoutAPIResponse,
-    SetClientActiveStatusResponse
-} from './response.DTOs.model';
+    ClientStatusResponse
+} from './response.DTO.model';
 
 const APIGateway = (): APIGatewayType => {
 	const { fetchPrivate } = BaseAPIService();
 
-	const login = async (formData: LoginFormDataType): Promise<APIResponse<LoginAPIResponse>> => {
-		const res = await fetchPrivate<LoginFormDataType, LoginAPIResponse>(
+	const login = async (formData: LoginPayload): Promise<APIResponse<LoginAPIResponse>> => {
+		const res = await fetchPrivate<LoginPayload, LoginAPIResponse>(
 			'POST',
 			'/v1/users/login',
 			formData
@@ -29,8 +29,8 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
-	const logout = async (formData: LogoutFormDataType): Promise<APIResponse<LogoutAPIResponse>> => {
-		const res = await fetchPrivate<LogoutFormDataType, LogoutAPIResponse>(
+	const logout = async (formData: LogoutPayload): Promise<APIResponse<LogoutAPIResponse>> => {
+		const res = await fetchPrivate<LogoutPayload, LogoutAPIResponse>(
 			'POST',
 			'/v1/users/logout',
 			formData
@@ -45,11 +45,11 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
-    const setClientActiveStatus = async (
-		formData: SetClientActiveStatusFormDataType,
+    const ClientStatus = async (
+		formData: ClientStatusPayload,
 		headers: Record<string, string>
-	): Promise<APIResponse<SetClientActiveStatusResponse>> => {
-		const res = await fetchPrivate<SetClientActiveStatusFormDataType, SetClientActiveStatusResponse>(
+	): Promise<APIResponse<ClientStatusResponse>> => {
+		const res = await fetchPrivate<ClientStatusPayload, ClientStatusResponse>(
 			'PUT',
 			'/v1/clients/status',
 			formData,
@@ -59,10 +59,10 @@ const APIGateway = (): APIGatewayType => {
 	};
 
 	const createClient = async (
-		formData: CreateClientFormDataType,
+		formData: CreateClientPayload,
 		headers: Record<string, string>
 	): Promise<APIResponse<CreateClientResponse>> => {
-		const res = await fetchPrivate<CreateClientFormDataType, CreateClientResponse>(
+		const res = await fetchPrivate<CreateClientPayload, CreateClientResponse>(
 			'POST',
 			'/v1/clients',
 			formData,
@@ -85,10 +85,10 @@ const APIGateway = (): APIGatewayType => {
 	};
 
 	const createProduct = async (
-		formData: CreateProductFormDataType,
+		formData: CreateProductPayload,
 		headers: Record<string, string>
 	): Promise<APIResponse<CreateProductResponse>> => {
-		const res = await fetchPrivate<CreateProductFormDataType, CreateProductResponse>(
+		const res = await fetchPrivate<CreateProductPayload, CreateProductResponse>(
 			'POST',
 			'/v1/clients/steps',
 			formData,
@@ -101,7 +101,7 @@ const APIGateway = (): APIGatewayType => {
 		login,
 		logout,
 		fetchClients,
-        setClientActiveStatus,
+        ClientStatus,
 		createClient,
 		getClientTaskStatus,
 		createProduct

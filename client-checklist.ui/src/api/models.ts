@@ -1,10 +1,10 @@
 import type {
-    CreateClientFormDataType,
-    CreateProductFormDataType,
-    LoginFormDataType,
-    LogoutFormDataType,
-    SetClientActiveStatusFormDataType
-} from './request.DTOs.model';
+    CreateClientPayload,
+    CreateProductPayload,
+    LoginPayload,
+    LogoutPayload,
+    ClientStatusPayload
+} from './request.DTO.model';
 import type {
     CreateClientResponse,
     CreateProductResponse,
@@ -12,8 +12,8 @@ import type {
     GetClientTaskStatusResponse,
     LoginAPIResponse,
     LogoutAPIResponse,
-    SetClientActiveStatusResponse
-} from './response.DTOs.model';
+    ClientStatusResponse
+} from './response.DTO.model';
 
 export enum ResponseMessage {
 	Success = 'Success',
@@ -56,15 +56,15 @@ export type APIService = {
 };
 
 export type APIGatewayType = {
-	login: (formData: LoginFormDataType) => Promise<APIResponse<LoginAPIResponse>>;
-	logout: (formData: LogoutFormDataType) => Promise<APIResponse<LogoutAPIResponse>>;
+	login: (formData: LoginPayload) => Promise<APIResponse<LoginAPIResponse>>;
+	logout: (formData: LogoutPayload) => Promise<APIResponse<LogoutAPIResponse>>;
 	fetchClients: (headers: Record<string, string>) => Promise<APIResponse<FetchClientsResponse>>;
-	setClientActiveStatus: (
-		formData: SetClientActiveStatusFormDataType,
+	ClientStatus: (
+		formData: ClientStatusPayload,
 		headers: Record<string, string>
-	) => Promise<APIResponse<SetClientActiveStatusResponse>>;
+	) => Promise<APIResponse<ClientStatusResponse>>;
 	createClient: (
-		formData: CreateClientFormDataType,
+		formData: CreateClientPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateClientResponse>>;
 	getClientTaskStatus: (
@@ -72,7 +72,7 @@ export type APIGatewayType = {
 		headers: Record<string, string>
 	) => Promise<APIResponse<GetClientTaskStatusResponse>>;
 	createProduct: (
-		formData: CreateProductFormDataType,
+		formData: CreateProductPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateProductResponse>>;
 };

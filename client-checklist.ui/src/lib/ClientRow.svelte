@@ -1,6 +1,6 @@
 <script lang="ts">
 	import APIGateway from '$api/APIGateway';
-	import type { SetClientActiveStatusFormDataType } from '$api/request.DTOs.model';
+	import type { ClientStatusPayload } from '$api/request.DTO.model';
 	import { AccessType } from '$enums/role';
 	import auth from '$stores/auth';
 	import { selectedClient } from '$stores/client';
@@ -11,7 +11,7 @@
 
 	export let client: any = {};
 	
-    const { setClientActiveStatus } = APIGateway();
+    const { ClientStatus } = APIGateway();
 
     let isLoading: boolean = false;
 	let textCss = 'pl-3 py-5 font-[400] text-[13px] text-[#202020] leading-[16.34px]';
@@ -23,12 +23,12 @@
 
 	const handleEnableClick = async (): Promise<void> => {
         isLoading = true;
-		let payload: SetClientActiveStatusFormDataType = {
+		let payload: ClientStatusPayload = {
 			clientId: client.id,
 			statusId: client.isActive ? 0 : 1
 		};
 
-		const res = await setClientActiveStatus(payload, {
+		const res = await ClientStatus(payload, {
 			'x-user-token': $auth?.userToken as string
 		});
         
