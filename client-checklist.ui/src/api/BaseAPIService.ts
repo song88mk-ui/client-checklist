@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FetchStatus, type APIErrorObject, type APIResponse, type APIService } from "./models";
+import { FetchErrorStatus, type APIErrorObject, type APIResponse, type APIService } from "./models";
 
 const BaseAPIService = (): APIService => {
     const BASE_API_URL = import.meta.env.VITE_API_BASE_URL;
@@ -10,8 +10,11 @@ const BaseAPIService = (): APIService => {
         "Access-Control-Allow-Origin": "*",
     }
 
-    const fetchPrivate = async (method: string, url: string, body?: Record<string, unknown>, addHeaders?: Record<string, string>): Promise<APIResponse> => {
-        let apiError: APIErrorObject | null = null;
+    const fetchPrivate = async <B, T>(method: string, url: string, body?: B, addHeaders?: Record<string, string>): Promise<APIResponse<T>> => {
+        let apiError: APIErrorObject = {
+            status: FetchErrorStatus.BadRequest,
+            statusCode: 400
+        };
 
         try {
             let newHeaders: Record<string, string> = {
@@ -42,43 +45,43 @@ const BaseAPIService = (): APIService => {
                 options
             )
 
-            if (!response.ok) {
-                if (response?.status === 401) {
-                    apiError = {
-                        status: FetchStatus.UnAuthorized,
-                        statusCode: 401
-                    }
-                    throw new Error()
+            if (response?.status === 400) {
+                apiError = {
+                    status: FetchErrorStatus.BadRequest,
+                    statusCode: 400
                 }
-                
-                if (response?.status === 400) {
-                    apiError = {
-                        status: FetchStatus.BadRequest,
-                        statusCode: 400
-                    }
-                    throw new Error()
-                }
+                throw new Error()
+            }
 
-                if (response?.status >= 500) {
-                    apiError = {
-                        status: FetchStatus.ServerError,
-                        statusCode: 500
-                    }
-                    throw new Error()
+            if (response?.status === 401) {
+                apiError = {
+                    status: FetchErrorStatus.UnAuthorized,
+                    statusCode: 401
                 }
+                throw new Error()
+            }
+
+            if (response?.status >= 400) {
+                apiError = {
+                    status: FetchErrorStatus.ServerError,
+                    statusCode: 500
+                }
+                throw new Error()
             }
 
             const resJson: any = await response.json()
-            const returnValue: APIResponse = {
+            const returnValue: APIResponse<T> = {
                 data: resJson?.result,
                 message: resJson?.message,
                 statusCode: resJson?.statusCode
             }
 
             return returnValue;
-        } catch (error) {
-            const errorReturnValue: APIResponse = {
-                error: apiError || error
+        } catch (error: unknown) {
+            console.log("Catch exception error", error)
+
+            const errorReturnValue: APIResponse<T> = {
+                error: apiError
             }
 
             return errorReturnValue
