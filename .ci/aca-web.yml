@@ -131,6 +131,8 @@ stages:
   - stage: production_build
     dependsOn: stage_staging_release
     displayName: Production Docker Build
+    variables:
+      - group: PRODUCTION_TRIGGER_STAGE1 # requires approval
     jobs:
       - job: docker_build
         displayName: Build App via Docker
