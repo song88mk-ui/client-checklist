@@ -42,14 +42,14 @@
 			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Languages Supported</span>
 			<br />
 			<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
-				{LangSupported}</span
+				{LangSupported.join()}</span
 			>
 		</div>
 		<div>
 			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span>
 			<br />
 			<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
-				{CurrencySupported}</span
+				{CurrencySupported.join()}</span
 			>
 		</div>
 		<div>

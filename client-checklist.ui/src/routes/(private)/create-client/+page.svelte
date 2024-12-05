@@ -7,9 +7,11 @@
 	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
 	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
-    
 	import MTSForm from '$lib/MTSForm.svelte';
 	import OperationsForm from '$lib/OperationsForm.svelte';
+	import BusinessAcceptanceForm from '$lib/BusinessAcceptanceForm.svelte';
+	import ClientLaunchForm from '$lib/ClientLaunch.svelte';
+
 
 	let step = $state(0);
 
@@ -47,5 +49,9 @@
 		<MTSForm {back} {next} {step}/>
 	{:else if step === 6 }
 		<OperationsForm {back} {next} {step}/>
+	{:else if step === 7 }
+		<BusinessAcceptanceForm {back} {next} {step}/>
+	{:else if step === 8 }
+		<ClientLaunchForm {back} {next} {step}/>
 	{/if}
 </div>
