@@ -38,7 +38,7 @@ export type FetchClientsResponse = {
 	clients: ClientFetch[];
 };
 
-export type SetClientActiveStatusResponse = null;
+export type ClientStatusResponse = null;
 
 export type CreateClientResponse = string;
 

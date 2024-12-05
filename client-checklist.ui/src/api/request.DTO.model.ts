@@ -1,11 +1,11 @@
-import type { Manager } from "./response.DTOs.model";
+import type { Manager } from "./response.DTO.model";
 
-export type LoginFormDataType = {
+export type LoginPayload = {
 	username: string;
 	password: string;
 };
 
-export type LogoutFormDataType = {
+export type LogoutPayload = {
 	userToken: string;
 };
 
@@ -14,12 +14,12 @@ export enum ClientActiveStatus {
     Active
 }
 
-export type SetClientActiveStatusFormDataType = {
+export type ClientStatusPayload = {
 	clientId: string;
     statusId: ClientActiveStatus
 };
 
-export type CreateClientFormDataType = {
+export type CreateClientPayload = {
 	clientName: string,
 	currencies: string[],
 	customerServiceManager: Manager,
@@ -57,7 +57,7 @@ export type ClientSubtask = {
     taskStatusId: number;
 }
 
-export type CreateProductFormDataType = {
+export type CreateProductPayload = {
     actualDateCompleted: string;
     assignedTo: string;
     clientId: string;
