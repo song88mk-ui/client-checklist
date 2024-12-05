@@ -29,12 +29,13 @@
             financeManagerNumber: '',
             productManagerName: '',
             productManagerNumber: '',
-            marketManagerName: '',
-            marketManagerNumber: '',
+            accountManagerName: '',
+            accountManagerNumber: '',
             technicalManagerName: '',
             technicalManagerNumber: '',
             customerServiceManagerName: '',
             customerServiceManagerNumber: '',
+            socialAccount: ''
         },
         validate: values => {
             let errs: any = {}
@@ -61,9 +62,9 @@
                 clientName, domain, sslCert, languages,
                 currencies, sports, markets, launchDate, mainDecisionMakerName,
                 mainDecisionMakerNumber, financeManagerName, financeManagerNumber,
-                productManagerName, productManagerNumber, marketManagerName,
-                marketManagerNumber, technicalManagerName, technicalManagerNumber,
-                customerServiceManagerName, customerServiceManagerNumber
+                productManagerName, productManagerNumber, accountManagerName,
+                accountManagerNumber, technicalManagerName, technicalManagerNumber,
+                customerServiceManagerName, customerServiceManagerNumber, socialAccount
              } = values
 
              const response: any = await createClient({
@@ -76,7 +77,7 @@
                 mainDecisionMaker: { name: mainDecisionMakerName, number: mainDecisionMakerNumber },
                 financeManager: { name: financeManagerName, number: financeManagerNumber },
                 productManager: { name: productManagerName, number: productManagerNumber },
-                marketManager: { name: marketManagerName, number: marketManagerNumber },
+                accountManager: { name: accountManagerName, number: accountManagerNumber },
                 technicalManager: { name: technicalManagerName, number: technicalManagerNumber },
                 customerServiceManager: { name: customerServiceManagerName, number: customerServiceManagerNumber }
              }, {
@@ -259,7 +260,7 @@
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 						id="mainDecisionMakerNumber"
 						type="text"
-						placeholder="Enter Number"
+						placeholder="Contact Details"
                         bind:value={$form.mainDecisionMakerNumber}
 					/>
 				</div>
@@ -280,7 +281,7 @@
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 						id="financeManagerNumber"
 						type="text"
-						placeholder="Enter Number"
+						placeholder="Contact Details"
                         bind:value={$form.financeManagerNumber}
 					/>
 				</div>
@@ -301,7 +302,7 @@
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 						id="productManagerNumber"
 						type="text"
-						placeholder="Enter Number"
+						placeholder="Contact Details"
                         bind:value={$form.productManagerNumber}
 					/>
 				</div>
@@ -315,17 +316,17 @@
 				<div class="flex gap-3">
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="marketManagerName"
+						id="accountManagerName"
 						type="text"
 						placeholder="Enter Name"
-                        bind:value={$form.marketManagerName}
+                        bind:value={$form.accountManagerName}
 					/>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="marketManagerNumber"
+						id="accountManagerNumber"
 						type="text"
-						placeholder="Enter Number"
-                        bind:value={$form.marketManagerNumber}
+						placeholder="Contact Details"
+                        bind:value={$form.accountManagerNumber}
 					/>
 				</div>
 			</div>
@@ -345,7 +346,7 @@
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 						id="technicalManagerNumber"
 						type="text"
-						placeholder="Enter Number"
+						placeholder="Contact Details"
                         bind:value={$form.technicalManagerNumber}
 					/>
 				</div>
@@ -366,12 +367,28 @@
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
 						id="customerServiceManagerNumber"
 						type="text"
-						placeholder="Enter Number"
+						placeholder="Contact Details"
                         bind:value={$form.customerServiceManagerNumber}
 					/>
 				</div>
 			</div>
 		</div>
+		<div class="flex gap-3">
+            <div class="flex-1">
+				<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
+					Social Account
+				</label>
+				<div class="flex gap-3">
+					<input
+						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+						id="socialAccount"
+						type="text"
+						placeholder="Enter Social Account (Skype, Whatsapp, Telegram, etc.)"
+                        bind:value={$form.socialAccount}
+					/>
+                </div>
+            </div>
+        </div>
 	</div>
 </div>
 <div class="text-right">
