@@ -45,7 +45,8 @@
 			services: services[client.serviceTypeId],
 			mainDecisionMaker: client.mainDecisionMaker.name,
 			status: client.taskStatus,
-			clientToken: client.clientToken
+			clientToken: client.clientToken,
+            isActive: client.isActive
 		}));
 	});
 
@@ -75,13 +76,14 @@
 		/>
 	{/if}
 	<div class="mb-[15px] mt-[15px] flex w-full flex-row items-center">
-		<span class={`${headerCss} w-[15%]`}>Company</span>
-		<span class={`${headerCss} w-[15%]`}>Domain</span>
+		<span class={`${headerCss} w-[10%]`}>Company</span>
+		<span class={`${headerCss} w-[10%]`}>Domain</span>
 		<span class={`${headerCss} w-[10%]`}>Target Launch Date</span>
 		<span class={`${headerCss} w-[30%]`}>Services</span>
 		<span class={`${headerCss} w-[10%]`}>Main Decision Maker</span>
 		<span class={`${headerCss} w-[10%]`}>Status</span>
 		<span class={`${headerCss} w-[10%] text-center`}>Actions</span>
+        <span class={`${headerCss} w-[10%] text-center`}>Enable/Disable</span>
 	</div>
 	{#each $clients as client}
 		<ClientRow {client} />
