@@ -203,6 +203,8 @@ namespace Client.Checklist.API.Repository
                             MainDecisionMaker = new Manager { Name = client.MainDecisionMaker, Number = client.MainDecisionMakerContact },
                             ProductManager = new Manager { Name = client.ProductManager, Number = client.ProductManagerContact },
                             TechnicalManager = new Manager { Name = client.TechnicalManager, Number = client.TechnicalManagerContact },
+                            AccountManager = new Manager { Name = client.AccountManager, Number = client.AccountManagerContact },
+                            SocialAccount = client.SocialAccount,
                             ServiceTypeId = client.ServiceTypeId,
                             TaskStatus = client.TaskStatus,
                             SSLCertificate = client.SSLCertificate,
@@ -252,6 +254,8 @@ namespace Client.Checklist.API.Repository
                             MainDecisionMaker = new Manager { Name = s.MainDecisionMaker, Number = s.MainDecisionMakerContact },
                             ProductManager = new Manager { Name = s.ProductManager, Number = s.ProductManagerContact },
                             TechnicalManager = new Manager { Name = s.TechnicalManager, Number = s.TechnicalManagerContact },
+                            AccountManager = new Manager { Name = s.AccountManager, Number = s.AccountManagerContact},
+                            SocialAccount = s.SocialAccount,
                             Currencies = string.IsNullOrEmpty(s.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedCurrency) ?? new List<string>(),
                             Languages = string.IsNullOrEmpty(s.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedLanguage) ?? new List<string>(),
                             Sports = string.IsNullOrEmpty(s.SupportedSports) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedSports) ?? new List<string>(),
@@ -312,6 +316,9 @@ namespace Client.Checklist.API.Repository
                         MainDecisionMakerContact = request.MainDecisionMaker?.Number ?? string.Empty,
                         ProductManager = request.ProductManager?.Name ?? string.Empty,
                         ProductManagerContact = request.ProductManager?.Number ?? string.Empty,
+                        AccountManager = request.AccountManager?.Name ?? string.Empty,
+                        AccountManagerContact = request.AccountManager?.Number ?? string.Empty,
+                        SocialAccount = request.SocialAccount ?? string.Empty,
                         Domain = request.Domain ?? string.Empty,
                         SSLCertificate = request.SSLCert ?? string.Empty,
                         ServiceTypeId = request.ServiceTypeId,
@@ -404,6 +411,9 @@ namespace Client.Checklist.API.Repository
                         client.MainDecisionMakerContact = request.MainDecisionMaker?.Number ?? string.Empty;
                         client.ProductManager = request.ProductManager?.Name ?? string.Empty;
                         client.ProductManagerContact = request.ProductManager?.Number ?? string.Empty;
+                        client.AccountManager = request.AccountManager?.Name ?? string.Empty;
+                        client.AccountManagerContact = request.AccountManager?.Number ?? string.Empty;
+                        client.SocialAccount = request.SocialAccount ?? string.Empty;
                         client.Domain = request.Domain ?? string.Empty;
                         client.SSLCertificate = request.SSLCert ?? string.Empty;
                         client.ServiceTypeId = request.ServiceTypeId;
