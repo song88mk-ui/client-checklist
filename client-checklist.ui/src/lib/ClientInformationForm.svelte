@@ -5,13 +5,13 @@
 	import DateInput from './DateInput.svelte';
     import selectedIntegration from '$stores/integration'
 	import Product from '../utils/client';
-	import { selectedClientId } from '$stores/client';
 	import IntegrationType from '$enums/integrationType';
 	import { ResponseMessage, StatusCode } from '$api/models';
 	import { goto } from '$app/navigation';
 	import { LocalStorage } from './storage';
 	import steps from '$stores/steps';
 	import Step from '$enums/Step';
+	import { servicesTypeId } from '$constants/services';
 
     const { createClient } = APIGateway()
     let {next} = $props()
@@ -72,7 +72,7 @@
 
              const response: any = await createClient({
                 ...values,
-                serviceTypeId: $selectedIntegration === IntegrationType.WALLET_INTEGRATION ? 1 : 2,
+                serviceTypeId: servicesTypeId[$selectedIntegration],
                 languages: languages.split(' '),
                 currencies: currencies.split(' '),
                 sports: sports.split(' '),
@@ -89,7 +89,7 @@
 						 isLoading = false;
 
              if (response.statusCode === StatusCode.Success) {
-								$steps[Step.ClientInformation].id = response.data;
+								$steps[Step.ClientInformation].ids.push(response.data);
                 next();
              }
 

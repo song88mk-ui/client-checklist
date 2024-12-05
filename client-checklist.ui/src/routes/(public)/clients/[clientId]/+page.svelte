@@ -9,6 +9,7 @@
 	import ClientProgressBar from './ClientProgressBar.svelte';
 	import ClientOnBoarding from './ClientOnBoarding.svelte';
 	import { openModal } from '$stores/modal';
+	import { DEFAULT_SERVICE_TEMPLATE } from './constant';
 	import { type ClientInformation, type ClientStep, type ClientProgressStatus } from './types';
 
 	const { clientId } = $page.params;
@@ -66,9 +67,18 @@
 			}
 			loading = false;
 			let res: any = response?.data;
+			const clientSteps = DEFAULT_SERVICE_TEMPLATE[res?.client.serviceTypeId].map((clientStep:any)=>{
+				if (res && res?.clientSteps.length > 0) {
+					if(res?.clientSteps?.find((item:any)=> item?.stepId === clientStep?.stepId)){
+						return res?.clientSteps?.find((item:any)=> item?.stepId === clientStep?.stepId)
+					}
+				}
+				return clientStep
+			})
+			console.log(clientSteps)
 			client = {
 				...res?.client,
-                clientSteps: res?.clientSteps
+				clientSteps: clientSteps
 			};
 			if (client && client.clientSteps.length > 0) {
 				calcClientStepProgress(client?.clientSteps);
@@ -111,6 +121,7 @@
 			CompanyName={client.clientName}
 			Domain={client?.domain}
 			LangSupported={client?.languages}
+			CurrencySupported={client?.currencies}
 			LaunchDate={new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
 				year: 'numeric',
 				month: 'long',

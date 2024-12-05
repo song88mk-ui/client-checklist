@@ -232,7 +232,7 @@ namespace Client.Checklist.API.Repository
             {
                 var clientTokens = (await _authRepository.GetClientToken(userToken)).Result;
 
-                var clients = _clientChecklistContext.ClientInformation.AsNoTracking().Where(c => c.IsDeleted == false).ToList();
+                var clients = _clientChecklistContext.ClientInformation.AsNoTracking().ToList();
 
                 return new BaseResponseDTO<ClientInformationListDTO>
                 {
@@ -258,7 +258,8 @@ namespace Client.Checklist.API.Repository
                             Markets = string.IsNullOrEmpty(s.TargetMarkets) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.TargetMarkets) ?? new List<string>(),
                             TargetLaunchDate = s.TargetLaunchDate,
                             TaskStatus = s.TaskStatus,
-                            ClientToken = clientTokens?.FirstOrDefault(f => f.UserId.ToUpper() == s.ClientId.ToString().ToUpper())?.OperatorToken ?? string.Empty
+                            ClientToken = clientTokens?.FirstOrDefault(f => f.UserId.ToUpper() == s.ClientId.ToString().ToUpper())?.OperatorToken ?? string.Empty,
+                            IsActive = !s.IsDeleted
                         }).ToList()
                     }
                 };
@@ -446,7 +447,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request)
+        public async Task<BaseResponse> EnableDisableClient(ClientStatusRequestDTO request)
         {
             try
             {
@@ -464,7 +465,15 @@ namespace Client.Checklist.API.Repository
                 }
                 else
                 {
-                    client.IsDeleted = true;
+                    var statuses = new int[] { 0, 1 };
+                    if(!statuses.Contains(request.StatusId))
+                        return new BaseResponse
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"Invalid Status"
+                        };
+
+                    client.IsDeleted = request.StatusId == 0;
                 }
 
                 _clientChecklistContext.SaveChanges();

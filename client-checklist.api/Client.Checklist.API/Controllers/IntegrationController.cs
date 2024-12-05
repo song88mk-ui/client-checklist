@@ -98,10 +98,10 @@ namespace Client.Checklist.API.Controllers
         }
 
         [Authorize("Admin")]
-        [HttpDelete("clients")]
-        public async Task<IActionResult> DeleteClient([FromBody] DeleteClientRequestDTO request)
+        [HttpPut("clients/status")]
+        public async Task<IActionResult> EnableDisableClient([FromRoute] ClientStatusRequestDTO request)
         {
-            var result = await _clientRepository.DeleteClientInformation(request);
+            var result = await _clientRepository.EnableDisableClient(request);
 
             return ReturnResult(result);
         }

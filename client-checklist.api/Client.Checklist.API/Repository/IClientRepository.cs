@@ -10,7 +10,7 @@ namespace Client.Checklist.API.Repository
         Task<BaseResponseDTO<ClientInformationListDTO>> GetClientList(string userToken);
         Task<BaseResponseDTO<string>> CreateClientInformation(CreateClientRequestDTO request, string userToken);
         Task<BaseResponseDTO<string>> UpdateClientInformation(UpdateClientRequestDTO request, string userToken);
-        Task<BaseResponse> DeleteClientInformation(DeleteClientRequestDTO request);
+        Task<BaseResponse> EnableDisableClient(ClientStatusRequestDTO request);
         Task<BaseResponseDTO<AddClientStepsResponseDTO>> AddClientSteps(AddClientStepsRequestDTO request);
         Task<BaseResponseDTO<bool>> UpdateClientSteps(UpdateClientStepsRequestDTO request);
     }

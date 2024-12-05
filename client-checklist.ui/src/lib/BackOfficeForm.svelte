@@ -4,13 +4,13 @@
 	import Environment from '$enums/Environment';
 	import ProductForm, { type ProductFormType } from './ProductForm';
 	import selectedIntegration from '$stores/integration';
-	import { INTEGRATION_STEPS } from './ProgressStep/const';
 	import APIGateway from '$api/APIGateway';
 	import Services from '$enums/Services';
-	import { selectedClientId } from '$stores/client';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
 	import Step from '$enums/Step';
+	import steps from '$stores/steps';
+	import { servicesTypeId } from '$constants/services';
 
 	const { createProduct } = APIGateway();
 
@@ -20,8 +20,7 @@
         step: number
 	}>();
 
-	const steps = INTEGRATION_STEPS[$selectedIntegration];
-	const title = steps[step].title;
+	const title = $steps[step].title;
 
 	const initialValues = {
 		[Environment.PRODUCTION]: backOfficeValues,
@@ -33,12 +32,13 @@
 
 	const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
+		const [clientId] = $steps[Step.ClientInformation].ids;
 		const stagingProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId,
 				stepId: Step.BackOffice,
 				stepName: '',
-				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
+				serviceTypeId: servicesTypeId[$selectedIntegration],
 				sortOrder: 0,
 				environment: 0,
 				...values[Environment.STAGING]
@@ -50,10 +50,10 @@
 
 		const productionProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId,
 				stepId: Step.BackOffice,
 				stepName: '',
-				serviceTypeId: Services.LIVE_DATA_INTEGRATION,
+				serviceTypeId: servicesTypeId[$selectedIntegration],
 				sortOrder: 0,
 				environment: 1,
 				...values[Environment.PRODUCTION]
@@ -70,6 +70,8 @@
 			error = ErrorMessages.CreateProductFailed;
 			return;
 		}
+
+		console.log(response);
 
 		next();
 	};

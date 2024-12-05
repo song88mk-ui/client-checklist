@@ -4,11 +4,12 @@
 	import { INTEGRATION_STEPS, STATUS_COLORS } from './const';
 	import StepStatus from '$enums/StepStatus';
     import steps from '$stores/steps';
+	import Step from '$enums/Step';
 
     let {step = $bindable()} = $props<{step: number}>()
     
     const updateStep = (index: number) => {
-        if ($steps[0]?.id) {
+        if ($steps[Step.ClientInformation].ids.length) {
             step = index;
         }
     }
@@ -20,7 +21,7 @@
     $effect(() => {
         if ($steps.length > 0) {
             $steps.forEach((s, i) => {
-                if (s.id) s.status = StepStatus.Completed;
+                if (s.ids.length) s.status = StepStatus.Completed;
                 else if (i === step) {
                     s.status = StepStatus.Active;
                 } else {

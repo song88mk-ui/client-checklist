@@ -27,26 +27,26 @@ export const STATUS_COLORS = {
 }
 
 const WALLET_INTEGRATION_STEPS: Step[] = [
-    { title: 'Contact Information', status: StepStatus.Active },
-    { title: 'Back Office', status: StepStatus.Inactive },
-    { title: 'Wallet Integration', status: StepStatus.Inactive },
-    { title: 'Sportsbook Player Site UI/UX', status: StepStatus.Inactive },
-    { title: 'Manage Trading Services', status: StepStatus.Inactive },
-    { title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive },
-    { title: 'Operations', status: StepStatus.Inactive },
-    { title: 'Business Acceptance Test', status: StepStatus.Inactive },
-    { title: 'Client Launch', status: StepStatus.Inactive }
+    { title: 'Contact Information', status: StepStatus.Active, ids: [] },
+    { title: 'Back Office', status: StepStatus.Inactive, ids: [] },
+    { title: 'Wallet Integration', status: StepStatus.Inactive, ids: [] },
+    { title: 'Sportsbook Player Site UI/UX', status: StepStatus.Inactive, ids: [] },
+    { title: 'Manage Trading Services', status: StepStatus.Inactive, ids: [] },
+    { title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, ids: [] },
+    { title: 'Operations', status: StepStatus.Inactive, ids: [] },
+    { title: 'Business Acceptance Test', status: StepStatus.Inactive, ids: [] },
+    { title: 'Client Launch', status: StepStatus.Inactive, ids: [] }
 ]
 
 const FEED_INTEGRATION_STEPS: Step[] = [
-    { title: 'Contact Information', status: StepStatus.Active },
-    { title: 'Back Office', status: StepStatus.Inactive },
-    { title: 'Odds Feed Integration', status: StepStatus.Inactive },
-    { title: 'Manage Trading Services', status: StepStatus.Inactive },
-    { title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive },
-    { title: 'Operations', status: StepStatus.Inactive },
-    { title: 'Business Acceptance Test', status: StepStatus.Inactive },
-    { title: 'Client Launch', status: StepStatus.Inactive }
+    { title: 'Contact Information', status: StepStatus.Active, ids: [] },
+    { title: 'Back Office', status: StepStatus.Inactive, ids: [] },
+    { title: 'Odds Feed Integration', status: StepStatus.Inactive, ids: [] },
+    { title: 'Manage Trading Services', status: StepStatus.Inactive, ids: [] },
+    { title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, ids: [] },
+    { title: 'Operations', status: StepStatus.Inactive, ids: [] },
+    { title: 'Business Acceptance Test', status: StepStatus.Inactive, ids: [] },
+    { title: 'Client Launch', status: StepStatus.Inactive, ids: [] }
 ]
 
 export const INTEGRATION_STEPS = {
