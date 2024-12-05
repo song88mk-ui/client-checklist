@@ -70,8 +70,9 @@
 	<div class="flex items-center justify-between p-6">
 		<div class="flex">
 			<span
-			class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
-			>{clientStep.stepName}</span>
+				class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
+				>{clientStep.stepName}</span
+			>
 			<div
 				class="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#0071BC] text-[12px] font-bold font-normal leading-none text-white"
 			>
@@ -85,7 +86,11 @@
 				>
 				<br />
 				<span class="text-[14px] font-bold font-normal leading-none text-[#0071BC]">
-					{clientStep.targetDateCompleted}</span
+					{clientStep.targetDateCompleted ? new Date(clientStep.targetDateCompleted).toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					}) : ''}</span
 				>
 			</div>
 
@@ -94,8 +99,12 @@
 					>Actual Date Completed</span
 				>
 				<br />
-				<span class="text-[14px] font-bold font-normal leading-none text-[#0071BC]"
-					>{clientStep.actualDateCompleted}</span
+				<span class="text-[14px] font-bold font-normal leading-none text-[#0071BC]">
+					{clientStep.actualDateCompleted ?new Date(clientStep.actualDateCompleted).toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					}): ''}</span
 				>
 			</div>
 			<div
