@@ -1,12 +1,12 @@
 import type { Manager } from "./response.DTOs.model";
 
 export type LoginFormDataType = {
-	username: string;
-	password: string;
+    username: string;
+    password: string;
 };
 
 export type LogoutFormDataType = {
-	userToken: string;
+    userToken: string;
 };
 
 export enum ClientActiveStatus {
@@ -15,38 +15,39 @@ export enum ClientActiveStatus {
 }
 
 export type SetClientActiveStatusFormDataType = {
-	clientId: string;
+    clientId: string;
     statusId: ClientActiveStatus
 };
 
 export type CreateClientFormDataType = {
-	clientName: string,
-	currencies: string[],
-	customerServiceManager: Manager,
-	customerServiceManagerName: string,
-	customerServiceManagerNumber: string,
-	domain: string,
-	financeManager: Manager,
- 	financeManagerName: string,
-	financeManagerNumber: string,
-	languages: string[],
-	launchDate: string,
-	mainDecisionMaker: Manager,
-	mainDecisionMakerName: string,
-	mainDecisionMakerNumber: string,
-	marketManager: Manager,
-	marketManagerName: string,
-	marketManagerNumber: string,
-	markets: string[],
-	productManager: Manager,
-	productManagerName: string,
-	productManagerNumber: string,
-	serviceTypeId: number,
-	sports: string[],
-	sslCert: string,
-	technicalManager: Manager,
-	technicalManagerName: string,
-	technicalManagerNumber: string
+    clientName: string,
+    currencies: string[],
+    customerServiceManager: Manager,
+    customerServiceManagerName: string,
+    customerServiceManagerNumber: string,
+    domain: string,
+    financeManager: Manager,
+    financeManagerName: string,
+    financeManagerNumber: string,
+    languages: string[],
+    launchDate: string,
+    mainDecisionMaker: Manager,
+    mainDecisionMakerName: string,
+    mainDecisionMakerNumber: string,
+    accountManager: Manager,
+    accountManagerName: string,
+    accountManagerNumber: string,
+    markets: string[],
+    productManager: Manager,
+    productManagerName: string,
+    productManagerNumber: string,
+    serviceTypeId: number,
+    sports: string[],
+    sslCert: string,
+    technicalManager: Manager,
+    technicalManagerName: string,
+    technicalManagerNumber: string
+    socialAccount: string
 };
 
 export type ClientSubtask = {
