@@ -10,9 +10,10 @@
 	import GenerateLinkModal from './GenerateLinkModal.svelte';
 
 	export let client: any = {};
+	
+    const { setClientActiveStatus } = APIGateway();
 
-	const { setClientActiveStatus } = APIGateway();
-
+    let isLoading: boolean = false;
 	let textCss = 'pl-3 py-5 font-[400] text-[13px] text-[#202020] leading-[16.34px]';
 
 	const handleShowGenerateLinkModal = () => {
@@ -21,6 +22,7 @@
 	};
 
 	const handleEnableClick = async (): Promise<void> => {
+        isLoading = true;
 		let payload: SetClientActiveStatusFormDataType = {
 			clientId: client.id,
 			statusId: client.isActive ? 0 : 1
@@ -29,10 +31,12 @@
 		const res = await setClientActiveStatus(payload, {
 			'x-user-token': $auth?.userToken as string
 		});
-
-		if (res?.error === null && res?.error === undefined) {
+        
+		if (res && res?.error === null && res?.error === undefined) {
 			client.isActive = !client.isActive;
 		}
+        
+        isLoading = false;
 	};
 </script>
 
@@ -67,6 +71,7 @@
 				checked={client.isActive}
 				class="peer sr-only"
 				on:change={handleEnableClick}
+                disabled={isLoading}
 			/>
 			<div
 				class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[#18F2A8] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700"
