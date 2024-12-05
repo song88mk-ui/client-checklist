@@ -20,20 +20,20 @@ import type {
 const APIGateway = (): APIGatewayType => {
 	const { fetchPrivate } = BaseAPIService();
 
-	const login = async (formData: LoginPayload): Promise<APIResponse<LoginAPIResponse>> => {
+	const login = async (payload: LoginPayload): Promise<APIResponse<LoginAPIResponse>> => {
 		const res = await fetchPrivate<LoginPayload, LoginAPIResponse>(
 			'POST',
 			'/v1/users/login',
-			formData
+			payload
 		);
 		return res;
 	};
 
-	const logout = async (formData: LogoutPayload): Promise<APIResponse<LogoutAPIResponse>> => {
+	const logout = async (payload: LogoutPayload): Promise<APIResponse<LogoutAPIResponse>> => {
 		const res = await fetchPrivate<LogoutPayload, LogoutAPIResponse>(
 			'POST',
 			'/v1/users/logout',
-			formData
+			payload
 		);
 		return res;
 	};
@@ -46,26 +46,26 @@ const APIGateway = (): APIGatewayType => {
 	};
 
     const ClientStatus = async (
-		formData: ClientStatusPayload,
+		payload: ClientStatusPayload,
 		headers: Record<string, string>
 	): Promise<APIResponse<ClientStatusResponse>> => {
 		const res = await fetchPrivate<ClientStatusPayload, ClientStatusResponse>(
 			'PUT',
 			'/v1/clients/status',
-			formData,
+			payload,
 			headers
 		);
 		return res;
 	};
 
 	const createClient = async (
-		formData: CreateClientPayload,
+		payload: CreateClientPayload,
 		headers: Record<string, string>
 	): Promise<APIResponse<CreateClientResponse>> => {
 		const res = await fetchPrivate<CreateClientPayload, CreateClientResponse>(
 			'POST',
 			'/v1/clients',
-			formData,
+			payload,
 			headers
 		);
 		return res;
@@ -85,13 +85,13 @@ const APIGateway = (): APIGatewayType => {
 	};
 
 	const createProduct = async (
-		formData: CreateProductPayload,
+		payload: CreateProductPayload,
 		headers: Record<string, string>
 	): Promise<APIResponse<CreateProductResponse>> => {
 		const res = await fetchPrivate<CreateProductPayload, CreateProductResponse>(
 			'POST',
 			'/v1/clients/steps',
-			formData,
+			payload,
 			headers
 		);
 		return res;

@@ -10,7 +10,7 @@ const BaseAPIService = (): APIService => {
         "Access-Control-Allow-Origin": "*",
     }
 
-    const fetchPrivate = async <B, T>(method: string, url: string, body?: B, addHeaders?: Record<string, string>): Promise<APIResponse<T>> => {
+    const fetchPrivate = async <B, T>(method: string, url: string, payload?: B, addHeaders?: Record<string, string>): Promise<APIResponse<T>> => {
         let apiError: APIErrorObject = {
             status: FetchErrorStatus.BadRequest,
             statusCode: 400
@@ -33,10 +33,10 @@ const BaseAPIService = (): APIService => {
                 headers: newHeaders
             };
 
-            if (body !== null && body !== undefined) {
+            if (payload !== null && payload !== undefined) {
                 options = {
                     ...options,
-                    body: JSON.stringify(body)
+                    body: JSON.stringify(payload)
                 }
             }
 
