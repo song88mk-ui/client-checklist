@@ -24,15 +24,9 @@
 	const title = $steps[step].title;
 
 	const initialValues = {
-		[Environment.STAGING]: {
-			id: 'test2',
-			...backOfficeValues
-		},
-		[Environment.PRODUCTION]: {
-			id: 'test1',
-			...backOfficeValues
-		}
-	};
+		[Environment.PRODUCTION]: backOfficeValues,
+		[Environment.STAGING]: backOfficeValues
+	}
 
 	let error = $state('');
 	let isLoading = $state(false);
