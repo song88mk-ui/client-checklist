@@ -1,18 +1,18 @@
 import type {
-	CreateClientPayload,
-	CreateProductPayload,
-	LoginPayload,
-	LogoutPayload,
-	ClientStatusPayload
+    CreateClientPayload,
+    CreateProductPayload,
+    LoginPayload,
+    LogoutPayload,
+    ClientStatusPayload
 } from './request.DTO.model';
 import type {
-	CreateClientResponse,
-	CreateProductResponse,
-	FetchClientsResponse,
-	GetClientTaskStatusResponse,
-	LoginAPIResponse,
-	LogoutAPIResponse,
-	ClientStatusResponse
+    CreateClientResponse,
+    CreateProductResponse,
+    FetchClientsResponse,
+    GetClientTaskStatusResponse,
+    LoginAPIResponse,
+    LogoutAPIResponse,
+    ClientStatusResponse
 } from './response.DTO.model';
 
 export enum ResponseMessage {

@@ -70,12 +70,3 @@ export type CreateProductPayload = {
     stepName: string;
     targetDateCompleted: string;
 }
-
-export type EditProductPayload = {
-	id: string;
-	stepName: string;
-	targetDateCompleted: string;
-	actualDateCompleted: string;
-	assignedTo: string;
-	clientSubTasks: ClientSubtask[];
-};

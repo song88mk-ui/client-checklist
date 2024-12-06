@@ -50,7 +50,3 @@ export type GetClientTaskStatusResponse = {
 export type CreateProductResponse = {
 	id: string;
 };
-
-export type EditProductResponse = {
-	id: string;
-};
