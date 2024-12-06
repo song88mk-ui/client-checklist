@@ -10,11 +10,13 @@
 	import Alert from '$lib/Alert.svelte';
 	import { goto } from '$app/navigation';
 	import AuthService from '$services/AuthService';
+	import { AccessType } from '$enums/role';
 
 	const { fetchClients } = APIGateway();
 	const { removeAuth } = AuthService;
 
 	let isLoading = false;
+    let isSuperAdmin: boolean = $auth?.accessType == AccessType.READWRITE
 	let error = '';
 
 	onMount(async () => {
@@ -45,7 +47,8 @@
 			services: services[client.serviceTypeId],
 			mainDecisionMaker: client.mainDecisionMaker.name,
 			status: client.taskStatus,
-			clientToken: client.clientToken
+			clientToken: client.clientToken,
+            isActive: client.isActive
 		}));
 	});
 
@@ -75,13 +78,16 @@
 		/>
 	{/if}
 	<div class="mb-[15px] mt-[15px] flex w-full flex-row items-center">
-		<span class={`${headerCss} w-[15%]`}>Company</span>
-		<span class={`${headerCss} w-[15%]`}>Domain</span>
+		<span class={`${headerCss} w-[${isSuperAdmin ? "10%" : "15%"}]`}>Company</span>
+		<span class={`${headerCss} w-[${isSuperAdmin ? "10%" : "15%"}]`}>Domain</span>
 		<span class={`${headerCss} w-[10%]`}>Target Launch Date</span>
 		<span class={`${headerCss} w-[30%]`}>Services</span>
 		<span class={`${headerCss} w-[10%]`}>Main Decision Maker</span>
 		<span class={`${headerCss} w-[10%]`}>Status</span>
 		<span class={`${headerCss} w-[10%] text-center`}>Actions</span>
+        {#if isSuperAdmin}
+            <span class={`${headerCss} w-[10%] text-center`}>Enable/Disable</span>
+        {/if}
 	</div>
 	{#each $clients as client}
 		<ClientRow {client} />

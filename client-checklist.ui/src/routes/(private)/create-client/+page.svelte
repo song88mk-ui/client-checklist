@@ -1,14 +1,18 @@
 <script lang="ts">
-	import ClientInformationForm from '$lib/ClientInformationForm';
-	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
-	import selectedIntegration from '$stores/integration';
-	import Product from '$utils/client';
 	import BackOfficeForm from '$lib/BackOfficeForm.svelte';
-	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
-	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
-    
+	import BusinessAcceptanceForm from '$lib/BusinessAcceptanceForm.svelte';
+	import ClientInformationForm from '$lib/ClientInformationForm';
+	import ClientLaunchForm from '$lib/ClientLaunch.svelte';
+	import EndToEndTestForm from '$lib/EndToEndTestForm.svelte';
 	import MTSForm from '$lib/MTSForm.svelte';
 	import OperationsForm from '$lib/OperationsForm.svelte';
+	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
+	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
+	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
+	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
+	import selectedIntegration from '$stores/integration';
+	import Product from '$utils/client';
+
 
 	let step = $state(0);
 
@@ -40,7 +44,13 @@
         <SportsbookPlayerSiteUiuxForm {back} {next} {step} />
 	{:else if step === 4 }
 		<MTSForm {back} {next} {step}/>
+	{:else if step === 5 }
+		<EndToEndTestForm {back} {next} {step}/>
 	{:else if step === 6 }
 		<OperationsForm {back} {next} {step}/>
+	{:else if step === 7 }
+		<BusinessAcceptanceForm {back} {next} {step}/>
+	{:else if step === 8 }
+		<ClientLaunchForm {back} {next} {step}/>
 	{/if}
 </div>

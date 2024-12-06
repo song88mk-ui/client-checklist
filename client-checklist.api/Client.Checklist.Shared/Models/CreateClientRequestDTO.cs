@@ -17,6 +17,8 @@
         public Manager? ProductManager { get; set; }
         public Manager? TechnicalManager { get; set; }
         public Manager? CustomerServiceManager { get; set; }
+        public Manager AccountManager { get; set; }
+        public string SocialAccount { get; set; }
     }
 
     public class Manager

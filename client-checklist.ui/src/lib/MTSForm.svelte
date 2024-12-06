@@ -5,11 +5,10 @@
 	import Environment from "$enums/Environment";
 	import selectedIntegration from '$stores/integration';
 	import ProductForm, { type ProductFormType } from "./ProductForm";
-	import { INTEGRATION_STEPS } from "./ProgressStep/const";
-    import { selectedClientId } from '$stores/client';
     import auth from '$stores/auth';
-	import Step from '$enums/Step';
-	import Services from '$enums/Services';
+		import Step from '$enums/Step';
+		import steps from '$stores/steps';
+		import type { ClientInformationFormType } from './ClientInformationForm';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import { servicesTypeId } from '$constants/services';
 
@@ -20,8 +19,7 @@
 
     const { step, next, back } = $props()
 
-	const steps = INTEGRATION_STEPS[$selectedIntegration];
-	const title = steps[step].title;
+	const title = $steps[step].title;
 
     let error = $state('');
 	let isLoading = $state(false);
@@ -32,9 +30,10 @@
 
     const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
+		const clientFormData = $steps[Step.ClientInformation].formData;
 		const stagingProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.Operations,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -49,7 +48,7 @@
 
 		const productionProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.Operations,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],

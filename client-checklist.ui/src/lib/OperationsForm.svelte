@@ -4,12 +4,11 @@
 	import Environment from "$enums/Environment";
 	import selectedIntegration from '$stores/integration';
 	import ProductForm, { type ProductFormType } from "./ProductForm";
-	import { INTEGRATION_STEPS } from "./ProgressStep/const";
     import APIGateway from '$api/APIGateway';
-	import { selectedClientId } from '$stores/client';
+		import steps from '$stores/steps';
     import auth from '$stores/auth';
-	import Step from '$enums/Step';
-	import Services from '$enums/Services';
+		import Step from '$enums/Step';
+		import type { ClientInformationFormType } from './ClientInformationForm';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import { servicesTypeId } from '$constants/services';
 
@@ -20,8 +19,7 @@
 	let error = $state('');
 	let isLoading = $state(false);
 
-	const steps = INTEGRATION_STEPS[$selectedIntegration];
-	const title = steps[step].title;
+	const title = $steps[step].title;
 
     const initialValues = {
         [Environment.STAGING]: operationsValues,
@@ -30,9 +28,10 @@
 
     const handleSubmit = async(values: ProductFormType) => {
 		isLoading = true;
+		const clientFormData = $steps[Step.ClientInformation].formData;
 		const stagingProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.Operations,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -47,7 +46,7 @@
 
 		const productionProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.Operations,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],

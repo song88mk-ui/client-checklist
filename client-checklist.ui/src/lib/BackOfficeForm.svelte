@@ -1,30 +1,37 @@
 <script lang="ts">
+	import { type EditProductFormDataType } from '$api/request.DTOs.model';
 	import { backOfficeValues } from '$constants/productFormValues';
 	import auth from '$stores/auth';
 	import Environment from '$enums/Environment';
 	import ProductForm, { type ProductFormType } from './ProductForm';
 	import selectedIntegration from '$stores/integration';
 	import APIGateway from '$api/APIGateway';
-	import Services from '$enums/Services';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
 	import Step from '$enums/Step';
+	import type { ClientInformationFormType } from './ClientInformationForm';
 	import steps from '$stores/steps';
 	import { servicesTypeId } from '$constants/services';
 
-	const { createProduct } = APIGateway();
+	const { createProduct, editProduct } = APIGateway();
 
 	const { back, next, step } = $props<{
-		back: () => void
-		next: () => void
-        step: number
+		back: () => void;
+		next: () => void;
+		step: number;
 	}>();
 
 	const title = $steps[step].title;
 
 	const initialValues = {
-		[Environment.PRODUCTION]: backOfficeValues,
-		[Environment.STAGING]: backOfficeValues
+		[Environment.STAGING]: {
+			id: 'test2',
+			...backOfficeValues
+		},
+		[Environment.PRODUCTION]: {
+			id: 'test1',
+			...backOfficeValues
+		}
 	};
 
 	let error = $state('');
@@ -32,10 +39,21 @@
 
 	const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
-		const [clientId] = $steps[Step.ClientInformation].ids;
+
+		await handleCreateProduct(values);
+
+		// TODO
+		// await handleEditProduct(values);
+
+		isLoading = false;
+		next();
+	};
+
+	const handleCreateProduct = async (values: ProductFormType) => {
+		const clientFormData = $steps[Step.ClientInformation].formData;
 		const stagingProduct = createProduct(
 			{
-				clientId,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.BackOffice,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -50,7 +68,7 @@
 
 		const productionProduct = createProduct(
 			{
-				clientId,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.BackOffice,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -62,18 +80,28 @@
 				'x-user-token': $auth?.userToken as string
 			}
 		);
-		
+
 		const response = await Promise.all([stagingProduct, productionProduct]);
-		isLoading = false;
-		
+
 		if (response.some((res) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
 			return;
 		}
 
-		console.log(response);
+		const [stagingResponse, productionResponse] = response;
 
-		next();
+		if (stagingResponse.data && productionResponse.data) {
+			$steps[step].formData = {
+				[Environment.STAGING]: {
+					id: stagingResponse.data.id,
+					...values[Environment.STAGING]
+				},
+				[Environment.PRODUCTION]: {
+					id: productionResponse.data.id,
+					...values[Environment.PRODUCTION]
+				}
+			};
+		}
 	};
 
 	$effect(() => {
@@ -82,7 +110,7 @@
 				error = '';
 			}, 5000);
 		}
-	})
+	});
 </script>
 
 {#if error}

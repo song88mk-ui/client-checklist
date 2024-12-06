@@ -1,21 +1,20 @@
 import type {
-    CreateClientFormDataType,
-    CreateProductFormDataType,
-    EditProductFormDataType,
-    LoginFormDataType,
-    LogoutFormDataType,
-    SetClientActiveStatusFormDataType
-} from './request.DTOs.model';
+	CreateClientPayload,
+	CreateProductPayload,
+	LoginPayload,
+	LogoutPayload,
+	ClientStatusPayload
+} from './request.DTO.model';
 import type {
-    CreateClientResponse,
-    CreateProductResponse,
-    EditProductResponse,
-    FetchClientsResponse,
-    GetClientTaskStatusResponse,
-    LoginAPIResponse,
-    LogoutAPIResponse,
-    SetClientActiveStatusResponse
-} from './response.DTOs.model';
+	CreateClientResponse,
+	CreateProductResponse,
+	EditProductResponse,
+	FetchClientsResponse,
+	GetClientTaskStatusResponse,
+	LoginAPIResponse,
+	LogoutAPIResponse,
+	ClientStatusResponse
+} from './response.DTO.model';
 
 export enum ResponseMessage {
 	Success = 'Success',
@@ -58,15 +57,15 @@ export type APIService = {
 };
 
 export type APIGatewayType = {
-	login: (formData: LoginFormDataType) => Promise<APIResponse<LoginAPIResponse>>;
-	logout: (formData: LogoutFormDataType) => Promise<APIResponse<LogoutAPIResponse>>;
+	login: (payload: LoginPayload) => Promise<APIResponse<LoginAPIResponse>>;
+	logout: (payload: LogoutPayload) => Promise<APIResponse<LogoutAPIResponse>>;
 	fetchClients: (headers: Record<string, string>) => Promise<APIResponse<FetchClientsResponse>>;
-	setClientActiveStatus: (
-		formData: SetClientActiveStatusFormDataType,
+	ClientStatus: (
+		payload: ClientStatusPayload,
 		headers: Record<string, string>
-	) => Promise<APIResponse<SetClientActiveStatusResponse>>;
+	) => Promise<APIResponse<ClientStatusResponse>>;
 	createClient: (
-		formData: CreateClientFormDataType,
+		payload: CreateClientPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateClientResponse>>;
 	getClientTaskStatus: (
@@ -74,7 +73,7 @@ export type APIGatewayType = {
 		headers: Record<string, string>
 	) => Promise<APIResponse<GetClientTaskStatusResponse>>;
 	createProduct: (
-		formData: CreateProductFormDataType,
+		payload: CreateProductPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateProductResponse>>;
 	editProduct: (
