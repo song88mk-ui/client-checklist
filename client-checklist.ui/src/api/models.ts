@@ -1,6 +1,7 @@
 import type {
 	CreateClientPayload,
 	CreateProductPayload,
+	EditProductPayload,
 	LoginPayload,
 	LogoutPayload,
 	ClientStatusPayload
@@ -77,7 +78,7 @@ export type APIGatewayType = {
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateProductResponse>>;
 	editProduct: (
-		formData: EditProductFormDataType,
+		formData: EditProductPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<EditProductResponse>>;
 };
