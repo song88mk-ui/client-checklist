@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { type EditProductFormDataType } from '$api/request.DTOs.model';
 	import { backOfficeValues } from '$constants/productFormValues';
 	import auth from '$stores/auth';
 	import Environment from '$enums/Environment';
@@ -13,7 +12,7 @@
 	import steps from '$stores/steps';
 	import { servicesTypeId } from '$constants/services';
 
-	const { createProduct, editProduct } = APIGateway();
+	const { createProduct } = APIGateway();
 
 	const { back, next, step } = $props<{
 		back: () => void;
