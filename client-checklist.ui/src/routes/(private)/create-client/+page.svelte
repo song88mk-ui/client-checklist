@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ClientInformationForm from '$lib/ClientInformationForm.svelte';
+	import ClientInformationForm from '$lib/ClientInformationForm';
 	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
 	import selectedIntegration from '$stores/integration';
 	import Product from '$utils/client';

@@ -1,6 +1,7 @@
 import type {
     CreateClientFormDataType,
     CreateProductFormDataType,
+    EditProductFormDataType,
     LoginFormDataType,
     LogoutFormDataType,
     SetClientActiveStatusFormDataType
@@ -8,6 +9,7 @@ import type {
 import type {
     CreateClientResponse,
     CreateProductResponse,
+    EditProductResponse,
     FetchClientsResponse,
     GetClientTaskStatusResponse,
     LoginAPIResponse,
@@ -75,4 +77,8 @@ export type APIGatewayType = {
 		formData: CreateProductFormDataType,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateProductResponse>>;
+	editProduct: (
+		formData: EditProductFormDataType,
+		headers: Record<string, string>
+	) => Promise<APIResponse<EditProductResponse>>;
 };

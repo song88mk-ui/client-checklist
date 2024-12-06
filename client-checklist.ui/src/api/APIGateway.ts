@@ -1,6 +1,7 @@
 import type {
 	CreateClientFormDataType,
 	CreateProductFormDataType,
+	EditProductFormDataType,
 	LoginFormDataType,
 	LogoutFormDataType,
     SetClientActiveStatusFormDataType
@@ -10,6 +11,7 @@ import type { APIGatewayType, APIResponse } from './models';
 import type {
 	CreateClientResponse,
 	CreateProductResponse,
+	EditProductResponse,
 	FetchClientsResponse,
 	GetClientTaskStatusResponse,
 	LoginAPIResponse,
@@ -97,6 +99,19 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const editProduct = async (
+		formData: EditProductFormDataType,
+		headers: Record<string, string>
+	): Promise<APIResponse<EditProductResponse>> => {
+		const res = await fetchPrivate<EditProductFormDataType, EditProductResponse>(
+			'POST',
+			'/v1/clients/steps',
+			formData,
+			headers
+		);
+		return res;
+	};
+
 	return {
 		login,
 		logout,
@@ -104,7 +119,8 @@ const APIGateway = (): APIGatewayType => {
         setClientActiveStatus,
 		createClient,
 		getClientTaskStatus,
-		createProduct
+		createProduct,
+		editProduct
 	};
 };
 
