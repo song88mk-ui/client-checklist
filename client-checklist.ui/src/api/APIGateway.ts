@@ -4,12 +4,14 @@ import type {
 	LoginPayload,
 	LogoutPayload,
 	ClientStatusPayload,
+	EditProductPayload
 } from './request.DTO.model';
 import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
 import type {
 	CreateClientResponse,
 	CreateProductResponse,
+	EditProductResponse,
 	FetchClientsResponse,
 	GetClientTaskStatusResponse,
 	LoginAPIResponse,
@@ -97,6 +99,19 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const editProduct = async (
+		formData: EditProductPayload,
+		headers: Record<string, string>
+	): Promise<APIResponse<EditProductResponse>> => {
+		const res = await fetchPrivate<EditProductPayload, EditProductResponse>(
+			'PUT',
+			'/v1/clients/steps',
+			formData,
+			headers
+		);
+		return res;
+	};
+
 	return {
 		login,
 		logout,
@@ -104,7 +119,8 @@ const APIGateway = (): APIGatewayType => {
 		ClientStatus,
 		createClient,
 		getClientTaskStatus,
-		createProduct
+		createProduct,
+		editProduct
 	};
 };
 

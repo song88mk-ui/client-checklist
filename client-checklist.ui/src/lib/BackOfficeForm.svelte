@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { type EditProductPayload } from '$api/request.DTO.model';
 	import { backOfficeValues } from '$constants/productFormValues';
 	import auth from '$stores/auth';
 	import Environment from '$enums/Environment';
@@ -12,7 +13,7 @@
 	import steps from '$stores/steps';
 	import { servicesTypeId } from '$constants/services';
 
-	const { createProduct } = APIGateway();
+	const { createProduct, editProduct } = APIGateway();
 
 	const { back, next, step } = $props<{
 		back: () => void;
@@ -22,10 +23,10 @@
 
 	const title = $steps[step].title;
 
-	const initialValues = {
-		[Environment.PRODUCTION]: backOfficeValues,
-		[Environment.STAGING]: backOfficeValues
-	}
+	let initialValues = $steps[step].formData as ProductFormType || {
+		[Environment.STAGING]: backOfficeValues,
+		[Environment.PRODUCTION]: backOfficeValues
+	};
 
 	let error = $state('');
 	let isLoading = $state(false);
@@ -33,48 +34,14 @@
 	const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
 
-		await handleCreateProduct(values);
-
-		// TODO
-		// await handleEditProduct(values);
+		let response;
+		if (values[Environment.STAGING].id && values[Environment.PRODUCTION].id) {
+			response = await handleEditProduct(values);
+		} else {
+			response = await handleCreateProduct(values);
+		}
 
 		isLoading = false;
-		next();
-	};
-
-	const handleCreateProduct = async (values: ProductFormType) => {
-		const clientFormData = $steps[Step.ClientInformation].formData;
-		const stagingProduct = createProduct(
-			{
-				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.BackOffice,
-				stepName: '',
-				serviceTypeId: servicesTypeId[$selectedIntegration],
-				sortOrder: 0,
-				environment: 0,
-				...values[Environment.STAGING]
-			},
-			{
-				'x-user-token': $auth?.userToken as string
-			}
-		);
-
-		const productionProduct = createProduct(
-			{
-				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.BackOffice,
-				stepName: '',
-				serviceTypeId: servicesTypeId[$selectedIntegration],
-				sortOrder: 0,
-				environment: 1,
-				...values[Environment.PRODUCTION]
-			},
-			{
-				'x-user-token': $auth?.userToken as string
-			}
-		);
-
-		const response = await Promise.all([stagingProduct, productionProduct]);
 
 		if (response.some((res) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
@@ -95,6 +62,62 @@
 				}
 			};
 		}
+		next();
+	};
+
+	const handleCreateProduct = async (values: ProductFormType) => {
+		const clientFormData = $steps[Step.ClientInformation].formData;
+		const stagingProduct = createProduct(
+			{
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
+				stepId: Step.BackOffice,
+				stepName: '',
+				serviceTypeId: servicesTypeId[$selectedIntegration],
+				environment: 0,
+				...values[Environment.STAGING]
+			},
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const productionProduct = createProduct(
+			{
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
+				stepId: Step.BackOffice,
+				stepName: '',
+				serviceTypeId: servicesTypeId[$selectedIntegration],
+				environment: 1,
+				...values[Environment.PRODUCTION]
+			},
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const response = await Promise.all([stagingProduct, productionProduct]);
+
+		return response;
+	};
+
+	const handleEditProduct = async (values: ProductFormType) => {
+		const stagingProduct = editProduct({
+			...values[Environment.STAGING],
+			stepName: '',
+		} as EditProductPayload, {
+			'x-user-token': $auth?.userToken as string
+		});
+		const productionProduct = editProduct({
+			...values[Environment.PRODUCTION],
+			stepName: '',
+		} as EditProductPayload,{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const response = await Promise.all([stagingProduct, productionProduct]);
+
+		return response;
 	};
 
 	$effect(() => {

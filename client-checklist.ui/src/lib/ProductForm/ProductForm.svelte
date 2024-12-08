@@ -11,7 +11,7 @@
 		isLoading?: boolean;
 		onSubmit: (values: ProductFormType) => void;
 	}>();
-
+	console.log({initialValues})
 	const { form, errors, updateField, handleSubmit } = createForm({
 		initialValues,
 		validationSchema,

@@ -65,8 +65,16 @@ export type CreateProductPayload = {
     clientSubTasks: ClientSubtask[];
     environment: number;
     serviceTypeId: number;
-    sortOrder: number;
     stepId: number;
     stepName: string;
     targetDateCompleted: string;
 }
+
+export type EditProductPayload = {
+	id: string;
+	stepName: string;
+	targetDateCompleted: string;
+	actualDateCompleted: string;
+	assignedTo: string;
+	clientSubTasks: ClientSubtask[];
+};
