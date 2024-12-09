@@ -3,7 +3,7 @@ import type {
 	CreateProductPayload,
 	LoginPayload,
 	LogoutPayload,
-    ClientStatusPayload
+	ClientStatusPayload,
 } from './request.DTO.model';
 import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
@@ -14,7 +14,7 @@ import type {
 	GetClientTaskStatusResponse,
 	LoginAPIResponse,
 	LogoutAPIResponse,
-    ClientStatusResponse
+	ClientStatusResponse
 } from './response.DTO.model';
 
 const APIGateway = (): APIGatewayType => {
@@ -45,7 +45,7 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
-    const ClientStatus = async (
+	const ClientStatus = async (
 		payload: ClientStatusPayload,
 		headers: Record<string, string>
 	): Promise<APIResponse<ClientStatusResponse>> => {
@@ -101,7 +101,7 @@ const APIGateway = (): APIGatewayType => {
 		login,
 		logout,
 		fetchClients,
-        ClientStatus,
+		ClientStatus,
 		createClient,
 		getClientTaskStatus,
 		createProduct

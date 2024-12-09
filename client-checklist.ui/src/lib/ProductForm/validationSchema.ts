@@ -10,6 +10,7 @@ export type ClientSubTaskFormType = {
 };
 
 export type ClientTaskFormType = {
+	id?: string;
 	assignedTo: string;
 	targetDateCompleted: string;
 	actualDateCompleted: string;

@@ -4,38 +4,49 @@
 	import Environment from '$enums/Environment';
 	import ProductForm, { type ProductFormType } from './ProductForm';
 	import selectedIntegration from '$stores/integration';
-	import { INTEGRATION_STEPS } from './ProgressStep/const';
 	import APIGateway from '$api/APIGateway';
-	import { selectedClientId } from '$stores/client';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
 	import Step from '$enums/Step';
+	import type { ClientInformationFormType } from './ClientInformationForm';
+	import steps from '$stores/steps';
 	import { servicesTypeId } from '$constants/services';
 
 	const { createProduct } = APIGateway();
 
 	const { back, next, step } = $props<{
-		back: () => void
-		next: () => void
-        step: number
+		back: () => void;
+		next: () => void;
+		step: number;
 	}>();
 
-	const steps = INTEGRATION_STEPS[$selectedIntegration];
-	const title = steps[step].title;
+	const title = $steps[step].title;
 
 	const initialValues = {
 		[Environment.PRODUCTION]: backOfficeValues,
 		[Environment.STAGING]: backOfficeValues
-	};
+	}
 
 	let error = $state('');
 	let isLoading = $state(false);
 
 	const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
+
+		await handleCreateProduct(values);
+
+		// TODO
+		// await handleEditProduct(values);
+
+		isLoading = false;
+		next();
+	};
+
+	const handleCreateProduct = async (values: ProductFormType) => {
+		const clientFormData = $steps[Step.ClientInformation].formData;
 		const stagingProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.BackOffice,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -50,7 +61,7 @@
 
 		const productionProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.BackOffice,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -62,16 +73,28 @@
 				'x-user-token': $auth?.userToken as string
 			}
 		);
-		
+
 		const response = await Promise.all([stagingProduct, productionProduct]);
-		isLoading = false;
-		
+
 		if (response.some((res) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
 			return;
 		}
 
-		next();
+		const [stagingResponse, productionResponse] = response;
+
+		if (stagingResponse.data && productionResponse.data) {
+			$steps[step].formData = {
+				[Environment.STAGING]: {
+					id: stagingResponse.data.id,
+					...values[Environment.STAGING]
+				},
+				[Environment.PRODUCTION]: {
+					id: productionResponse.data.id,
+					...values[Environment.PRODUCTION]
+				}
+			};
+		}
 	};
 
 	$effect(() => {
@@ -80,7 +103,7 @@
 				error = '';
 			}, 5000);
 		}
-	})
+	});
 </script>
 
 {#if error}

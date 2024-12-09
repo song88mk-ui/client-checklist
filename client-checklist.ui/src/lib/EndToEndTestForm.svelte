@@ -4,19 +4,18 @@
     import { servicesTypeId } from "$constants/services";
     import Environment from "$enums/Environment";
     import { ErrorMessages } from '$enums/ErrorMessages';
-    import Step from "$enums/Step";
+    import Step from '$enums/Step';
+		import steps from '$stores/steps';
+		import type { ClientInformationFormType } from './ClientInformationForm';
     import auth from '$stores/auth';
-    import { selectedClientId } from "$stores/client";
     import selectedIntegration from '$stores/integration';
     import ProductForm, { type ProductFormType } from "./ProductForm";
-    import { INTEGRATION_STEPS } from "./ProgressStep/const";
     
     const { step, next, back } = $props()
 
     const { createProduct } = APIGateway();
 
-	const steps = INTEGRATION_STEPS[$selectedIntegration];
-	const title = steps[step].title;
+	const title = $steps[step].title;
     
     const initialValues: ProductFormType = {
         [Environment.STAGING]: endToEndTestValues,
@@ -28,9 +27,10 @@
 
     const handleSubmit = async (values: ProductFormType) => {
         isLoading = true;
+				const clientFormData = $steps[Step.ClientInformation].formData;
 		const stagingProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.EndToEndFunctionalPerformanceTest,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -45,7 +45,7 @@
 
 		const productionProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.EndToEndFunctionalPerformanceTest,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],

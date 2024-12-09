@@ -48,5 +48,5 @@ export type GetClientTaskStatusResponse = {
 };
 
 export type CreateProductResponse = {
-	id: number;
+	id: string;
 };

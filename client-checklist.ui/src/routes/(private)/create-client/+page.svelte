@@ -1,7 +1,7 @@
 <script lang="ts">
 	import BackOfficeForm from '$lib/BackOfficeForm.svelte';
 	import BusinessAcceptanceForm from '$lib/BusinessAcceptanceForm.svelte';
-	import ClientInformationForm from '$lib/ClientInformationForm.svelte';
+	import ClientInformationForm from '$lib/ClientInformationForm';
 	import ClientLaunchForm from '$lib/ClientLaunch.svelte';
 	import EndToEndTestForm from '$lib/EndToEndTestForm.svelte';
 	import MTSForm from '$lib/MTSForm.svelte';
@@ -25,10 +25,6 @@
 	const next = () => {
 		step++;
 	};
-
-	$inspect(step)
-    
-	const steps = INTEGRATION_STEPS[$selectedIntegration];
 </script>
 
 <div class="mb-10">
@@ -39,7 +35,7 @@
 </div>
 <div class="mb-10">
 	{#if step === 0}
-		<ClientInformationForm {back} {next} />
+		<ClientInformationForm {next} />
 	{:else if step === 1}
 		<BackOfficeForm {back} {next} {step}/>
 	{:else if step === 2}

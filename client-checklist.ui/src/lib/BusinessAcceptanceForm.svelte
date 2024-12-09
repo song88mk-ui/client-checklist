@@ -2,15 +2,14 @@
 <script lang="ts">
     import { BAValues } from '$constants/productFormValues';
 	import Environment from "$enums/Environment";
-	import selectedIntegration from '$stores/integration';
 	import ProductForm, { type ProductFormType } from "./ProductForm";
-	import { INTEGRATION_STEPS } from "./ProgressStep/const";
     import APIGateway from '$api/APIGateway';
-	import { selectedClientId } from '$stores/client';
     import auth from '$stores/auth';
-	import Step from '$enums/Step';
+		import Step from '$enums/Step';
+		import steps from '$stores/steps';
 	import Services from '$enums/Services';
 	import { ErrorMessages } from '$enums/ErrorMessages';
+	import type { ClientInformationFormType } from './ClientInformationForm';
 
     const { createProduct } = APIGateway();
 
@@ -19,8 +18,7 @@
 	let error = $state('');
 	let isLoading = $state(false);
 
-	const steps = INTEGRATION_STEPS[$selectedIntegration];
-	const title = steps[step].title;
+	const title = $steps[step].title;
 
     const initialValues = {
         [Environment.STAGING]: BAValues,
@@ -29,9 +27,10 @@
 
     const handleSubmit = async(values: ProductFormType) => {
 		isLoading = true;
+		const clientFormData = $steps[Step.ClientInformation].formData;
 		const stagingProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.BusinessAcceptanceTest,
 				stepName: '',
 				serviceTypeId: Services.SPORTBOOK_AND_WALLET_INTEGRATION,
@@ -46,7 +45,7 @@
 
 		const productionProduct = createProduct(
 			{
-				clientId: $selectedClientId as string,
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.BusinessAcceptanceTest,
 				stepName: '',
 				serviceTypeId: Services.SPORTBOOK_AND_WALLET_INTEGRATION,
