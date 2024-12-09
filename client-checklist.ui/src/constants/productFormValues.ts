@@ -18,6 +18,51 @@ const backOfficeSubTasks: ClientSubTaskFormType[] = [
 	}
 ];
 
+const walletIntegrationSubTasks : ClientSubTaskFormType[] = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Authentication',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'Bet Placement',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 3,
+		subtaskName: 'Bet Full Cashout',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 4,
+		subtaskName: 'Bet Cancellation',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 5,
+		subtaskName: 'Bet Settlement',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 6,
+		subtaskName: 'Bet Resettlement',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+]
+
 const sportsbookPlayerSiteSubTasks: ClientSubTaskFormType[] = [
     {  
         subtaskId: 1,
@@ -529,6 +574,11 @@ const defaultValues = {
 export const backOfficeValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: backOfficeSubTasks 
+};
+
+export const walletIntegrationValues: ClientTaskFormType = {
+	...defaultValues,
+	clientSubTasks: walletIntegrationSubTasks 
 };
 
 
