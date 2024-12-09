@@ -15,10 +15,6 @@
 	};
 
 	$effect(() => {
-		$steps = INTEGRATION_STEPS[$selectedIntegration];
-	});
-
-	$effect(() => {
 		if ($steps.length > 0) {
 			$steps.forEach((s, i) => {
 				if (s.formData) s.status = StepStatus.Completed;
