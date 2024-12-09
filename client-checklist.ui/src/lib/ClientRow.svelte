@@ -44,8 +44,8 @@
 <div
 	class="mb-[12px] flex w-full flex-row items-center rounded-[5px] border-[1px] border-solid border-[#D6D6D6] bg-[#FFF]"
 >
-	<span class={`${textCss} w-[${isSuperAdmin ? "10%" : "15%"}] capitalize`}>{client.companyName}</span>
-	<span class={`${textCss} w-[${isSuperAdmin ? "10%" : "15%"}] capitalize`}>{client.domain}</span>
+	<span class={`${textCss} ${isSuperAdmin ? "w-[10%]" : "w-[15%]"} capitalize`}>{client.companyName}</span>
+	<span class={`${textCss} ${isSuperAdmin ? "w-[10%]" : "w-[15%]"} capitalize`}>{client.domain}</span>
 	<span class={`${textCss} w-[10%]`}
 		>{format(new Date(client.targetLaunchDate), 'MMMM dd, yyyy')}</span
 	>
