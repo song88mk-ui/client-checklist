@@ -1,18 +1,20 @@
 import type {
-    CreateClientPayload,
-    CreateProductPayload,
-    LoginPayload,
-    LogoutPayload,
-    ClientStatusPayload
+	CreateClientPayload,
+	CreateProductPayload,
+	EditProductPayload,
+	LoginPayload,
+	LogoutPayload,
+	ClientStatusPayload
 } from './request.DTO.model';
 import type {
-    CreateClientResponse,
-    CreateProductResponse,
-    FetchClientsResponse,
-    GetClientTaskStatusResponse,
-    LoginAPIResponse,
-    LogoutAPIResponse,
-    ClientStatusResponse
+	CreateClientResponse,
+	CreateProductResponse,
+	EditProductResponse,
+	FetchClientsResponse,
+	GetClientTaskStatusResponse,
+	LoginAPIResponse,
+	LogoutAPIResponse,
+	ClientStatusResponse
 } from './response.DTO.model';
 
 export enum ResponseMessage {
@@ -75,4 +77,8 @@ export type APIGatewayType = {
 		payload: CreateProductPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateProductResponse>>;
+	editProduct: (
+		formData: EditProductPayload,
+		headers: Record<string, string>
+	) => Promise<APIResponse<EditProductResponse>>;
 };
