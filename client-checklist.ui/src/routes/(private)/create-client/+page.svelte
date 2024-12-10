@@ -10,9 +10,11 @@
 	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
 	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
 	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
+	import OddsFeedIntegrationForm from '$lib/OddsFeedIntegrationForm.svelte';
 	import selectedIntegration from '$stores/integration';
 	import Product from '$utils/client';
 	import steps from '$stores/steps';
+	import IntegrationType from "$enums/integrationType";
 
 	let step = $state(0);
 
@@ -42,8 +44,10 @@
 		<ClientInformationForm {next} />
 	{:else if step === 1}
 		<BackOfficeForm {back} {next} {step}/>
-	{:else if step === 2}
+	{:else if step === 2 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
 		<WalletIntegrationForm {back} {next} {step}/>
+	{:else if step === 2 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
+		<OddsFeedIntegrationForm {back} {next} {step} />
     {:else if step === 3}
         <SportsbookPlayerSiteUiuxForm {back} {next} {step} />
 	{:else if step === 4 }

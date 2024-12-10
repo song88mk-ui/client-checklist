@@ -18,6 +18,37 @@ const backOfficeSubTasks: ClientSubTaskFormType[] = [
 	}
 ];
 
+const oddsFeedIntegrationSubTasks: ClientSubTaskFormType[] = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Odds Feed',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'Odds Feed (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 3,
+		subtaskName: 'Live Data',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 4,
+		subtaskName: 'Live Data (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	}
+];
+
 const walletIntegrationSubTasks : ClientSubTaskFormType[] = [
 	{
 		subtaskId: 1,
@@ -574,6 +605,11 @@ const defaultValues = {
 export const BackOfficeValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: backOfficeSubTasks 
+};
+
+export const OddsFeedIntegrationValues: ClientTaskFormType = {
+	...defaultValues,
+	clientSubTasks: oddsFeedIntegrationSubTasks 
 };
 
 export const WalletIntegrationValues: ClientTaskFormType = {
