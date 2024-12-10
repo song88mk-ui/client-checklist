@@ -12,7 +12,7 @@
 	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
 	import selectedIntegration from '$stores/integration';
 	import Product from '$utils/client';
-
+	import steps from '$stores/steps';
 
 	let step = $state(0);
 
@@ -25,6 +25,10 @@
 	const next = () => {
 		step++;
 	};
+
+	$effect(() => {
+		$steps = INTEGRATION_STEPS[$selectedIntegration];
+	})
 </script>
 
 <div class="mb-10">

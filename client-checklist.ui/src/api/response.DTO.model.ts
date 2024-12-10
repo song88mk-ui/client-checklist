@@ -1,4 +1,6 @@
 import type Role from '$enums/role';
+import type { ClientSubtask } from './request.DTO.model';
+import type Services from '$enums/Services';
 
 export type LoginAPIResponse = {
 	userToken: string;
@@ -32,6 +34,8 @@ export type ClientFetch = {
 	targetLaunchDate: string;
 	taskStatus: number;
 	technicalManager: Manager;
+	accountManager: Manager;
+	socialAccount: string;
 };
 
 export type FetchClientsResponse = {
@@ -42,9 +46,23 @@ export type ClientStatusResponse = null;
 
 export type CreateClientResponse = string;
 
+export type ClientStep = {
+	clientStepId: number;
+	clientId: string;
+	stepId: number;
+	stepName: string;
+	serviceTypeId: Services;
+	environment: number;
+	targetDateCompleted: string;
+	actualDateCompleted: string;
+	assignedTo: string;
+	sortOrder: number;
+	clientSubtasks: ClientSubtask[];
+};
+
 export type GetClientTaskStatusResponse = {
-	client: ClientFetch[];
-	clientSteps: unknown[];
+	client: ClientFetch;
+	clientSteps: ClientStep[];
 };
 
 export type CreateProductResponse = {
