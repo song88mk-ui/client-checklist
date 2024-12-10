@@ -593,6 +593,13 @@ namespace Client.Checklist.API.Repository
                 {
                     activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
 
+                    if(ex.InnerException?.Message.Contains("duplicate key") ?? false)
+                        return new BaseResponseDTO<AddClientStepsResponseDTO>
+                        {
+                            StatusCode = StatusCode.Error,
+                            Message = $"{StatusCode.Error.ToString().Replace('_', ' ')} (Cannot insert duplicate steps - {request.StepName})"
+                        };
+
                     return new BaseResponseDTO<AddClientStepsResponseDTO>
                     {
                         StatusCode = StatusCode.Error,
