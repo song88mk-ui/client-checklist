@@ -18,6 +18,37 @@ const backOfficeSubTasks: ClientSubTaskFormType[] = [
 	}
 ];
 
+const oddsFeedIntegrationSubTasks: ClientSubTaskFormType[] = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Odds Feed',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'Odds Feed (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 3,
+		subtaskName: 'Live Data',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 4,
+		subtaskName: 'Live Data (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	}
+];
+
 const walletIntegrationSubTasks : ClientSubTaskFormType[] = [
 	{
 		subtaskId: 1,
@@ -571,18 +602,23 @@ const defaultValues = {
 	actualDateCompleted: ''
 };
 
-export const backOfficeValues: ClientTaskFormType = {
+export const BackOfficeValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: backOfficeSubTasks 
 };
 
-export const walletIntegrationValues: ClientTaskFormType = {
+export const OddsFeedIntegrationValues: ClientTaskFormType = {
+	...defaultValues,
+	clientSubTasks: oddsFeedIntegrationSubTasks 
+};
+
+export const WalletIntegrationValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: walletIntegrationSubTasks 
 };
 
 
-export const sportsbookPlayerSiteValues: ClientTaskFormType = {
+export const SportsbookPlayerSiteValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: sportsbookPlayerSiteSubTasks
 };
@@ -592,12 +628,12 @@ export const MTSValues: ClientTaskFormType = {
 	clientSubTasks: MTSSubTasks
 };
 
-export const endToEndTestValues: ClientTaskFormType = {
+export const EndToEndTestValues: ClientTaskFormType = {
     ...defaultValues,
     clientSubTasks: endToEndTestSubTasks
 }
 
-export const operationsValues: ClientTaskFormType = {
+export const OperationsValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: operationsSubTasks
 };

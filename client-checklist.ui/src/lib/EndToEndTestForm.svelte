@@ -1,6 +1,6 @@
 <script lang="ts">
   	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { endToEndTestValues } from '$constants/productFormValues';
+	import { EndToEndTestValues } from '$constants/productFormValues';
 	import Environment from "$enums/Environment";
 	import ProductForm, { type ProductFormType } from "./ProductForm";
     import steps from '$stores/steps';
@@ -23,8 +23,8 @@
 	const title = $steps[step].title;
 
 	let initialValues = $steps[step].formData as ProductFormType || {
-		[Environment.STAGING]: endToEndTestValues,
-		[Environment.PRODUCTION]: endToEndTestValues
+		[Environment.STAGING]: EndToEndTestValues,
+		[Environment.PRODUCTION]: EndToEndTestValues
 	};
 
     let error = $state('');
