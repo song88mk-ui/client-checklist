@@ -84,11 +84,13 @@
 		if (clientSteps.length) {
 			const stepData = groupedByStepId(clientSteps);
 			
-			$steps.map((step, index) => {
-				if (stepData[index]) {
-					step.formData = stepData[index] as ProductFormType;
+			$steps.map((step) => {
+				if (stepData[step.stepId]) {
+					step.formData = stepData[step.stepId] as ProductFormType;
 				}
 			});
+
+			console.log({ $steps, clientSteps })
 		}
 	});
 </script>
