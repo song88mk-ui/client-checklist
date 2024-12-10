@@ -61,7 +61,7 @@ export type APIGatewayType = {
 	login: (payload: LoginPayload) => Promise<APIResponse<LoginAPIResponse>>;
 	logout: (payload: LogoutPayload) => Promise<APIResponse<LogoutAPIResponse>>;
 	fetchClients: (headers: Record<string, string>) => Promise<APIResponse<FetchClientsResponse>>;
-	ClientStatus: (
+	clientStatus: (
 		payload: ClientStatusPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<ClientStatusResponse>>;

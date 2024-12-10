@@ -47,7 +47,7 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
-	const ClientStatus = async (
+	const clientStatus = async (
 		payload: ClientStatusPayload,
 		headers: Record<string, string>
 	): Promise<APIResponse<ClientStatusResponse>> => {
@@ -116,7 +116,7 @@ const APIGateway = (): APIGatewayType => {
 		login,
 		logout,
 		fetchClients,
-		ClientStatus,
+		clientStatus,
 		createClient,
 		getClientTaskStatus,
 		createProduct,
