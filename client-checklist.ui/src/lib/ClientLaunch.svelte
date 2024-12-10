@@ -1,42 +1,78 @@
 
 <script lang="ts">
-    import { ClientLaunchValues } from '$constants/productFormValues';
+  	import { type EditProductPayload } from '$api/request.DTO.model';
+	import { ClientLaunchValues } from '$constants/productFormValues';
 	import Environment from "$enums/Environment";
-	import selectedIntegration from '$stores/integration';
 	import ProductForm, { type ProductFormType } from "./ProductForm";
-	import { INTEGRATION_STEPS } from "./ProgressStep/const";
-    import APIGateway from '$api/APIGateway';
+    import steps from '$stores/steps';
     import auth from '$stores/auth';
-		import Step from '$enums/Step';
-		import steps from '$stores/steps';
-	import Services from '$enums/Services';
 	import { ErrorMessages } from '$enums/ErrorMessages';
+	import Alert from './Alert.svelte';
+	import Step from '$enums/Step';
+	import APIGateway from '$api/APIGateway';
 	import type { ClientInformationFormType } from './ClientInformationForm';
+	import { servicesTypeId } from '$constants/services';
+	import selectedIntegration from '$stores/integration';
 
-    const { createProduct } = APIGateway();
-
-    const { step, next, back } = $props()
-
-	let error = $state('');
-	let isLoading = $state(false);
+    const { createProduct, editProduct } = APIGateway();
+	const { back, next, step } = $props<{
+		back: () => void;
+		next: () => void;
+		step: number;
+	}>();
 
 	const title = $steps[step].title;
 
-    const initialValues = {
-        [Environment.STAGING]: ClientLaunchValues,
-        [Environment.PRODUCTION]: ClientLaunchValues
-    }
+	let initialValues = $steps[step].formData as ProductFormType || {
+		[Environment.STAGING]: ClientLaunchValues,
+		[Environment.PRODUCTION]: ClientLaunchValues
+	};
 
-    const handleSubmit = async(values: ProductFormType) => {
+    let error = $state('');
+	let isLoading = $state(false);
+
+	const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
+
+		let response;
+		if (values[Environment.STAGING].id && values[Environment.PRODUCTION].id) {
+			response = await handleEditProduct(values);
+		} else {
+			response = await handleCreateProduct(values);
+		}
+
+		isLoading = false;
+
+		if (response.some((res) => res.error)) {
+			error = ErrorMessages.CreateProductFailed;
+			return;
+		}
+
+		const [stagingResponse, productionResponse] = response;
+
+		if (stagingResponse.data && productionResponse.data) {
+			$steps[step].formData = {
+				[Environment.STAGING]: {
+					id: stagingResponse.data.id,
+					...values[Environment.STAGING]
+				},
+				[Environment.PRODUCTION]: {
+					id: productionResponse.data.id,
+					...values[Environment.PRODUCTION]
+				}
+			};
+		}
+		next();
+	};
+
+	const handleCreateProduct = async (values: ProductFormType) => {
 		const clientFormData = $steps[Step.ClientInformation].formData;
 		const stagingProduct = createProduct(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.ClientLaunch,
 				stepName: '',
-				serviceTypeId: Services.SPORTBOOK_AND_WALLET_INTEGRATION,
-				sortOrder: 0,
+				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 0,
 				...values[Environment.STAGING]
 			},
@@ -50,8 +86,7 @@
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: Step.ClientLaunch,
 				stepName: '',
-				serviceTypeId: Services.SPORTBOOK_AND_WALLET_INTEGRATION,
-				sortOrder: 0,
+				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,
 				...values[Environment.PRODUCTION]
 			},
@@ -59,17 +94,45 @@
 				'x-user-token': $auth?.userToken as string
 			}
 		);
-		
-		const response = await Promise.all([stagingProduct, productionProduct]);
-		isLoading = false;
-		
-		if (response.some((res) => res.error)) {
-			error = ErrorMessages.CreateProductFailed;
-			return;
-		}
 
-		next();    
-    }
+		const response = await Promise.all([stagingProduct, productionProduct]);
+
+		return response;
+	};
+
+	const handleEditProduct = async (values: ProductFormType) => {
+		const stagingProduct = editProduct({
+			...values[Environment.STAGING],
+			stepName: '',
+		} as EditProductPayload, {
+			'x-user-token': $auth?.userToken as string
+		});
+		const productionProduct = editProduct({
+			...values[Environment.PRODUCTION],
+			stepName: '',
+		} as EditProductPayload,{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const response = await Promise.all([stagingProduct, productionProduct]);
+
+		return response;
+	};
+
+    $effect(() => {
+		if (error) {
+			setTimeout(() => {
+				error = '';
+			}, 5000);
+		}
+	});
 </script>
+
+{#if error}
+	<div class="mb-5">
+		<Alert variant="error" message={error} hasCloseButton={false} />
+	</div>
+{/if}
 
 <ProductForm {title} {initialValues} {back} onSubmit={handleSubmit}/>
