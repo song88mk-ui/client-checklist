@@ -1,17 +1,14 @@
 <script lang="ts">
-	import APIGateway from '$api/APIGateway';
-	import type { ClientStatusPayload } from '$api/request.DTO.model';
 	import { AccessType } from '$enums/role';
 	import auth from '$stores/auth';
 	import { selectedClient } from '$stores/client';
 	import { openModal } from '$stores/modal';
 	import { format } from 'date-fns';
 	import ClientRowStatus from './ClientRowStatus.svelte';
+	import ClientStatusModal from './ClientStatusModal.svelte';
 	import GenerateLinkModal from './GenerateLinkModal.svelte';
 
 	export let client: any = {};
-
-	const { ClientStatus } = APIGateway();
 
 	let isLoading: boolean = false;
 	let isSuperAdmin: boolean = $auth?.accessType == AccessType.READWRITE;
@@ -22,22 +19,11 @@
 		openModal(GenerateLinkModal);
 	};
 
-	const handleEnableClick = async (): Promise<void> => {
-		isLoading = true;
-		let payload: ClientStatusPayload = {
-			clientId: client.id,
-			statusId: client.isActive ? 0 : 1
-		};
+	const handleShowEnableDisableModal = (e: any) => {
+		e.preventDefault();
 
-		const res = await ClientStatus(payload, {
-			'x-user-token': $auth?.userToken as string
-		});
-
-		if (res && res?.error === null && res?.error === undefined) {
-			client.isActive = !client.isActive;
-		}
-
-		isLoading = false;
+		$selectedClient = client;
+		openModal(ClientStatusModal);
 	};
 </script>
 
@@ -68,15 +54,13 @@
 		</button>
 	</div>
 	{#if isSuperAdmin}
-		<div class="flex w-[10%] items-center justify-center pl-3">
+		<div
+			role="presentation"
+			class="flex w-[10%] items-center justify-center pl-3"
+			on:click={(e: any) => handleShowEnableDisableModal(e)}
+		>
 			<label class="inline-flex cursor-pointer items-center">
-				<input
-					type="checkbox"
-					checked={client.isActive}
-					class="peer sr-only"
-					on:change={handleEnableClick}
-					disabled={isLoading}
-				/>
+				<input type="checkbox" class="peer sr-only" bind:checked={client.isActive} />
 				<div
 					class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[#18F2A8] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700"
 				></div>
