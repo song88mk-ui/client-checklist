@@ -73,7 +73,7 @@
 			<img src="/icon-close.svg" alt="icon-close" />
 		</button>
 	</div>
-	<span class="mb-[4px] text-[20px] font-[600] leading-[28px] text-[#101828]">Disable Client</span>
+	<span class="mb-[4px] text-[20px] font-[600] leading-[28px] text-[#101828]">{currClient?.isActive ? 'Disable Client' : 'Enable Client'}</span>
 	<span class="mb-[4px] text-[14px] font-[400] leading-[20px] text-[#475467]"
 		>Are you sure you want to {currClient?.isActive ? 'disable' : 'enable'}
 		<strong>{currClient?.companyName}</strong>?</span
