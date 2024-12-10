@@ -571,18 +571,18 @@ const defaultValues = {
 	actualDateCompleted: ''
 };
 
-export const backOfficeValues: ClientTaskFormType = {
+export const BackOfficeValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: backOfficeSubTasks 
 };
 
-export const walletIntegrationValues: ClientTaskFormType = {
+export const WalletIntegrationValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: walletIntegrationSubTasks 
 };
 
 
-export const sportsbookPlayerSiteValues: ClientTaskFormType = {
+export const SportsbookPlayerSiteValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: sportsbookPlayerSiteSubTasks
 };
@@ -592,12 +592,12 @@ export const MTSValues: ClientTaskFormType = {
 	clientSubTasks: MTSSubTasks
 };
 
-export const endToEndTestValues: ClientTaskFormType = {
+export const EndToEndTestValues: ClientTaskFormType = {
     ...defaultValues,
     clientSubTasks: endToEndTestSubTasks
 }
 
-export const operationsValues: ClientTaskFormType = {
+export const OperationsValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: operationsSubTasks
 };
