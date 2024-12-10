@@ -41,7 +41,7 @@
 	<div>
 		<div class="mb-[4px] text-[20px] font-[600] leading-[28px] text-[#101828]">Confirm Logout</div>
 		<div class="text-[14px] font-[400] leading-[20px] text-[#475467]">
-			You’re about to log out. Any unsaved changes will be lost. Continue?"
+			You are about to log out. Any unsaved changes will be lost. Continue?
 		</div>
 	</div>
 

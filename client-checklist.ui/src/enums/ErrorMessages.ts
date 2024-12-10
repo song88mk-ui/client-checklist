@@ -5,5 +5,6 @@ export enum ErrorMessages {
 	DeleteClientFailed = 'Failed to delete client.',
 	LogoutFailed = 'Failed to logout.',
 	CreateProductFailed = 'Failed to create product.',
-	FetchClientFailed = 'Failed to fetch client.'
+	FetchClientFailed = 'Failed to fetch client.',
+    ClientStatusFailed = 'Failed to change client status.'
 }
