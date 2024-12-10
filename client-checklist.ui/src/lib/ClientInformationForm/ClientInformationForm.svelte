@@ -12,13 +12,12 @@
 	import Step from '$enums/Step';
 	import { servicesTypeId } from '$constants/services';
 	import validationSchema, { type ClientInformationFormType } from './validationSchema';
-	import type { Client } from '$types/client';
 
 	const { createClient } = APIGateway();
 	let { next } = $props();
 	let isLoading = $state(false);
 
-	let initialValues: ClientInformationFormType = {
+	let initialValues = {
 		clientName: '',
 		domain: '',
 		sslCert: '',
@@ -42,7 +41,15 @@
 		socialAccount: ''
 	};
 
-	const { form, handleSubmit, errors, updateField } = createForm({
+	$effect(() => {
+		if ($steps[Step.ClientInformation]?.formData) {
+			updateInitialValues($steps[Step.ClientInformation]?.formData as ClientInformationFormType);
+		} else {
+			updateInitialValues(initialValues);
+		}
+	})
+
+	const { form, handleSubmit, errors, updateField, updateInitialValues } = createForm({
 		initialValues,
 		validationSchema,
 		onSubmit: async (values) => {
@@ -116,23 +123,6 @@
 
 	const handleSelectDate = (selectedDate: Date) => {
 		updateField('launchDate', selectedDate.toISOString());
-	};
-
-	$effect(() => {
-		const { formData } = $steps[Step.ClientInformation];
-		if (formData) {
-			initialValues = $steps[Step.ClientInformation].formData as ClientInformationFormType;
-		}
-	});
-
-	const disableSubmit = () => {
-		return (
-			$form.clientName === '' ||
-			$form.languages === '' ||
-			$form.currencies === '' ||
-			$form.sports === '' ||
-			$form.markets === ''
-		);
 	};
 </script>
 

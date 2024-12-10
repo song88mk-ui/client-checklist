@@ -34,6 +34,8 @@ export type ClientFetch = {
 	targetLaunchDate: string;
 	taskStatus: number;
 	technicalManager: Manager;
+	accountManager: Manager;
+	socialAccount: string;
 };
 
 export type FetchClientsResponse = {

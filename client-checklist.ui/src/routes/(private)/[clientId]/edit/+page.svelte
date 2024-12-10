@@ -22,6 +22,9 @@
 	import selectedIntegration from '$stores/integration';
 	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import steps from '$stores/steps';
+	import Step from '$enums/Step';
+	import groupedByStepId from '$utils/groupedByStepId';
+	import type { ProductFormType } from '$lib/ProductForm';
 
 	const { getClientTaskStatus } = APIGateway();
 
@@ -51,17 +54,41 @@
 		}
 
 		const { client, clientSteps } = response.data as GetClientTaskStatusResponse;
-
-		if (client && clientSteps.length) {
-			$selectedIntegration = servicesType[clientSteps[0].serviceTypeId];
+		if (client) {
+			$selectedIntegration = servicesType[client.serviceTypeId];
 			$steps = INTEGRATION_STEPS[$selectedIntegration];
-
-			$steps[0].formData = {
+			$steps[Step.ClientInformation].formData = {
 				clientId: client.clientId,
 				clientName: client.clientName,
 				domain: client.domain,
-				launchDate: client.targetLaunchDate
+				launchDate: client.targetLaunchDate,
+				languages: client.languages.join(', '),
+				currencies: client.currencies.join(', '),
+				sports: client.sports.join(', '),
+				markets: client.markets.join(', '),
+				mainDecisionMakerName: client.mainDecisionMaker.name,
+				mainDecisionMakerNumber: client.mainDecisionMaker.number,
+				financeManagerName: client.financeManager.name,
+				financeManagerNumber: client.financeManager.number,
+				productManagerName: client.productManager.name,
+				productManagerNumber: client.productManager.number,
+				accountManagerName: client.accountManager.name,
+				accountManagerNumber: client.accountManager.number,
+				technicalManagerName: client.technicalManager.name,
+				technicalManagerNumber: client.technicalManager.number,
+				customerServiceManagerName: client.customerServiceManager.name,
+				customerServiceManagerNumber: client.customerServiceManager.number,
+				socialAccount: client.socialAccount,
 			} as ClientInformationFormType;
+		}
+		if (clientSteps.length) {
+			const stepData = groupedByStepId(clientSteps);
+			
+			$steps.map((step, index) => {
+				if (stepData[index]) {
+					step.formData = stepData[index] as ProductFormType;
+				}
+			});
 		}
 	});
 </script>

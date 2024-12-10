@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-	import selectedIntegration from '$stores/integration';
-	import { INTEGRATION_STEPS, STATUS_COLORS } from './const';
+	import { STATUS_COLORS } from './const';
 	import StepStatus from '$enums/StepStatus';
 	import steps from '$stores/steps';
 	import Step from '$enums/Step';
@@ -18,10 +17,12 @@
 		if ($steps.length > 0) {
 			$steps.forEach((s, i) => {
 				if (s.formData) s.status = StepStatus.Completed;
-				else if (i === step) {
-					s.status = StepStatus.Active;
-				} else {
+				else {
 					s.status = StepStatus.Inactive;
+				}
+
+				if (i === step) {
+					s.status = StepStatus.Active;
 				}
 			});
 		}
