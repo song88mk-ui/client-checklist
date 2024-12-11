@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { ClientRowStatus } from '../enums/ClientRowStatus';
 
-	export let status: ClientRowStatus = ClientRowStatus.InProgress;
+	export let status: ClientRowStatus = ClientRowStatus.NotStarted;
 	export let className: string = '';
+
 	let statusDefault = `px-5 py-2 rounded-[50px] text-[12px] font-[600] leading-[15px] w-fit ${className} text-center `;
 	let statusText = '';
 	let statusCss = '';
