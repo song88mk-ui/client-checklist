@@ -6,10 +6,10 @@
 	let isScrolledToBottom = false;
 
 	function handleScroll() {
-		const scrollHeight = agreementText.scrollHeight;
 		const scrollTop = agreementText.scrollTop;
-		const clientHeight = agreementText.clientHeight;
-		isScrolledToBottom = scrollTop + clientHeight >= scrollHeight;
+		if(scrollTop > 78){
+			isScrolledToBottom = true;
+		}
 	}
 	onMount(() => {
 		handleScroll();
