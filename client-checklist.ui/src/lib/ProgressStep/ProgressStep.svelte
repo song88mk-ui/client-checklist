@@ -48,7 +48,11 @@
 				{title}
 			</div>
 			{#if index < $steps.length - 1}
-				<div class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[status].line}`}></div>
+				{#if $steps[index + 1].status === StepStatus.Completed}
+					<div class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[StepStatus.Completed].line}`}></div>
+				{:else}
+					<div class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[status].line}`}></div>
+				{/if}
 			{/if}
 		</div>
 	{/each}
