@@ -10,8 +10,11 @@
 		errors?: unknown;
 	}>();
 
+	let localSubtasks = $state(clientSubTasks);
+
 	const handleSelectStatus = (index: number, status: ClientRowStatus) => {
 		updateField(`${name}.${index}.taskStatusId`, status);
+		localSubtasks = clientSubTasks
 	};
 
 	const handleChange = (index: number, value: string) => {
@@ -32,7 +35,7 @@
 		</tr>
 	</thead>
 	<tbody class="divide-y divide-gray-200 border-b bg-white">
-		{#each clientSubTasks as subTask, index}
+		{#each localSubtasks as subTask, index}
 			<tr>
 				<td class="whitespace-nowrap py-4 pl-5 pr-2 align-top text-sm text-gray-900">
 					<div class="flex h-[38px] items-center">

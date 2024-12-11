@@ -40,19 +40,15 @@
 	class="relative w-full rounded border border text-sm text-gray-700"
 	on:focusout={handleFocusOut}
 >
-	<div class="flex px-3 py-2 pr-1">
+	<div class="flex cursor-pointer gap-[5px] items-center p-2" on:click={toggle}>
 		<div class="flex-1">
 			<ClientRowStatus className="w-full !py-1" status={value} />
 		</div>
-		<div class="flex items-center">
-			<button type="button" class="p-1" on:click={toggle}>
-				<img
-					src="/icon-arrow-down.svg"
-					alt="icon-arrow-down"
-					class={`h-[12px] w-[12px] ${isShow ? 'rotate-180' : ''}`}
-				/>
-			</button>
-		</div>
+		<img
+			src="/icon-arrow-down.svg"
+			alt="icon-arrow-down"
+			class={`h-[12px] w-[12px] ${isShow ? 'rotate-180' : ''}`}
+		/>
 	</div>
 	{#if isShow}
 		<div
