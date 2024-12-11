@@ -7,7 +7,7 @@ export type LoginFormType = {
 };
 
 export default yup.object().shape({
-	username: yup.string().required(),
-	password: yup.string().required(),
+	username: yup.string().required("Username is required."),
+	password: yup.string().required("Password is required."),
 	rememberMe: yup.boolean()
 });

@@ -26,13 +26,13 @@ export type ClientInformationFormType = {
 };
 
 export default yup.object().shape({
-	clientName: yup.string().required(),
+	clientName: yup.string().required("Client name is required."),
 	domain: yup.string(),
 	sslCert: yup.string(),
-	languages: yup.string().required(),
-	currencies: yup.string().required(),
-	sports: yup.string().required(),
-	markets: yup.string().required(),
+	languages: yup.string().required("Languages must at least have one value."),
+	currencies: yup.string().required("Currencies must at least have one value."),
+	sports: yup.string().required("Sports must at least have one value."),
+	markets: yup.string().required("Markets must at least have one value."),
 	launchDate: yup.string(),
 	mainDecisionMakerName: yup.string(),
 	mainDecisionMakerNumber: yup.string(),
@@ -46,5 +46,5 @@ export default yup.object().shape({
 	technicalManagerNumber: yup.string(),
 	customerServiceManagerName: yup.string(),
 	customerServiceManagerNumber: yup.string(),
-	socialAccount: yup.string().required()
+	socialAccount: yup.string().required("Social account is required.")
 });
