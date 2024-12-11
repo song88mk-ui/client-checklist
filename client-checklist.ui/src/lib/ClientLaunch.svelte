@@ -1,5 +1,6 @@
 
 <script lang="ts">
+	import { goto } from '$app/navigation';
   	import { type EditProductPayload } from '$api/request.DTO.model';
 	import { ClientLaunchValues } from '$constants/productFormValues';
 	import Environment from "$enums/Environment";
@@ -15,7 +16,7 @@
 	import selectedIntegration from '$stores/integration';
 
     const { createProduct, editProduct } = APIGateway();
-	const { back, next, step } = $props<{
+	const { back, step } = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
@@ -62,7 +63,6 @@
 				}
 			};
 		}
-		next();
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {
@@ -96,7 +96,11 @@
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-
+		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+			setTimeout(() => {
+				goto("/");
+			}, 3000);
+		}
 		return response;
 	};
 
@@ -135,4 +139,4 @@
 	</div>
 {/if}
 
-<ProductForm {title} {initialValues} {back} onSubmit={handleSubmit}/>
+<ProductForm {step} {title} {initialValues} {back} {isLoading} onSubmit={handleSubmit}/>

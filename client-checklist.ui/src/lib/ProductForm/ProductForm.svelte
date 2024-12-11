@@ -4,10 +4,11 @@
 	import ClientTask from './ClientTask.svelte';
 	import Environment from '$enums/Environment';
 
-	let { title, initialValues, back, isLoading, onSubmit } = $props<{
+	let { title, initialValues, back, isLoading, onSubmit,step } = $props<{
 		title: string;
 		initialValues: ProductFormType;
 		back?: () => void;
+		step?: () => number;
 		isLoading?: boolean;
 		onSubmit: (values: ProductFormType) => void;
 	}>();
@@ -16,6 +17,7 @@
 		validationSchema,
 		onSubmit
 	});
+
 </script>
 
 <form onsubmit={handleSubmit} class="flex flex-col gap-7">
@@ -44,7 +46,7 @@
 			>
 			<button
 				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
-				disabled={isLoading}>Next</button
+				disabled={isLoading}>{step ? 'Create': 'Next'}</button
 			>
 		</div>
 	</div>
