@@ -89,8 +89,6 @@
 					step.formData = stepData[step.stepId] as ProductFormType;
 				}
 			});
-
-			console.log({ $steps, clientSteps })
 		}
 	});
 </script>
