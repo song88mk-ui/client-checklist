@@ -126,7 +126,7 @@
 	};
 </script>
 
-<form onsubmit={handleSubmit}>
+<form onsubmit={handleSubmit} class="flex flex-col gap-7">
 	<div class="flex flex flex-col flex-col gap-5 divide-y rounded-md border bg-white px-6 py-[30px]">
 		<div class="flex flex-col gap-5">
 			<h2 class="text-lg font-bold italic">Client information</h2>
