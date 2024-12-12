@@ -22,25 +22,25 @@
 	export let clientStep: ClientStep;
 	let isOpen = false;
 	let status: number = 0;
-	let percentage = '';
+	let percentage = '0';
 
 	function toggle() {
 		isOpen = !isOpen;
 	}
+
 	function calculateProgress(clientSubtasks: ClientSubtask[]) {
 		if (clientSubtasks.length > 0) {
 			const taskProgress = clientSubtasks.map((item) => item.taskStatusId);
 			const totalPercentage = calculatePercentage(taskProgress, 2);
 			percentage = totalPercentage.toFixed(0);
-			if (totalPercentage > 0 && totalPercentage < 100) {
+
+			if (totalPercentage > 0 && totalPercentage <= 100) {
 				status = 1;
-				return;
-			}
-			if (totalPercentage === 100) {
-				status = 1;
+                return;
 			}
 		}
 	}
+
 	function calculatePercentage(items: any, itemToCheck: any): number {
 		if (!Array.isArray(items) || items.length === 0) {
 			return 0;
@@ -61,6 +61,7 @@
           </div>
       `;
 	}
+    
 	calculateProgress(clientStep.clientSubtasks);
 </script>
 
