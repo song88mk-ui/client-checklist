@@ -12,8 +12,8 @@ export const servicesTypeId: { [key: string]: Services } = {
 };
 
 export const servicesType: { [key: number]: IntegrationType } = {
-	[Services.ODDS_FEED_AND_LIVE_DATA_INTEGRATION]: IntegrationType.WALLET_INTEGRATION,
-	[Services.SPORTBOOK_AND_WALLET_INTEGRATION]: IntegrationType.FEED_INTEGRATION
+	[Services.ODDS_FEED_AND_LIVE_DATA_INTEGRATION]: IntegrationType.FEED_INTEGRATION,
+	[Services.SPORTBOOK_AND_WALLET_INTEGRATION]: IntegrationType.WALLET_INTEGRATION
 };
 
 export default services;

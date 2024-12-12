@@ -34,12 +34,9 @@
 	const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
 
-		let response;
-		if (values[Environment.STAGING].id && values[Environment.PRODUCTION].id) {
-			response = await handleEditProduct(values);
-		} else {
-			response = await handleCreateProduct(values);
-		}
+		const response = values[Environment.STAGING].id && values[Environment.PRODUCTION].id
+				? await handleEditProduct(values)
+				: await handleCreateProduct(values);
 
 		isLoading = false;
 

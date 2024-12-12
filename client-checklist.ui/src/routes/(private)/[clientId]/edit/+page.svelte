@@ -44,7 +44,7 @@
 
 	onMount(async () => {
 		const response = await getClientTaskStatus($page.params.clientId, {
-			'x-user-token': $auth?.userToken as string
+			'x-user-token': $auth?.userToken || ''
 		});
 
 		isLoading = false;

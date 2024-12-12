@@ -16,10 +16,7 @@
 	$effect(() => {
 		if ($steps.length > 0) {
 			$steps.forEach((s, i) => {
-				if (s.formData) s.status = StepStatus.Completed;
-				else {
-					s.status = StepStatus.Inactive;
-				}
+				s.status = s.formData ? StepStatus.Completed : StepStatus.Inactive
 
 				if (i === step) {
 					s.status = StepStatus.Active;
