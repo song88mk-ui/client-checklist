@@ -52,7 +52,7 @@
 
 <div class="relative" onfocusout={handleFocusOut}>
 	<input
-		class="w-full rounded border px-3 py-2 text-sm text-gray-700"
+		class="w-full rounded border px-3 py-2 text-sm text-gray-700 bg-[url('/icon-calendar.svg')] bg-no-repeat bg-[center_right_12px]"
 		id="backendDevelopmentTeam"
 		type="text"
 		autocomplete="off"

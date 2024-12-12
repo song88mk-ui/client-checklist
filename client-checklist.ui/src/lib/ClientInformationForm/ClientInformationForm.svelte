@@ -134,7 +134,7 @@
 				<div class="flex-1">
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="companyName">
 						Company Name
-						<span class="text-red-500">*</span>
+						<span class="text-red-500 font-bold">*</span>
 					</label>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -144,7 +144,7 @@
 						bind:value={$form.clientName}
 					/>
 					{#if $errors.clientName}
-						<small class="text-xs font-bold text-red-500">{$errors.clientName}</small>
+						<small class="text-xs font-bold text-red-500 font-bold">{$errors.clientName}</small>
 					{/if}
 				</div>
 				<div class="flex-1">
@@ -194,7 +194,7 @@
 			<div class="flex gap-3">
 				<div class="flex-1">
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="languagesSupported">
-						Languages Supported <span class="text-red-500">*</span>
+						Languages Supported <span class="text-red-500 font-bold">*</span>
 					</label>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -204,12 +204,12 @@
 						bind:value={$form.languages}
 					/>
 					{#if $errors.languages}
-						<small class="text-xs font-bold text-red-500">{$errors.languages}</small>
+						<small class="text-xs font-bold text-red-500 font-bold">{$errors.languages}</small>
 					{/if}
 				</div>
 				<div class="flex-1">
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="currencySupported">
-						Currencies Supported <span class="text-red-500">*</span>
+						Currencies Supported <span class="text-red-500 font-bold">*</span>
 					</label>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -219,14 +219,14 @@
 						bind:value={$form.currencies}
 					/>
 					{#if $errors.currencies}
-						<small class="text-xs font-bold text-red-500">{$errors.currencies}</small>
+						<small class="text-xs font-bold text-red-500 font-bold">{$errors.currencies}</small>
 					{/if}
 				</div>
 			</div>
 			<div class="flex gap-3">
 				<div class="flex-1">
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="sports">
-						Sports <span class="text-red-500">*</span>
+						Sports <span class="text-red-500 font-bold">*</span>
 					</label>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -236,12 +236,12 @@
 						bind:value={$form.sports}
 					/>
 					{#if $errors.sports}
-						<small class="text-xs font-bold text-red-500">{$errors.sports}</small>
+						<small class="text-xs font-bold text-red-500 font-bold">{$errors.sports}</small>
 					{/if}
 				</div>
 				<div class="flex-1">
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="targetMarket">
-						Target Market <span class="text-red-500">*</span>
+						Target Market <span class="text-red-500 font-bold">*</span>
 					</label>
 					<input
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -251,7 +251,7 @@
 						bind:value={$form.markets}
 					/>
 					{#if $errors.markets}
-						<small class="text-xs font-bold text-red-500">{$errors.markets}</small>
+						<small class="text-xs font-bold text-red-500 font-bold">{$errors.markets}</small>
 					{/if}
 				</div>
 			</div>
@@ -390,7 +390,7 @@
 			</div>
 			<div>
 				<label class="mb-2 block text-xs font-semibold text-gray-700" for="socialAccount">
-					Social Account <span class="text-red-500">*</span>
+					Social Account <span class="text-red-500 font-bold">*</span>
 				</label>
 				<input
 					class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -400,7 +400,7 @@
 					bind:value={$form.socialAccount}
 				/>
 				{#if $errors.socialAccount}
-					<small class="text-xs font-bold text-red-500">{$errors.socialAccount}</small>
+					<small class="text-xs font-bold text-red-500 font-bold">{$errors.socialAccount}</small>
 				{/if}
 			</div>
 		</div>

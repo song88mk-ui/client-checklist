@@ -75,11 +75,11 @@
 				}
 				return clientStep
 			})
-			console.log(clientSteps)
 			client = {
 				...res?.client,
 				clientSteps: clientSteps
 			};
+            
 			if (client && client.clientSteps.length > 0) {
 				calcClientStepProgress(client?.clientSteps);
 			}

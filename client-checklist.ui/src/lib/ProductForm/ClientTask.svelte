@@ -61,7 +61,7 @@
 			<div class="flex gap-3">
 				<div class="flex-1">
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="assignedTo">
-						Assigned To <span class="text-red-500">*</span>
+						Assigned To <span class="text-red-500 font-bold">*</span>
 					</label>
 					<select
 						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -75,7 +75,7 @@
 						{/each}
 					</select>
 					{#if errors.assignedTo}
-						<small class="text-red-500">{errors.assignedTo}</small>
+						<small class="text-red-500 font-bold">{errors.assignedTo}</small>
 					{/if}
 				</div>
 				<div class="flex-1">
@@ -87,7 +87,7 @@
 						onSelectDate={(selectedDate) => handleSelectDate('targetDateCompleted', selectedDate)}
 					/>
 					{#if errors.targetDateCompleted}
-						<small class="text-red-500">{errors.targetDateCompleted}</small>
+						<small class="text-red-500 font-bold">{errors.targetDateCompleted}</small>
 					{/if}
 				</div>
 				<div class="flex-1">
@@ -99,7 +99,7 @@
 						onSelectDate={(selectedDate) => handleSelectDate('actualDateCompleted', selectedDate)}
 					/>
 					{#if errors.actualDateCompleted}
-						<small class="text-red-500">{errors.actualDateCompleted}</small>
+						<small class="text-red-500 font-bold">{errors.actualDateCompleted}</small>
 					{/if}
 				</div>
 			</div>
