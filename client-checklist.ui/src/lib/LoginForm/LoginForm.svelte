@@ -49,7 +49,7 @@
 				/>
 			</div>
 			{#if $errors.username}
-				<small class="text-red-500">{$errors.username}</small>
+				<small class="text-red-500 font-bold">{$errors.username}</small>
 			{/if}
 		</div>
 
@@ -72,7 +72,7 @@
 				</div>
 			</div>
 			{#if $errors.password}
-				<small class="text-red-500">{$errors.password}</small>
+				<small class="text-red-500 font-bold">{$errors.password}</small>
 			{/if}
 		</div>
 
@@ -94,7 +94,7 @@
 					on:click={onRemoveError}
 					aria-label="Close alert"
 				>
-					<Icon icon="mdi:close" height={22} class="fill-current text-red-500" />
+					<Icon icon="mdi:close" height={22} class="fill-current text-red-500 font-bold" />
 				</button>
 			</div>
 		{/if}

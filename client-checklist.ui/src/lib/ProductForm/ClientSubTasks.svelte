@@ -51,7 +51,7 @@
 						onchange={(e) => handleChange(index, (e.target as HTMLInputElement).value || '')}
 					/>
 					{#if errors[index].comment}
-						<small class="text-red-500">{errors[index].comment}</small>
+						<small class="text-red-500 font-bold">{errors[index].comment}</small>
 					{/if}
 				</td>
 				<td class="w-[20%] whitespace-nowrap py-4 pl-2 pr-5 align-top text-sm text-gray-900">
