@@ -28,7 +28,7 @@
 		if (response.error) {
 			const { statusCode } = response.error;
 			if (statusCode === 401) {
-				await removeAuth();
+				removeAuth();
 				await goto('/login');
 			}
 
@@ -36,7 +36,7 @@
 			return;
 		}
 
-		$clients = (response.data as { clients: any[] }).clients.map((client) => ({
+		$clients = (response.data as { clients: { clientId: string, clientName: string, domain: string, targetLaunchDate: string, serviceTypeId: number, mainDecisionMaker: { name: string }, taskStatus: number, clientToken: string, isActive: boolean }[] }).clients.map((client) => ({
 			id: client.clientId,
 			companyName: client.clientName,
 			domain: client.domain,
@@ -45,7 +45,7 @@
 			mainDecisionMaker: client.mainDecisionMaker.name,
 			status: client.taskStatus,
 			clientToken: client.clientToken,
-            isActive: client.isActive
+			isActive: client.isActive
 		}));
 	});
 

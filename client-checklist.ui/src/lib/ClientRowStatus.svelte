@@ -21,6 +21,7 @@
 			// Update this to proper colors, not in mockup yet
 			statusCss = 'bg-[#E7FFE4] text-[#2DBE22]';
 			statusText = 'Completed';
+			break;
 		default:
 			break;
 	}
