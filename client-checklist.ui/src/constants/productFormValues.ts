@@ -1,3 +1,4 @@
+import { format } from 'date-fns'; 
 import { ClientRowStatus } from '$enums/ClientRowStatus';
 import type { ClientSubTaskFormType, ClientTaskFormType } from '$lib/ProductForm/validationSchema';
 
@@ -598,8 +599,8 @@ const clientLaunchSubTasks: ClientSubTaskFormType[] = [
 
 const defaultValues = {
 	assignedTo: '',
-	targetDateCompleted: '',
-	actualDateCompleted: ''
+	targetDateCompleted: format(new Date(), 'MMMM dd, yyyy'),
+	actualDateCompleted: format(new Date(), 'MMMM dd, yyyy')
 };
 
 export const BackOfficeValues: ClientTaskFormType = {
