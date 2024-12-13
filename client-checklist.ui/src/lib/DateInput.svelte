@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { DatePicker } from 'date-picker-svelte';
-	import { format,addYears } from 'date-fns';
+	import { format, addYears, endOfYear } from 'date-fns';
 
 	let { value, onSelectDate } = $props<{
 		value: string;
@@ -10,7 +10,7 @@
 	let isShowDatePicker = $state(false);
 	let valueAsDate = $state(value ? new Date(value) : new Date());
 	let formattedValue = $state(format(valueAsDate, 'MMMM d, yyyy') || '');
-	let max = addYears(new Date(), 1);
+	let max = endOfYear(addYears(new Date(), 1));
 
 	const handleFocusOut = (e: FocusEvent) => {
 		if (
