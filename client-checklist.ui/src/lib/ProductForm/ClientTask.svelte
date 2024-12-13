@@ -63,17 +63,19 @@
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="assignedTo">
 						Assigned To <span class="text-red-500 font-bold">*</span>
 					</label>
-					<select
-						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="assignedTo"
-						onchange={handleChange}
-						value={clientTask.assignedTo}
-					>
-						<option value="">Select an option</option>
-						{#each assignedToOptions as option}
-							<option value={option}>{option}</option>
-						{/each}
-					</select>
+                    <div class="w-full rounded border">
+                        <select
+                            class="w-full rounded pl-[10px] border-solid border-r-[8px] border-[transparent] py-2 text-sm text-gray-700"
+                            id="assignedTo"
+                            onchange={handleChange}
+                            value={clientTask.assignedTo}
+                        >
+                            <option value="">Select an option</option>
+                            {#each assignedToOptions as option}
+                                <option value={option}>{option}</option>
+                            {/each}
+                        </select>
+                    </div>
 					{#if errors.assignedTo}
 						<small class="text-red-500 font-bold">{errors.assignedTo}</small>
 					{/if}
