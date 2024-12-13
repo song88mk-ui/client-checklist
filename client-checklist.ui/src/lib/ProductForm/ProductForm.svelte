@@ -21,12 +21,12 @@
 		validationSchema,
 		onSubmit
 	});
+    
 	$effect(()=>{
 		if(hasValue($errors)){
 			errorMsg = "Please fill all the fields correctly."
 		}
 	})
-
 </script>
 
 <form onsubmit={handleSubmit} class="flex flex-col gap-7">

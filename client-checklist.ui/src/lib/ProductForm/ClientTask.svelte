@@ -39,7 +39,7 @@
 	};
 
 	$effect(() => {
-		if (!isShowTask && hasValue(errors)) {
+		if (hasValue(errors)) {
 			isShowTask = true;
 		}
 	});
