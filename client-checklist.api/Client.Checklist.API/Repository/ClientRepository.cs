@@ -8,9 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Diagnostics;
 using System.Text.Json;
 using TaskStatus = Client.Checklist.Shared.Enums.TaskStatus;
-using System.Collections.Generic;
 using Environment = Client.Checklist.Shared.Enums.Environment;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Client.Checklist.API.Repository
 {
@@ -77,7 +75,7 @@ namespace Client.Checklist.API.Repository
                             {
                                 UserToken = response.Result.OperatorToken,
                                 RoleName = "Admin",
-                                AccessType = roleName?.Contains("Super Admin") ?? false ? (int)AccessType.ReadAndWrite : (int)AccessType.ReadOnly
+                                AccessType = roleName?.Contains("Super Admin") ?? false ? AccessType.ReadAndWrite : AccessType.ReadOnly
                             }
                         };
                     }
@@ -159,12 +157,12 @@ namespace Client.Checklist.API.Repository
                         ClientStepId = s.ClientStepId,
                         AssignedTo = s.AssignedTo,
                         ClientId = s.ClientId,
-                        StepId = s.StepId,
+                        Step = (Steps)s.StepId,
                         StepName = s.StepName,
-                        ServiceTypeId = s.ServiceTypeId,
+                        ServiceType = (ServiceType)s.ServiceTypeId,
                         ActualDateCompleted = s.TargetDateCompleted,
                         TargetDateCompleted = s.ActualDateCompleted,
-                        Environment = s.Environment,
+                        Environment = (Environment)s.Environment,
                         SortOrder = s.SortOrder
                     }).ToList();
 
@@ -175,7 +173,7 @@ namespace Client.Checklist.API.Repository
                         {
                             SubtaskId = cs.SubtaskId,
                             SubtaskName = cs.SubtaskName,
-                            TaskStatusId = cs.TaskStatusId,
+                            TaskStatus = (TaskStatus)cs.TaskStatusId,
                             Comment = cs.Comment
                         }).ToList();
 
