@@ -1,4 +1,8 @@
-﻿namespace Client.Checklist.Shared.Models
+﻿using Client.Checklist.Shared.Enums;
+using Environment = Client.Checklist.Shared.Enums.Environment;
+using TaskStatus = Client.Checklist.Shared.Enums.TaskStatus;
+
+namespace Client.Checklist.Shared.Models
 {
     public class ClientInformationResponseDTO
     {
@@ -20,10 +24,10 @@
 
         public long ClientStepId { get; set; }
         public Guid ClientId { get; set; }
-        public int StepId { get; set; }
+        public Steps Step { get; set; }
         public string StepName { get; set; }
-        public int ServiceTypeId { get; set; }
-        public int Environment { get; set; }
+        public ServiceType ServiceType { get; set; }
+        public Environment Environment { get; set; }
         public DateTime? TargetDateCompleted { get; set; }
         public DateTime? ActualDateCompleted { get; set; }
         public string AssignedTo { get; set; }
@@ -36,6 +40,6 @@
         public int SubtaskId { get; set; }
         public string SubtaskName { get; set; }
         public string Comment { get; set; }
-        public int TaskStatusId { get; set; }
+        public TaskStatus TaskStatus { get; set; }
     }
 }
