@@ -26,11 +26,11 @@
 	<thead class="bg-[#F6F6F6]">
 		<tr>
 			<th scope="col" class="py-2 pl-3 pr-2 text-left text-sm font-semibold text-[#1A1A1A]">
-				Task
+				Description
 			</th>
-			<th scope="col" class="p-2 text-left text-sm font-semibold text-[#1A1A1A]"> Status </th>
+			<th scope="col" class="p-2 text-left text-sm font-semibold text-[#1A1A1A]"> Comments </th>
 			<th scope="col" class="py-2 pl-2 pr-3 text-left text-sm font-semibold text-[#1A1A1A]">
-				Actions
+				Status
 			</th>
 		</tr>
 	</thead>
