@@ -5,17 +5,17 @@
 
 
 	const STATUS_BG: any = {
-		0: 'bg-[#E3E3E3]',
+		3: 'bg-[#E3E3E3]',
 		1: 'bg-[#FAE9DC]',
 		2: 'bg-[#E7FFE4]'
 	};
 	const STATUS_TEXT: any = {
-		0: 'text-[#979797]',
+		3: 'text-[#979797]',
 		1: 'text-[#EF7E1D]',
 		2: 'text-[#2DBE22]'
 	};
 	const STATUS_MESSAGE: any = {
-		0: 'Not Started',
+		3: 'Not Started',
 		1: 'In Progress',
 		2: 'Completed'
 	};
@@ -27,10 +27,9 @@
 	function toggle() {
 		isOpen = !isOpen;
 	}
-
 	function calculateProgress(clientSubtasks: ClientSubtask[]) {
 		if (clientSubtasks.length > 0) {
-			const taskProgress = clientSubtasks.map((item) => item.taskStatusId);
+			const taskProgress = clientSubtasks.map((item) => item.taskStatus);
 			const totalPercentage = calculatePercentage(taskProgress, 2);
 			percentage = totalPercentage.toFixed(0);
 
@@ -74,7 +73,7 @@
 		<div class="flex">
 			<span
 				class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
-				>{STEP_NAME[clientStep.stepId]}</span
+				>{STEP_NAME[clientStep.step]}</span
 			>
 			<div
 				class="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#0071BC] text-[12px] font-bold font-normal leading-none text-white"
@@ -154,7 +153,7 @@
 								>{clientSubtask.comment}</td
 							>
 							<td class="border-b border-[#ECECEC] px-4 py-2 text-start text-[14px] text-[#1A1A1A]"
-								>{@html Status(clientSubtask.taskStatusId)}</td
+								>{@html Status(clientSubtask.taskStatus)}</td
 							>
 						</tr>
 					{/each}
