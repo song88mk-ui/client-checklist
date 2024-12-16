@@ -21,18 +21,20 @@
 		validationSchema,
 		onSubmit
 	});
+    
 	$effect(()=>{
 		if(hasValue($errors)){
-			errorMsg = "Please fill all the fields correctly"
+			errorMsg = "Please fill all the fields correctly."
 		}
 	})
-
 </script>
 
 <form onsubmit={handleSubmit} class="flex flex-col gap-7">
-	<div class="mb-5">
-		<Alert variant="error" message={errorMsg} hasCloseButton={false} />
-	</div>
+    {#if hasValue($errors)}
+        <div class="mb-5">
+            <Alert variant="error" message={errorMsg} hasCloseButton={false} />
+        </div>
+    {/if}
 	<ClientTask
 		title={`${title} (${Environment.STAGING})`}
 		name={Environment.STAGING}
