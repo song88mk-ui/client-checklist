@@ -19,6 +19,25 @@
 		1: 'In Progress',
 		2: 'Completed'
 	};
+
+	const TASK_STATUS_BG: any = {
+		0: 'bg-[#E3E3E3]',
+		1: 'bg-[#E3E3E3]',
+		2: 'bg-[#FAE9DC]',
+		3: 'bg-[#E7FFE4]'
+	};
+	const TASK_STATUS_TEXT: any = {
+		0: 'text-[#979797]',
+		1: 'text-[#979797]',
+		2: 'text-[#EF7E1D]',
+		3: 'text-[#2DBE22]'
+	};
+	const TASK_STATUS_MESSAGE: any = {
+		0: 'Not Applicable',
+		1: 'Not Started',
+		2: 'In Progress',
+		3: 'Completed'
+	};
 	export let clientStep: ClientStep;
 	let isOpen = false;
 	let status: number = 0;
@@ -55,12 +74,13 @@
 	function Status(status: number) {
 		return `
           <div
-              class="mx-[10px] rounded-[24px] ${STATUS_BG[status]} flex px-[2px] justify-center items-center ${STATUS_TEXT[status]} text-[12px] font-normal font-semibold leading-none h-[23px] self-center">
-			  ${STATUS_MESSAGE[status]}       
+              class="mx-[10px] rounded-[24px] ${TASK_STATUS_BG[status]} flex px-[2px] justify-center items-center ${TASK_STATUS_TEXT[status]} text-[12px] font-normal font-semibold leading-none h-[23px] self-center">
+			  ${TASK_STATUS_MESSAGE[status]}
           </div>
       `;
 	}
-    
+
+	console.log('CLIENT STEP', clientStep)
 	calculateProgress(clientStep.clientSubtasks);
 </script>
 

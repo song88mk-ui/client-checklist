@@ -31,6 +31,7 @@
 
     let error = $state('');
 	let isLoading = $state(false);
+	let message = $state('');
 
 	const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
@@ -97,6 +98,7 @@
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
 		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+			message = 'The account Song88 has been successfully created';
 			setTimeout(() => {
 				goto("/");
 			}, 3000);
@@ -136,6 +138,12 @@
 {#if error}
 	<div class="mb-5">
 		<Alert variant="error" message={error} hasCloseButton={false} />
+	</div>
+{/if}
+
+{#if message}
+	<div class="mb-5">
+		<Alert variant="success"  {message} hasCloseButton={false} />
 	</div>
 {/if}
 

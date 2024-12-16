@@ -3,6 +3,8 @@
 	import validationSchema, { type ProductFormType } from './validationSchema';
 	import ClientTask from './ClientTask.svelte';
 	import Environment from '$enums/Environment';
+	import Alert from '../Alert.svelte';
+	import hasValue from '$utils/hasValue';
 
 	let { title, initialValues, back, isLoading, onSubmit,step } = $props<{
 		title: string;
@@ -12,15 +14,27 @@
 		isLoading?: boolean;
 		onSubmit: (values: ProductFormType) => void;
 	}>();
+
+	let errorMsg = $state('')
 	const { form, errors, updateField, handleSubmit } = createForm({
 		initialValues,
 		validationSchema,
 		onSubmit
 	});
-
+    
+	$effect(()=>{
+		if(hasValue($errors)){
+			errorMsg = "Please fill all the fields correctly."
+		}
+	})
 </script>
 
 <form onsubmit={handleSubmit} class="flex flex-col gap-7">
+    {#if hasValue($errors)}
+        <div class="mb-5">
+            <Alert variant="error" message={errorMsg} hasCloseButton={false} />
+        </div>
+    {/if}
 	<ClientTask
 		title={`${title} (${Environment.STAGING})`}
 		name={Environment.STAGING}
@@ -45,6 +59,7 @@
 				onclick={back}>Back</button
 			>
 			<button
+				onclick={()=>window.scrollTo({ top: 0, behavior: 'smooth' })}
 				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
 				disabled={isLoading}>{step ? 'Create': 'Next'}</button
 			>
