@@ -9,6 +9,10 @@
 	let statusCss = '';
 
 	$: switch (status) {
+		case ClientRowStatus.NotApplicable:
+			statusCss = 'bg-[#FAEDCC] text-[#C39646]';
+			statusText = 'Not Applicable';
+			break;
 		case ClientRowStatus.NotStarted:
 			statusCss = 'bg-[#E3E3E3] text-[#979797]';
 			statusText = 'Not Started';

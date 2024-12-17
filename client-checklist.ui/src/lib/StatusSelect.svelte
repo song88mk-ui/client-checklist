@@ -30,6 +30,7 @@
 	};
 
 	const statusOptions = [
+        ClientRowStatusEnum.NotApplicable,
 		ClientRowStatusEnum.NotStarted,
 		ClientRowStatusEnum.InProgress,
 		ClientRowStatusEnum.Completed
@@ -40,7 +41,7 @@
 	class="relative w-full rounded border border text-sm text-gray-700"
 	on:focusout={handleFocusOut}
 >
-	<div class="flex cursor-pointer gap-[5px] items-center p-2" on:click={toggle}>
+	<div role="presentation" class="flex cursor-pointer gap-[5px] items-center p-2" on:click={toggle}>
 		<div class="flex-1">
 			<ClientRowStatus className="w-full !py-1" status={value} />
 		</div>
