@@ -2,14 +2,14 @@ export type ClientSubtask = {
     subtaskId: number;
     subtaskName: string
     comment: string;
-    taskStatusId: number
+    taskStatus: number
     assignedTo: number;
 };
 
 export type ClientStep = {
     clientTaskId: number;
     clientId: string;
-    stepId: number;
+    step: number;
     stepName: string;
     serviceTypeId: number;
     targetDateCompleted: string;
