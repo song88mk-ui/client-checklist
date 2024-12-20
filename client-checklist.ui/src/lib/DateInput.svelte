@@ -7,10 +7,18 @@
 		onSelectDate?: (selectedDate: Date) => void;
 	}>();
 
+	let prevValue = value;
 	let isShowDatePicker = $state(false);
 	let valueAsDate = $state(value ? new Date(value) : new Date());
 	let formattedValue = $state(format(valueAsDate, 'MMMM d, yyyy') || '');
 	let max = endOfYear(addYears(new Date(), 1));
+
+	$effect(() => {
+		if (prevValue === value) return;
+		valueAsDate = value ? new Date(value) : new Date();
+		formattedValue = format(valueAsDate, 'MMMM d, yyyy');
+		prevValue = value;
+	});
 
 	const handleFocusOut = (e: FocusEvent) => {
 		if (
