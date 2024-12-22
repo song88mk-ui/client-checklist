@@ -11,6 +11,7 @@
 	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
 	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
 	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
+	import OddsFeedIntegrationForm from '$lib/OddsFeedIntegrationForm.svelte';
 	import Product from '$utils/client';
 	import { page } from '$app/stores';
 	import APIGateway from '$api/APIGateway';
@@ -53,6 +54,8 @@
 			error = ErrorMessages.FetchClientFailed;
 		}
 
+		$steps = INTEGRATION_STEPS[$selectedIntegration];
+
 		const { client, clientSteps } = response.data as GetClientTaskStatusResponse;
 		if (client) {
 			$selectedIntegration = servicesType[client.serviceTypeId];
@@ -78,12 +81,12 @@
 				technicalManagerNumber: client.technicalManager.number,
 				customerServiceManagerName: client.customerServiceManager.name,
 				customerServiceManagerNumber: client.customerServiceManager.number,
-				socialAccount: client.socialAccount,
+				socialAccount: client.socialAccount
 			} as ClientInformationFormType;
 		}
 		if (clientSteps.length) {
 			const stepData = groupedByStepId(clientSteps);
-			
+
 			$steps.map((step) => {
 				if (stepData[step.stepId]) {
 					step.formData = stepData[step.stepId] as ProductFormType;
@@ -109,23 +112,25 @@
 		<ProgressStep bind:step />
 	</div>
 	<div class="mb-10">
-		{#if step === 0}
+		{#if $steps[step].stepId === Step.ClientInformation}
 			<ClientInformationForm {next} />
-		{:else if step === 1}
+		{:else if $steps[step].stepId === Step.BackOffice}
 			<BackOfficeForm {back} {next} {step} />
-		{:else if step === 2}
+		{:else if $steps[step].stepId === Step.WalletIntegration}
 			<WalletIntegrationForm {back} {next} {step} />
-		{:else if step === 3}
+		{:else if $steps[step].stepId === Step.OddsfeedIntegration}
+			<OddsFeedIntegrationForm {back} isEdit {next} {step} />
+		{:else if $steps[step].stepId === Step.SportsbookPlayerSite}
 			<SportsbookPlayerSiteUiuxForm {back} {next} {step} />
-		{:else if step === 4}
+		{:else if $steps[step].stepId === Step.ManagedTradingServices}
 			<MTSForm {back} {next} {step} />
-		{:else if step === 5}
+		{:else if $steps[step].stepId === Step.EndToEndFunctionalPerformanceTest}
 			<EndToEndTestForm {back} {next} {step} />
-		{:else if step === 6}
+		{:else if $steps[step].stepId === Step.Operations}
 			<OperationsForm {back} {next} {step} />
-		{:else if step === 7}
+		{:else if $steps[step].stepId === Step.BusinessAcceptanceTest}
 			<BusinessAcceptanceForm {back} {next} {step} />
-		{:else if step === 8}
+		{:else if $steps[step].stepId === Step.ClientLaunch}
 			<ClientLaunchForm {back} {next} {step} />
 		{/if}
 	</div>

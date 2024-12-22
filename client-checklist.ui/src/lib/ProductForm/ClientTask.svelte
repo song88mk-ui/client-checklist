@@ -5,12 +5,13 @@
 	import ClientSubTasks from './ClientSubTasks.svelte';
 	import hasValue from '$utils/hasValue';
 
-	let { title, name, clientTask, updateField, errors } = $props<{
+	let { title, name, clientTask, updateField, errors, disabled = false } = $props<{
 		title?: string;
 		name?: string;
 		clientTask: ClientTaskFormType;
 		updateField?: (field: string | number | symbol, value: any) => void;
 		errors?: unknown;
+		disabled?: boolean;
 	}>();
 
 	const handleSelectDate = (field: keyof ClientTaskFormType, selectedDate: Date) => {
@@ -69,6 +70,7 @@
                             id="assignedTo"
                             onchange={handleChange}
                             value={clientTask.assignedTo}
+														{disabled}
                         >
                             <option value="">Select an option</option>
                             {#each assignedToOptions as option}
@@ -87,6 +89,7 @@
 					<DateInput
 						value={clientTask.targetDateCompleted}
 						onSelectDate={(selectedDate) => handleSelectDate('targetDateCompleted', selectedDate)}
+						{disabled}
 					/>
 					{#if errors.targetDateCompleted}
 						<small class="text-red-500 font-bold">{errors.targetDateCompleted}</small>
@@ -99,6 +102,7 @@
 					<DateInput
 						value={clientTask.actualDateCompleted}
 						onSelectDate={(selectedDate) => handleSelectDate('actualDateCompleted', selectedDate)}
+						disabled={disabled}
 					/>
 					{#if errors.actualDateCompleted}
 						<small class="text-red-500 font-bold">{errors.actualDateCompleted}</small>
@@ -110,6 +114,7 @@
 				clientSubTasks={clientTask.clientSubTasks}
 				errors={errors.clientSubTasks}
 				{updateField}
+				{disabled}
 			/>
 		</div>
 	{/if}
