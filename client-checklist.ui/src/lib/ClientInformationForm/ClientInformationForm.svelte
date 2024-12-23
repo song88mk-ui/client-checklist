@@ -12,10 +12,16 @@
 	import Step from '$enums/Step';
 	import { servicesTypeId } from '$constants/services';
 	import validationSchema, { type ClientInformationFormType } from './validationSchema';
+	import { AccessType } from '$enums/role';
 
 	const { createClient } = APIGateway();
-	let { next } = $props();
+	let { next, isEdit = false } = $props();
 	let isLoading = $state(false);
+	let disabled = $state(false);
+
+	$effect(() => {
+		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+	});
 
 	let initialValues = {
 		clientName: '',
@@ -53,6 +59,11 @@
 		initialValues,
 		validationSchema,
 		onSubmit: async (values) => {
+			if (disabled) {
+				next();
+				return;
+			}
+
 			isLoading = true;
 			const {
 				clientName,
@@ -142,6 +153,7 @@
 						type="text"
 						placeholder="Enter Company Name"
 						bind:value={$form.clientName}
+						{disabled}
 					/>
 					{#if $errors.clientName}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.clientName}</small>
@@ -157,6 +169,7 @@
 						type="text"
 						placeholder="Enter Domain"
 						bind:value={$form.domain}
+						{disabled}
 					/>
 				</div>
 				<div class="flex-1">
@@ -169,6 +182,7 @@
 						type="text"
 						placeholder="Enter SSL Certificate (s)"
 						bind:value={$form.sslCert}
+						{disabled}
 					/>
 				</div>
 			</div>
@@ -188,6 +202,7 @@
 					<DateInput
 						value={new Date($form.launchDate).toISOString()}
 						onSelectDate={(selectedDate) => handleSelectDate(selectedDate)}
+						{disabled}
 					/>
 				</div>
 			</div>
@@ -202,6 +217,7 @@
 						type="text"
 						placeholder="Enter Languages Supported"
 						bind:value={$form.languages}
+						{disabled}
 					/>
 					{#if $errors.languages}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.languages}</small>
@@ -217,6 +233,7 @@
 						type="text"
 						placeholder="Enter Currencies Supported"
 						bind:value={$form.currencies}
+						{disabled}
 					/>
 					{#if $errors.currencies}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.currencies}</small>
@@ -234,6 +251,7 @@
 						type="text"
 						placeholder="Enter Sports"
 						bind:value={$form.sports}
+						{disabled}
 					/>
 					{#if $errors.sports}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.sports}</small>
@@ -249,6 +267,7 @@
 						type="text"
 						placeholder="Enter Target Market"
 						bind:value={$form.markets}
+						{disabled}
 					/>
 					{#if $errors.markets}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.markets}</small>
@@ -270,6 +289,7 @@
 							type="text"
 							placeholder="Enter Name"
 							bind:value={$form.mainDecisionMakerName}
+							{disabled}
 						/>
 						<input
 							class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -277,6 +297,7 @@
 							type="text"
 							placeholder="Enter Number"
 							bind:value={$form.mainDecisionMakerNumber}
+							{disabled}
 						/>
 					</div>
 				</div>
@@ -291,6 +312,7 @@
 							type="text"
 							placeholder="Enter Name"
 							bind:value={$form.financeManagerName}
+							{disabled}
 						/>
 						<input
 							class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -298,6 +320,7 @@
 							type="text"
 							placeholder="Enter Number"
 							bind:value={$form.financeManagerNumber}
+							{disabled}
 						/>
 					</div>
 				</div>
@@ -312,6 +335,7 @@
 							type="text"
 							placeholder="Enter Name"
 							bind:value={$form.productManagerName}
+							{disabled}
 						/>
 						<input
 							class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -319,6 +343,7 @@
 							type="text"
 							placeholder="Enter Number"
 							bind:value={$form.productManagerNumber}
+							{disabled}
 						/>
 					</div>
 				</div>
@@ -335,6 +360,7 @@
 							type="text"
 							placeholder="Enter Name"
 							bind:value={$form.accountManagerName}
+							{disabled}
 						/>
 						<input
 							class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -342,6 +368,7 @@
 							type="text"
 							placeholder="Enter Number"
 							bind:value={$form.accountManagerNumber}
+							{disabled}
 						/>
 					</div>
 				</div>
@@ -356,6 +383,7 @@
 							type="text"
 							placeholder="Enter Name"
 							bind:value={$form.technicalManagerName}
+							{disabled}
 						/>
 						<input
 							class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -363,6 +391,7 @@
 							type="text"
 							placeholder="Enter Number"
 							bind:value={$form.technicalManagerNumber}
+							{disabled}
 						/>
 					</div>
 				</div>
@@ -377,6 +406,7 @@
 							type="text"
 							placeholder="Enter Name"
 							bind:value={$form.customerServiceManagerName}
+							{disabled}
 						/>
 						<input
 							class="w-full rounded border px-3 py-2 text-sm text-gray-700"
@@ -384,6 +414,7 @@
 							type="text"
 							placeholder="Enter Number"
 							bind:value={$form.customerServiceManagerNumber}
+							{disabled}
 						/>
 					</div>
 				</div>
@@ -398,6 +429,7 @@
 					type="text"
 					placeholder="Enter Social Account (Skype, Whatsapp, Telegram, etc)"
 					bind:value={$form.socialAccount}
+					{disabled}
 				/>
 				{#if $errors.socialAccount}
 					<small class="text-xs font-bold font-bold text-red-500">{$errors.socialAccount}</small>
