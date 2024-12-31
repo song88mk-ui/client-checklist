@@ -25,7 +25,7 @@
 		currencies: '',
 		sports: '',
 		markets: '',
-		launchDate: new Date().toISOString(),
+		launchDate: '',
 		mainDecisionMakerName: '',
 		mainDecisionMakerNumber: '',
 		financeManagerName: '',
@@ -186,7 +186,8 @@
 						Target Launch Date
 					</label>
 					<DateInput
-						value={new Date($form.launchDate).toISOString()}
+                        placeholder="Enter target launch date"
+						value={$form.launchDate.length > 0 ? new Date($form.launchDate).toISOString() : ''}
 						onSelectDate={(selectedDate) => handleSelectDate(selectedDate)}
 					/>
 				</div>
