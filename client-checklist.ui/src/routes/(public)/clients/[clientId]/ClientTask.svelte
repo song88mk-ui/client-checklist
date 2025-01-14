@@ -21,13 +21,13 @@
 	};
 
 	const TASK_STATUS_BG: any = {
-		0: 'bg-[#E3E3E3]',
+		0: 'bg-[#FAEDCC]',
 		1: 'bg-[#E3E3E3]',
 		2: 'bg-[#FAE9DC]',
 		3: 'bg-[#E7FFE4]'
 	};
 	const TASK_STATUS_TEXT: any = {
-		0: 'text-[#979797]',
+		0: 'text-[#C39646]',
 		1: 'text-[#979797]',
 		2: 'text-[#EF7E1D]',
 		3: 'text-[#2DBE22]'
