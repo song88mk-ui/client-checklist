@@ -49,7 +49,7 @@ export type CreateClientResponse = string;
 export type ClientStep = {
 	clientStepId: number;
 	clientId: string;
-	stepId: number;
+	step: number;
 	stepName: string;
 	serviceTypeId: Services;
 	environment: number;
