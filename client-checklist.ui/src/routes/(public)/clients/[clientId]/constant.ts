@@ -16,18 +16,11 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             assignedTo: null,
             clientId: null,
             clientStepId: 0,
-            clientSubtasks: [
-                {
-                    comment: "",
-                    subtaskId: 0,
-                    subtaskName: "Client Account Set Up",
-                    taskStatus: 1
-                },
-            ],
+            clientSubtasks: [],
             environment: 0,
             serviceTypeId: 1,
             sortOrder: 0,
-            stepId: 1,
+            step: 1,
             stepName: "Back Office",
             targetDateCompleted: null
         },
@@ -40,7 +33,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 1,
             sortOrder: 0,
-            stepId: 3,
+            step: 3,
             stepName: "Odds Feed Integration",
             targetDateCompleted: null
         },
@@ -53,7 +46,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 1,
             sortOrder: 0,
-            stepId: 5,
+            step: 5,
             stepName: "Managed Trading Services",
             targetDateCompleted: null
         },
@@ -66,7 +59,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 1,
             sortOrder: 0,
-            stepId: 6,
+            step: 6,
             stepName: "End to End Functional & Performance Test",
             targetDateCompleted: null
         },
@@ -79,7 +72,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 1,
             sortOrder: 0,
-            stepId: 7,
+            step: 7,
             stepName: "Operations",
             targetDateCompleted: null
         },
@@ -92,7 +85,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 1,
             sortOrder: 0,
-            stepId: 8,
+            step: 8,
             stepName: "Business Acceptance Test",
             targetDateCompleted: null
         },
@@ -105,7 +98,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 1,
             sortOrder: 0,
-            stepId:9,
+            step:9,
             stepName: "Client Launch",
             targetDateCompleted: null
         }
@@ -120,7 +113,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 2,
             sortOrder: 0,
-            stepId: 1,
+            step: 1,
             stepName: "Back Office",
             targetDateCompleted: null
         },
@@ -133,7 +126,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 2,
             sortOrder: 0,
-            stepId: 2,
+            step: 2,
             stepName:  "Wallet Integration",
             targetDateCompleted: null
         },
@@ -146,7 +139,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 2,
             sortOrder: 0,
-            stepId: 4,
+            step: 4,
             stepName: "Sportsbook Player Site UI/UX",
             targetDateCompleted: null
         },
@@ -159,7 +152,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 2,
             sortOrder: 0,
-            stepId: 5,
+            step: 5,
             stepName: "Managed Trading Services",
             targetDateCompleted: null
         },
@@ -172,7 +165,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 2,
             sortOrder: 0,
-            stepId: 6,
+            step: 6,
             stepName: "End to End Functional & Performance Test",
             targetDateCompleted: null
         },
@@ -185,7 +178,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 2,
             sortOrder: 0,
-            stepId: 7,
+            step: 7,
             stepName: "Operations",
             targetDateCompleted: null
         },
@@ -198,7 +191,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 2,
             sortOrder: 0,
-            stepId: 8,
+            step: 8,
             stepName: "Business Acceptance Test",
             targetDateCompleted: null
         },
@@ -211,7 +204,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
             environment: 0,
             serviceTypeId: 2,
             sortOrder: 0,
-            stepId:9,
+            step:9,
             stepName: "Client Launch",
             targetDateCompleted: null
         }

@@ -21,13 +21,13 @@
 	};
 
 	const TASK_STATUS_BG: any = {
-		0: 'bg-[#E3E3E3]',
+		0: 'bg-[#FAEDCC]',
 		1: 'bg-[#E3E3E3]',
 		2: 'bg-[#FAE9DC]',
 		3: 'bg-[#E7FFE4]'
 	};
 	const TASK_STATUS_TEXT: any = {
-		0: 'text-[#979797]',
+		0: 'text-[#C39646]',
 		1: 'text-[#979797]',
 		2: 'text-[#EF7E1D]',
 		3: 'text-[#2DBE22]'
@@ -49,12 +49,24 @@
 	function calculateProgress(clientSubtasks: ClientSubtask[]) {
 		if (clientSubtasks.length > 0) {
 			const taskProgress = clientSubtasks.map((item) => item.taskStatus);
-			const totalPercentage = calculatePercentage(taskProgress, 2);
+			const totalPercentage = calculatePercentage(taskProgress, 3);
 			percentage = totalPercentage.toFixed(0);
-
+			if(totalPercentage == 100){
+				status = 2;
+				return;
+			}
 			if (totalPercentage > 0 && totalPercentage <= 100) {
 				status = 1;
                 return;
+			}
+
+			if(totalPercentage === 0){
+				const totalPercentageInProgress = calculatePercentage(taskProgress, 2);
+				if(totalPercentageInProgress > 0){
+					status = 1;
+					return;
+				}
+				status = 3;
 			}
 		}
 	}
@@ -71,18 +83,17 @@
 		return percentage;
 	}
 
-	function Status(status: number) {
+	function TaskStatus(taskstatus: number) {
 		return `
           <div
-              class="mx-[10px] rounded-[24px] ${TASK_STATUS_BG[status]} flex px-[2px] justify-center items-center ${TASK_STATUS_TEXT[status]} text-[12px] font-normal font-semibold leading-none h-[23px] self-center">
-			  ${TASK_STATUS_MESSAGE[status]}
+              class="mx-[10px] rounded-[24px] ${TASK_STATUS_BG[taskstatus]} flex px-[2px] justify-center items-center ${TASK_STATUS_TEXT[taskstatus]} text-[12px] font-normal font-semibold leading-none h-[23px] self-center">
+			  ${TASK_STATUS_MESSAGE[taskstatus]}
           </div>
       `;
 	}
 
 	console.log('CLIENT STEP', clientStep)
-	calculateProgress(clientStep.clientSubtasks);
-</script>
+	calculateProgress(clientStep.clientSubtasks);</script>
 
 <div
 	on:click={toggle}
@@ -173,7 +184,7 @@
 								>{clientSubtask.comment}</td
 							>
 							<td class="border-b border-[#ECECEC] px-4 py-2 text-start text-[14px] text-[#1A1A1A]"
-								>{@html Status(clientSubtask.taskStatus)}</td
+								>{@html TaskStatus(clientSubtask.taskStatus)}</td
 							>
 						</tr>
 					{/each}

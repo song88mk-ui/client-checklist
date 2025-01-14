@@ -160,8 +160,8 @@ namespace Client.Checklist.API.Repository
                         Step = (Steps)s.StepId,
                         StepName = s.StepName,
                         ServiceType = (ServiceType)s.ServiceTypeId,
-                        ActualDateCompleted = s.TargetDateCompleted,
-                        TargetDateCompleted = s.ActualDateCompleted,
+                        ActualDateCompleted = s.ActualDateCompleted,
+                        TargetDateCompleted = s.TargetDateCompleted,
                         Environment = (Environment)s.Environment,
                         SortOrder = s.SortOrder
                     }).ToList();

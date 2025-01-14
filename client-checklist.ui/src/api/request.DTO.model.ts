@@ -30,7 +30,8 @@ export type CreateClientPayload = {
     financeManagerName: string,
     financeManagerNumber: string,
     languages: string[],
-    launchDate: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    launchDate: any,
     mainDecisionMaker: Manager,
     mainDecisionMakerName: string,
     mainDecisionMakerNumber: string,

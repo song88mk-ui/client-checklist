@@ -87,6 +87,7 @@
 						Target Date to Complete
 					</label>
 					<DateInput
+                        placeholder="Select date"
 						value={clientTask.targetDateCompleted}
 						onSelectDate={(selectedDate) => handleSelectDate('targetDateCompleted', selectedDate)}
 						{disabled}
@@ -100,6 +101,7 @@
 						Actual Date Completed
 					</label>
 					<DateInput
+                        placeholder="Select date"
 						value={clientTask.actualDateCompleted}
 						onSelectDate={(selectedDate) => handleSelectDate('actualDateCompleted', selectedDate)}
 						disabled={disabled}

@@ -599,8 +599,8 @@ const clientLaunchSubTasks: ClientSubTaskFormType[] = [
 
 const defaultValues = {
 	assignedTo: '',
-	targetDateCompleted: format(new Date(), 'MMMM dd, yyyy'),
-	actualDateCompleted: format(new Date(), 'MMMM dd, yyyy')
+	targetDateCompleted: null,
+	actualDateCompleted: null
 };
 
 export const BackOfficeValues: ClientTaskFormType = {
