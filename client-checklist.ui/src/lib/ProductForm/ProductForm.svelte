@@ -6,15 +6,16 @@
 	import Alert from '../Alert.svelte';
 	import hasValue from '$utils/hasValue';
 
-	let { title, initialValues, back, isLoading, onSubmit,step } = $props<{
+	let { title, initialValues, back, isLoading, onSubmit,step, disabled = false } = $props<{
 		title: string;
 		initialValues: ProductFormType;
 		back?: () => void;
 		step?: () => number;
 		isLoading?: boolean;
 		onSubmit: (values: ProductFormType) => void;
+		disabled?: boolean;
 	}>();
-
+	
 	let errorMsg = $state('')
 	const { form, errors, updateField, handleSubmit } = createForm({
 		initialValues,
@@ -41,6 +42,7 @@
 		clientTask={$form[Environment.STAGING]}
 		errors={$errors[Environment.STAGING]}
 		{updateField}
+		{disabled}
 	/>
 
 	<ClientTask
@@ -48,6 +50,7 @@
 		name={Environment.PRODUCTION}
 		clientTask={$form[Environment.PRODUCTION]}
 		errors={$errors[Environment.PRODUCTION]}
+		{disabled}
 		{updateField}
 	/>
 	<div class="text-right">

@@ -13,10 +13,9 @@ const groupedByStepId = (data: ClientStep[]) => {
 			},
 			item
 		) => {
-			if (!acc[item.stepId]) {
-				acc[item.stepId] = { [Environment.STAGING]: {}, [Environment.PRODUCTION]: {} };
+			if (!acc[item.step]) {
+				acc[item.step] = { [Environment.STAGING]: {}, [Environment.PRODUCTION]: {} };
 			}
-
       const clientTaskFormData = {
         id: item.clientStepId,
         assignedTo: item.assignedTo,
@@ -26,9 +25,9 @@ const groupedByStepId = (data: ClientStep[]) => {
       };
 
 			if (item.environment === 0) {
-				acc[item.stepId][Environment.STAGING] = clientTaskFormData;
+				acc[item.step][Environment.STAGING] = clientTaskFormData;
 			} else {
-				acc[item.stepId][Environment.PRODUCTION] = clientTaskFormData;
+				acc[item.step][Environment.PRODUCTION] = clientTaskFormData;
 			}
 			return acc;
 		},

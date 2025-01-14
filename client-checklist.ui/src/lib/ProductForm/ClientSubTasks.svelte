@@ -3,11 +3,12 @@
 	import type { ClientRowStatus } from '$enums/ClientRowStatus';
 	import StatusSelect from '$lib/StatusSelect.svelte';
 
-	let { name, clientSubTasks, updateField, errors } = $props<{
+	let { name, clientSubTasks, updateField, errors, disabled = false } = $props<{
 		name?: string;
 		clientSubTasks: ClientSubTaskFormType;
 		updateField?: (field: string | number | symbol, value: any) => void;
 		errors?: unknown;
+		disabled?: boolean;
 	}>();
 
 	let localSubtasks = $state(clientSubTasks);
@@ -49,6 +50,7 @@
 						placeholder="Comments"
 						value={subTask.comment}
 						onchange={(e) => handleChange(index, (e.target as HTMLInputElement).value || '')}
+						{disabled}
 					/>
 					{#if errors[index].comment}
 						<small class="text-red-500 font-bold">{errors[index].comment}</small>
@@ -58,6 +60,7 @@
 					<StatusSelect
 						value={subTask.taskStatusId}
 						onSelectStatus={(status) => handleSelectStatus(index, status)}
+						{disabled}
 					/>
 				</td>
 			</tr>

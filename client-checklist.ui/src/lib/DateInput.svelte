@@ -2,15 +2,24 @@
 	import { DatePicker } from 'date-picker-svelte';
 	import { format, addYears, endOfYear } from 'date-fns';
 
-	let { value, onSelectDate } = $props<{
+	let { value, onSelectDate, disabled = false } = $props<{
 		value: string;
 		onSelectDate?: (selectedDate: Date) => void;
+		disabled?: boolean;
 	}>();
 
+	let prevValue = value;
 	let isShowDatePicker = $state(false);
 	let valueAsDate = $state(value ? new Date(value) : new Date());
 	let formattedValue = $state(format(valueAsDate, 'MMMM d, yyyy') || '');
 	let max = endOfYear(addYears(new Date(), 1));
+
+	$effect(() => {
+		if (prevValue === value) return;
+		valueAsDate = value ? new Date(value) : new Date();
+		formattedValue = format(valueAsDate, 'MMMM d, yyyy');
+		prevValue = value;
+	});
 
 	const handleFocusOut = (e: FocusEvent) => {
 		if (
@@ -60,9 +69,10 @@
 		onclick={handleShowDatePicker}
 		onchange={handleChangeDate}
 		value={formattedValue}
+		{disabled}
 	/>
 
-	{#if isShowDatePicker}
+	{#if isShowDatePicker && !disabled}
 		<div class="absolute z-10">
 			<DatePicker {max} value={valueAsDate} on:focusout={handleFocusOut} on:select={handleSelectDate} />
 		</div>
