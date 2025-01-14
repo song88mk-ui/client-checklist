@@ -25,7 +25,7 @@
 		currencies: '',
 		sports: '',
 		markets: '',
-		launchDate: new Date().toISOString(),
+		launchDate: null,
 		mainDecisionMakerName: '',
 		mainDecisionMakerNumber: '',
 		financeManagerName: '',
@@ -54,6 +54,9 @@
 		validationSchema,
 		onSubmit: async (values) => {
 			isLoading = true;
+
+            console.log("here 1");
+
 			const {
 				clientName,
 				domain,
@@ -78,6 +81,8 @@
 				socialAccount
 			} = values;
 
+            console.log("here 2");
+
 			const formData = {
 				...values,
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -96,6 +101,8 @@
 				},
 				socialAccount
 			};
+
+            console.log("here 3");
 
 			const response: any = await createClient(formData, {
 				'x-user-token': $auth?.userToken as string
@@ -186,7 +193,8 @@
 						Target Launch Date
 					</label>
 					<DateInput
-						value={new Date($form.launchDate).toISOString()}
+                        placeholder="Enter target launch date"
+						value={$form.launchDate ? new Date($form.launchDate).toISOString() : null}
 						onSelectDate={(selectedDate) => handleSelectDate(selectedDate)}
 					/>
 				</div>

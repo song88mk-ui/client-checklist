@@ -9,7 +9,8 @@ export type ClientInformationFormType = {
 	currencies: string;
 	sports: string;
 	markets: string;
-	launchDate: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+	launchDate: any;
 	mainDecisionMakerName: string;
 	mainDecisionMakerNumber: string;
 	financeManagerName: string;
@@ -33,7 +34,7 @@ export default yup.object().shape({
 	currencies: yup.string().required("Currencies must at least have one value."),
 	sports: yup.string().required("Sports must at least have one value."),
 	markets: yup.string().required("Markets must at least have one value."),
-	launchDate: yup.string(),
+	launchDate: yup.mixed().nullable(),
 	mainDecisionMakerName: yup.string(),
 	mainDecisionMakerNumber: yup.string(),
 	financeManagerName: yup.string(),
