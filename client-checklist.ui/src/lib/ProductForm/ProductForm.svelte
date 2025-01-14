@@ -6,7 +6,7 @@
 	import Alert from '../Alert.svelte';
 	import hasValue from '$utils/hasValue';
 
-	let { title, initialValues, back, isLoading, onSubmit,step, disabled = false } = $props<{
+	let { title, initialValues, back, isLoading, onSubmit, step, disabled = false } = $props<{
 		title: string;
 		initialValues: ProductFormType;
 		back?: () => void;

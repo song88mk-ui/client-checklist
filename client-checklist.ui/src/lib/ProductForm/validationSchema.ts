@@ -5,7 +5,7 @@ export type ClientSubTaskFormType = {
 	subtaskId: number;
 	subtaskName: string;
 	comment: string;
-	taskStatusId: number;
+	taskStatus: number;
 	assignedTo: string;
 };
 
@@ -27,7 +27,7 @@ const clientSubTaskFormSchema = yup.array().of(
 		subtaskId: yup.number(),
 		subtaskName: yup.string(),
 		comment: yup.string(),
-		taskStatusId: yup.number(),
+		taskStatus: yup.number(),
 		assignedTo: yup.string()
 	})
 );

@@ -21,7 +21,7 @@ export const DEFAULT_SERVICE_TEMPLATE:any = {
                     comment: "",
                     subtaskId: 0,
                     subtaskName: "Client Account Set Up",
-                    taskStatusId: 1
+                    taskStatus: 1
                 },
             ],
             environment: 0,
