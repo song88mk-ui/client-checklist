@@ -1,25 +1,26 @@
 <script lang="ts">
 	import { DatePicker } from 'date-picker-svelte';
 	import { format, addYears, endOfYear } from 'date-fns';
+	import { preventDefault } from 'svelte/legacy';
 
 	let { placeholder, value, onSelectDate, disabled = false } = $props<{
         placeholder: string;
-		value: string;
+		value: any;
 		onSelectDate?: (selectedDate: Date) => void;
 		disabled?: boolean;
 	}>();
 
 	let prevValue = value;
 	let isShowDatePicker = $state(false);
-	let valueAsDate = $state(value.length > 0 ? new Date(value) : new Date());
-	let formattedValue = $state(value.length > 0 ? format(valueAsDate, 'MMMM d, yyyy') : '');
+	let valueAsDate = $state(value ? new Date(value) : new Date());
+	let formattedValue = $state(value ? format(valueAsDate, 'MMMM d, yyyy') : '');
 	let max = endOfYear(addYears(new Date(), 1));
 
 	$effect(() => {
 		if (prevValue === value) return;
 
-        valueAsDate = value.length > 0 ? new Date(value) : new Date();
-        formattedValue = value.length > 0 ? format(valueAsDate, 'MMMM d, yyyy') : '';
+        valueAsDate = value ? new Date(value) : new Date();
+        formattedValue = value ? format(valueAsDate, 'MMMM d, yyyy') : '';
 
 		prevValue = value;
 	});
@@ -73,6 +74,10 @@
 		onchange={handleChangeDate}
 		value={formattedValue}
 		{disabled}
+        onkeypress={(e: any) => {
+            e.preventDefault();
+            return;
+        }}
 	/>
 
 	{#if isShowDatePicker && !disabled}
