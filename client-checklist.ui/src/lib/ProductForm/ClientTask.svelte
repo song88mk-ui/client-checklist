@@ -90,6 +90,7 @@
                         placeholder="Select date"
 						value={clientTask.targetDateCompleted}
 						onSelectDate={(selectedDate) => handleSelectDate('targetDateCompleted', selectedDate)}
+                        inputId={`${title}-targetDateCompleted`}
 						{disabled}
 					/>
 					{#if errors.targetDateCompleted}
@@ -104,6 +105,7 @@
                         placeholder="Select date"
 						value={clientTask.actualDateCompleted}
 						onSelectDate={(selectedDate) => handleSelectDate('actualDateCompleted', selectedDate)}
+                        inputId={`${title}-actualDateCompleted`}
 						disabled={disabled}
 					/>
 					{#if errors.actualDateCompleted}
