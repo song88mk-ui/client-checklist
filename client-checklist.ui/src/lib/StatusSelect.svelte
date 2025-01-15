@@ -5,6 +5,7 @@
 	export let value = ClientRowStatusEnum.NotStarted;
 	export let onSelectStatus: (selectedStatus: ClientRowStatusEnum) => void;
 	export let disabled: boolean = false;
+    export let elementId: string = "";
 
 	let isShow = false;
 
@@ -18,14 +19,10 @@
 	};
 
 	const handleFocusOut = (e: FocusEvent) => {
-		if (
-			e?.currentTarget instanceof HTMLElement &&
-			e.relatedTarget &&
-			e.relatedTarget instanceof Node &&
-			e.currentTarget.contains(e.relatedTarget)
-		) {
-			return;
-		} else {
+        const parentElement = document.getElementById(elementId);
+		const relatedTarget = e.relatedTarget as Node;
+
+		if (e.relatedTarget === null || (parentElement !== null && !parentElement.contains(relatedTarget))) {
 			isShow = false;
 		}
 	};
@@ -39,7 +36,9 @@
 </script>
 
 <div
+    id={elementId}
 	class="relative w-full rounded border border text-sm text-gray-700"
+    tabindex="-1"
 	on:focusout={handleFocusOut}
 >
 	<div role="presentation" class="flex cursor-pointer items-center gap-[5px] p-2" on:click={toggle}>
