@@ -151,4 +151,6 @@
 	</div>
 {/if}
 
-<ProductForm {step} {title} {initialValues} {back} {isLoading} onSubmit={handleSubmit}/>
+<div class="cc-client-launch">
+	<ProductForm {step} {title} {initialValues} {back} {isLoading} onSubmit={handleSubmit}/>
+</div>

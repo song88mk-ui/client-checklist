@@ -30,7 +30,7 @@
 	})
 </script>
 
-<form onsubmit={handleSubmit} class="flex flex-col gap-7">
+<form onsubmit={handleSubmit} class="cc-product-form flex flex-col gap-7">
     {#if hasValue($errors)}
         <div class="mb-5">
             <Alert variant="error" message={errorMsg} hasCloseButton={false} />
