@@ -6,13 +6,13 @@
 		placeholder,
 		value,
 		onSelectDate,
-        inputId,
+        elementId,
 		disabled = false
 	} = $props<{
 		placeholder: string;
 		value: any;
 		onSelectDate?: (selectedDate: Date) => void;
-        inputId: string;
+        elementId: string;
 		disabled?: boolean;
 	}>();
 
@@ -32,7 +32,7 @@
 	});
 
 	const handleFocusOut = (e: FocusEvent) => {
-        const parentElement = document.getElementById(inputId)
+        const parentElement = document.getElementById(elementId)
 		const relatedTarget = e.relatedTarget as Node;
 
 		if (e.relatedTarget === null || (parentElement !== null && !parentElement.contains(relatedTarget))) {
@@ -55,7 +55,7 @@
 </script>
 
 <div
-    id={inputId}
+    id={elementId}
 	class="relative w-full rounded border bg-[url('/icon-calendar.svg')] bg-[center_right_12px] bg-no-repeat px-3 py-2"
 	role="presentation"
     tabindex="-1"

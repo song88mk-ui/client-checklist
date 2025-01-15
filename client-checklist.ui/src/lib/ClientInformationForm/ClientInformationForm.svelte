@@ -210,7 +210,7 @@
                         placeholder="Enter target launch date"
 						value={$form.launchDate ? new Date($form.launchDate).toISOString() : null}
 						onSelectDate={(selectedDate) => handleSelectDate(selectedDate)}
-                        inputId="clientInformation-targetLaunchDate"
+                        elementId="clientInformation-targetLaunchDate"
 						{disabled}
 					/>
 				</div>
