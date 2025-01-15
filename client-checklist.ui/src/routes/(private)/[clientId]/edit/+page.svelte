@@ -85,7 +85,15 @@
 			} as ClientInformationFormType;
 		}
 		if (clientSteps.length) {
-			const stepData = groupedByStepId(clientSteps);
+			const formattedClientSteps = clientSteps.map((step) => ({
+				...step,
+				clientSubtasks: step.clientSubtasks.map((subtask) => ({
+					...subtask,
+					taskStatusId: subtask.taskStatus
+				}))
+			}));
+			
+			const stepData = groupedByStepId(formattedClientSteps);
 
 			$steps.map((step) => {
 				if (stepData[step.stepId]) {

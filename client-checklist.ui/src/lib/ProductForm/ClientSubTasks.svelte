@@ -14,7 +14,7 @@
 	let localSubtasks = $state(clientSubTasks);
 
 	const handleSelectStatus = (index: number, status: ClientRowStatus) => {
-		updateField(`${name}.${index}.taskStatus`, status);
+		updateField(`${name}.${index}.taskStatusId`, status);
 		localSubtasks = clientSubTasks
 	};
 
@@ -58,7 +58,7 @@
 				</td>
 				<td class="w-[20%] whitespace-nowrap py-4 pl-2 pr-5 align-top text-sm text-gray-900">
 					<StatusSelect
-						value={subTask.taskStatus}
+						value={subTask.taskStatusId}
 						onSelectStatus={(status) => handleSelectStatus(index, status)}
 						{disabled}
 					/>

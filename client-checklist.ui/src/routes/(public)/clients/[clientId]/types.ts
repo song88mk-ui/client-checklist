@@ -37,7 +37,7 @@ export type ClientInformation = {
     serviceTypeId: number;
     sslCertificate: string;
     targetLaunchDate: string;
-    taskStatus: number;
+    taskStatusId: number;
     technicalManager: Manager
     clientSteps: ClientStep[];
 };

@@ -56,7 +56,7 @@ export type ClientSubtask = {
     comment: string;
     subtaskId: number;
     subtaskName: string;
-    taskStatus: number;
+    taskStatusId: number;
 }
 
 export type CreateProductPayload = {
