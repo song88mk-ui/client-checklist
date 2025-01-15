@@ -85,7 +85,15 @@
 			} as ClientInformationFormType;
 		}
 		if (clientSteps.length) {
-			const stepData = groupedByStepId(clientSteps);
+			const formattedClientSteps = clientSteps.map((step) => ({
+				...step,
+				clientSubtasks: step.clientSubtasks.map((subtask) => ({
+					...subtask,
+					taskStatusId: subtask.taskStatus
+				}))
+			}));
+			
+			const stepData = groupedByStepId(formattedClientSteps);
 
 			$steps.map((step) => {
 				if (stepData[step.stepId]) {
@@ -105,6 +113,7 @@
 {/if}
 
 {#if !error && !isLoading}
+<div class="cc-edit-client">
 	<div class="mb-10">
 		<h1 class="text-3xl font-bold">{Product[$selectedIntegration]}</h1>
 	</div>
@@ -134,4 +143,5 @@
 			<ClientLaunchForm isEdit {back} {next} {step} />
 		{/if}
 	</div>
+</div>
 {/if}

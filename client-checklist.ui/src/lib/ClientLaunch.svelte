@@ -6,6 +6,7 @@
 	import ProductForm, { type ProductFormType } from './ProductForm';
 	import steps from '$stores/steps';
 	import auth from '$stores/auth';
+	import Product from '$utils/client';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
 	import Step from '$enums/Step';
@@ -45,6 +46,9 @@
 
 	const handleSubmit = async (values: ProductFormType) => {
 		if (disabled) {
+			setTimeout(() => {
+				goto("/");
+			}, 3000);
 			return;
 		}
 
@@ -57,12 +61,15 @@
 			response = await handleCreateProduct(values);
 		}
 
-		isLoading = false;
-
 		if (response.some((res) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
+			isLoading = false;
 			return;
 		}
+
+		setTimeout(() => {
+			goto("/");
+		}, 3000);
 
 		const [stagingResponse, productionResponse] = response;
 
@@ -111,11 +118,8 @@
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
-			message = 'The account Song88 has been successfully created';
-			setTimeout(() => {
-				goto('/');
-			}, 3000);
+		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+			message = `${Product[$selectedIntegration]} has been successfully created`;
 		}
 		return response;
 	};
@@ -141,7 +145,10 @@
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-
+		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+			message = `${Product[$selectedIntegration]} has been successfully updated`;
+		}
+		
 		return response;
 	};
 
@@ -166,4 +173,6 @@
 	</div>
 {/if}
 
-<ProductForm {step} {title} {initialValues} {back} {isLoading} {disabled} onSubmit={handleSubmit} />
+<div class="cc-client-launch">
+	<ProductForm {step} {title} {initialValues} {back} {isLoading} {disabled} onSubmit={handleSubmit} />
+</div>

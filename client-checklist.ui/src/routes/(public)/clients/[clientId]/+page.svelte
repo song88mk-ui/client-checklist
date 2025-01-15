@@ -12,6 +12,7 @@
 	import { type ClientInformation, type ClientStep, type ClientProgressStatus } from './types';
 	import Environment from '$enums/Environment';
 	import { LocalStorage } from '$lib/storage';
+	import {DEFAULT_SERVICE_TEMPLATE} from './constant'
 
 	const { clientId } = $page.params;
 	const { searchParams } = $page.url;
@@ -64,6 +65,20 @@
 			completed: calculatePercentage(clientProgressStatus, 2)
 		};
 	}
+	function getClientTask(clientSteps: ClientStep[]):ClientStep[]{
+		let newClientSteps = []
+		if(client){
+			newClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId].map((templateClientStep:ClientStep)=>{
+				const result = clientSteps.find((x)=> x.step ==templateClientStep.step)
+				if(result){
+					return result
+				}
+				return templateClientStep
+
+			})
+		}
+		return newClientSteps
+	}
 
 	onMount(async () => {
 		try {
@@ -86,7 +101,6 @@
 				...res?.client,
 				clientSteps
 			};
-
 			if (client && client.clientSteps.length > 0) {
 				calcClientStepProgress(client?.clientSteps);
 			}
@@ -144,13 +158,13 @@
 			CurrEnvironment={currEnvironment}
 			HandleChangeEnvironment={changeCurrEnvironment}
 		/>
-		{#if client.clientSteps.length > 0 && currEnvironment === Environment.STAGING}
-			{#each client.clientSteps.filter((clientStep) => clientStep.environment === 0) as clientStep}
+		{#if currEnvironment === Environment.STAGING}
+			{#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
 				<ClientTaskComponent {clientStep}  />
 			{/each}
 		{/if}
-		{#if client.clientSteps.length > 0 && currEnvironment === Environment.PRODUCTION}
-			{#each client.clientSteps.filter((clientStep) => clientStep.environment === 1) as clientStep}
+		{#if currEnvironment === Environment.PRODUCTION}
+			{#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
 				<ClientTaskComponent {clientStep}  />
 			{/each}
 		{/if}

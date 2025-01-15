@@ -9,11 +9,14 @@ export type ClientSubTaskFormType = {
 	assignedTo: string;
 };
 
+
 export type ClientTaskFormType = {
 	id?: string;
 	assignedTo: string;
-	targetDateCompleted: string;
-	actualDateCompleted: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+	targetDateCompleted: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+	actualDateCompleted: any;
 	clientSubTasks: ClientSubTaskFormType[];
 };
 
@@ -38,8 +41,8 @@ const clientTaskFormSchema = yup.object().shape({
 		then: (schema) => schema.min(1, 'Assigned to is required'),
 		otherwise: (schema) => schema
 	}),
-	targetDateCompleted: yup.string(),
-	actualDateCompleted: yup.string(),
+	targetDateCompleted: yup.mixed().nullable(),
+	actualDateCompleted: yup.mixed().nullable(),
 	clientSubTasks: clientSubTaskFormSchema
 });
 
