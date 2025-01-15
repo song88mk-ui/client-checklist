@@ -12,29 +12,47 @@
 	import type { ClientInformationFormType } from './ClientInformationForm';
 	import steps from '$stores/steps';
 	import { servicesTypeId } from '$constants/services';
+	import { AccessType } from '$enums/role';
 
 	const { createProduct, editProduct } = APIGateway();
 
-	const { back, next, step } = $props<{
+	const {
+		back,
+		next,
+		step,
+		isEdit = false
+	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
+		isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
 
-	let initialValues = $steps[step].formData as ProductFormType || {
+	let initialValues = ($steps[step].formData as ProductFormType) || {
 		[Environment.STAGING]: BackOfficeValues,
 		[Environment.PRODUCTION]: BackOfficeValues
 	};
 
 	let error = $state('');
 	let isLoading = $state(false);
+	let disabled = $state(false);
+
+	$effect(() => {
+		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+	});
 
 	const handleSubmit = async (values: ProductFormType) => {
+		if (disabled) {
+			next();
+			return;
+		}
+
 		isLoading = true;
 
-		const response = values[Environment.STAGING].id && values[Environment.PRODUCTION].id
+		const response =
+			values[Environment.STAGING].id && values[Environment.PRODUCTION].id
 				? await handleEditProduct(values)
 				: await handleCreateProduct(values);
 
@@ -98,16 +116,21 @@
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
-		const stagingProduct = editProduct({
-			...values[Environment.STAGING],
-			stepName: '',
-		} as EditProductPayload, {
-			'x-user-token': $auth?.userToken as string
-		});
-		const productionProduct = editProduct({
-			...values[Environment.PRODUCTION],
-			stepName: '',
-		} as EditProductPayload,{
+		const stagingProduct = editProduct(
+			{
+				...values[Environment.STAGING],
+				stepName: ''
+			} as EditProductPayload,
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+		const productionProduct = editProduct(
+			{
+				...values[Environment.PRODUCTION],
+				stepName: ''
+			} as EditProductPayload,
+			{
 				'x-user-token': $auth?.userToken as string
 			}
 		);
@@ -132,4 +155,4 @@
 	</div>
 {/if}
 
-<ProductForm {title} {initialValues} {back} {isLoading} onSubmit={handleSubmit} />
+<ProductForm {title} {initialValues} {back} {isLoading} {disabled} onSubmit={handleSubmit} />

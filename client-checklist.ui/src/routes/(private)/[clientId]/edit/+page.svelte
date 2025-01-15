@@ -113,35 +113,35 @@
 {/if}
 
 {#if !error && !isLoading}
-	<div class="cc-edit-client">
-		<div class="mb-10">
-			<h1 class="text-3xl font-bold">{Product[$selectedIntegration]}</h1>
-		</div>
-		<div class="mx-auto mb-10 max-w-screen-lg">
-			<ProgressStep bind:step />
-		</div>
-		<div class="mb-10">
-			{#if $steps[step].stepId === Step.ClientInformation}
-				<ClientInformationForm {next} />
-			{:else if $steps[step].stepId === Step.BackOffice}
-				<BackOfficeForm {back} {next} {step} />
-			{:else if $steps[step].stepId === Step.WalletIntegration}
-				<WalletIntegrationForm {back} {next} {step} />
-			{:else if $steps[step].stepId === Step.OddsfeedIntegration}
-				<OddsFeedIntegrationForm {back} isEdit {next} {step} />
-			{:else if $steps[step].stepId === Step.SportsbookPlayerSite}
-				<SportsbookPlayerSiteUiuxForm {back} {next} {step} />
-			{:else if $steps[step].stepId === Step.ManagedTradingServices}
-				<MTSForm {back} {next} {step} />
-			{:else if $steps[step].stepId === Step.EndToEndFunctionalPerformanceTest}
-				<EndToEndTestForm {back} {next} {step} />
-			{:else if $steps[step].stepId === Step.Operations}
-				<OperationsForm {back} {next} {step} />
-			{:else if $steps[step].stepId === Step.BusinessAcceptanceTest}
-				<BusinessAcceptanceForm {back} {next} {step} />
-			{:else if $steps[step].stepId === Step.ClientLaunch}
-				<ClientLaunchForm {back} {next} {step} />
-			{/if}
-		</div>
+<div class="cc-edit-client">
+	<div class="mb-10">
+		<h1 class="text-3xl font-bold">{Product[$selectedIntegration]}</h1>
 	</div>
+	<div class="mx-auto mb-10 max-w-screen-lg">
+		<ProgressStep bind:step />
+	</div>
+	<div class="mb-10">
+		{#if $steps[step].stepId === Step.ClientInformation}
+			<ClientInformationForm isEdit {next} />
+		{:else if $steps[step].stepId === Step.BackOffice}
+			<BackOfficeForm isEdit {back} {next} {step} />
+		{:else if $steps[step].stepId === Step.WalletIntegration}
+			<WalletIntegrationForm isEdit {back} {next} {step} />
+		{:else if $steps[step].stepId === Step.OddsfeedIntegration}
+			<OddsFeedIntegrationForm isEdit {back} {next} {step} />
+		{:else if $steps[step].stepId === Step.SportsbookPlayerSite}
+			<SportsbookPlayerSiteUiuxForm isEdit {back} {next} {step} />
+		{:else if $steps[step].stepId === Step.ManagedTradingServices}
+			<MTSForm isEdit {back} {next} {step} />
+		{:else if $steps[step].stepId === Step.EndToEndFunctionalPerformanceTest}
+			<EndToEndTestForm isEdit {back} {next} {step} />
+		{:else if $steps[step].stepId === Step.Operations}
+			<OperationsForm isEdit {back} {next} {step} />
+		{:else if $steps[step].stepId === Step.BusinessAcceptanceTest}
+			<BusinessAcceptanceForm isEdit {back} {next} {step} />
+		{:else if $steps[step].stepId === Step.ClientLaunch}
+			<ClientLaunchForm isEdit {back} {next} {step} />
+		{/if}
+	</div>
+</div>
 {/if}
