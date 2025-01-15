@@ -17,7 +17,7 @@
 	}: Props = $props();
 </script>
 
-<div class="flex flex-col items-start rounded-[4px] border border-[#E1E1E1] bg-white p-6">
+<div class="cc-client-details flex flex-col items-start rounded-[4px] border border-[#E1E1E1] bg-white p-6">
 	<div class="flex items-start justify-between self-stretch">
 		<div>
 			<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Company Name</span>
