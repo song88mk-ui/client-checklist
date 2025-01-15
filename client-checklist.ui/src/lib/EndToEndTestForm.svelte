@@ -1,10 +1,10 @@
 <script lang="ts">
-  	import { type EditProductPayload } from '$api/request.DTO.model';
+	import { type EditProductPayload } from '$api/request.DTO.model';
 	import { EndToEndTestValues } from '$constants/productFormValues';
-	import Environment from "$enums/Environment";
-	import ProductForm, { type ProductFormType } from "./ProductForm";
-    import steps from '$stores/steps';
-    import auth from '$stores/auth';
+	import Environment from '$enums/Environment';
+	import ProductForm, { type ProductFormType } from './ProductForm';
+	import steps from '$stores/steps';
+	import auth from '$stores/auth';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
 	import Step from '$enums/Step';
@@ -12,26 +12,42 @@
 	import type { ClientInformationFormType } from './ClientInformationForm';
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
+	import { AccessType } from '$enums/role';
 
-    const { createProduct, editProduct } = APIGateway();
-	const { back, next, step } = $props<{
+	const { createProduct, editProduct } = APIGateway();
+	const {
+		back,
+		next,
+		step,
+		isEdit = false
+	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
+		isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
 
-	let initialValues = $steps[step].formData as ProductFormType || {
+	let initialValues = ($steps[step].formData as ProductFormType) || {
 		[Environment.STAGING]: EndToEndTestValues,
 		[Environment.PRODUCTION]: EndToEndTestValues
 	};
 
-    let error = $state('');
+	let error = $state('');
 	let isLoading = $state(false);
+	let disabled = $state(false);
 
+	$effect(() => {
+		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+	});
 
 	const handleSubmit = async (values: ProductFormType) => {
+		if (disabled) {
+			next();
+			return;
+		}
+
 		isLoading = true;
 
 		let response;
@@ -101,16 +117,21 @@
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
-		const stagingProduct = editProduct({
-			...values[Environment.STAGING],
-			stepName: '',
-		} as EditProductPayload, {
-			'x-user-token': $auth?.userToken as string
-		});
-		const productionProduct = editProduct({
-			...values[Environment.PRODUCTION],
-			stepName: '',
-		} as EditProductPayload,{
+		const stagingProduct = editProduct(
+			{
+				...values[Environment.STAGING],
+				stepName: ''
+			} as EditProductPayload,
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+		const productionProduct = editProduct(
+			{
+				...values[Environment.PRODUCTION],
+				stepName: ''
+			} as EditProductPayload,
+			{
 				'x-user-token': $auth?.userToken as string
 			}
 		);
@@ -120,7 +141,7 @@
 		return response;
 	};
 
-    $effect(() => {
+	$effect(() => {
 		if (error) {
 			setTimeout(() => {
 				error = '';
@@ -135,4 +156,4 @@
 	</div>
 {/if}
 
-<ProductForm {title} {initialValues} {back} onSubmit={handleSubmit} />
+<ProductForm {title} {initialValues} {back} {disabled} onSubmit={handleSubmit} />

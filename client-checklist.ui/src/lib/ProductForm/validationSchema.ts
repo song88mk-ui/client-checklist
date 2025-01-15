@@ -36,7 +36,11 @@ const clientSubTaskFormSchema = yup.array().of(
 );
 
 const clientTaskFormSchema = yup.object().shape({
-	assignedTo: yup.string().min(1, 'Assigned to is required'),
+	assignedTo: yup.string().when('disabled', {
+		is: false,
+		then: (schema) => schema.min(1, 'Assigned to is required'),
+		otherwise: (schema) => schema
+	}),
 	targetDateCompleted: yup.mixed().nullable(),
 	actualDateCompleted: yup.mixed().nullable(),
 	clientSubTasks: clientSubTaskFormSchema
