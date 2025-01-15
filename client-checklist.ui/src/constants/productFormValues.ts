@@ -19,7 +19,7 @@ const backOfficeSubTasks: ClientSubTaskFormType[] = [
 	}
 ];
 
-const oddsFeedIntegrationSubTasks: ClientSubTaskFormType[] = [
+const oddsFeedIntegrationSubTasksStg: ClientSubTaskFormType[] = [
 	{
 		subtaskId: 1,
 		subtaskName: 'Odds Feed',
@@ -44,6 +44,23 @@ const oddsFeedIntegrationSubTasks: ClientSubTaskFormType[] = [
 	{
 		subtaskId: 4,
 		subtaskName: 'Live Data (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	}
+];
+
+const oddsFeedIntegrationSubTasksPrd: ClientSubTaskFormType[] = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Odds Feed',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'Odds Feed (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
@@ -115,56 +132,84 @@ const sportsbookPlayerSiteSubTasks: ClientSubTaskFormType[] = [
 const MTSSubTasks: ClientSubTaskFormType[] = [
 	{
 		subtaskId: 1,
-		subtaskName: 'Max Bet',
+		subtaskName: 'Limit ID Creation',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 2,
-		subtaskName: 'Max Bet(Client)',
+		subtaskName: 'Limit ID Creation(Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 3,
-		subtaskName: 'Max Payout',
+		subtaskName: 'Liability Settings',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 4,
-		subtaskName: 'Max Payout(Client)',
+		subtaskName: 'Liability Settings(Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 5,
-		subtaskName: 'Player CCF and Groupings',
+		subtaskName: 'Bookmaker Settings',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 6,
-		subtaskName: 'Player CCF and Groupings(Client)',
+		subtaskName: 'Bookmaker Settings(Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 7,
-		subtaskName: 'Bet Validation',
+		subtaskName: 'CCF',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 8,
-		subtaskName: 'Bet Validation(Client)',
+		subtaskName: 'CCF(Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 9,
+		subtaskName: 'Tournament Hierachy',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 10,
+		subtaskName: 'Tournament Hierachy(Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 11,
+		subtaskName: 'Test Bets for reports',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 12,
+		subtaskName: 'Test Bets for reports(Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
@@ -348,237 +393,244 @@ const BASubTasks: ClientSubTaskFormType[] = [
 	},
 	{
 		subtaskId: 4,
-		subtaskName: 'Search Functionality',
+		subtaskName: 'Log in/ Log out (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 5,
-		subtaskName: 'Search Functionality (Client)',
+		subtaskName: 'Search Functionality',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 6,
-		subtaskName: 'Bet Placement',
+		subtaskName: 'Search Functionality (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 7,
-		subtaskName: 'Bet Placement (Client)',
+		subtaskName: 'Bet Placement',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 8,
-		subtaskName: 'Odds Format',
+		subtaskName: 'Bet Placement (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 9,
-		subtaskName: 'Odds Format (Client)',
+		subtaskName: 'Odds Format',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 10,
-		subtaskName: 'Full and Partial Cashout',
+		subtaskName: 'Odds Format (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 11,
-		subtaskName: 'Full and Partial Cashout (Client)',
+		subtaskName: 'Full and Partial Cashout',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
 		subtaskId: 12,
+		subtaskName: 'Full and Partial Cashout (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 13,
 		subtaskName: 'Settlement',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},	
 	{
-		subtaskId: 13,
+		subtaskId: 14,
 		subtaskName: 'Settlement (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 14,
+		subtaskId: 15,
 		subtaskName: 'Bet Slip / My Bets',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 15,
+		subtaskId: 16,
 		subtaskName: 'Bet Slip / My Bets (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 16,
+		subtaskId: 17,
 		subtaskName: 'Bet History',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 17,
+		subtaskId: 18,
 		subtaskName: 'Bet History (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 18,
+		subtaskId: 19,
 		subtaskName: 'Supported Languages',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 19,
+		subtaskId: 20,
 		subtaskName: 'Supported Languages (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 20,
+		subtaskId: 21,
 		subtaskName: 'Supported Currencies',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 21,
+		subtaskId: 22,
 		subtaskName: 'Supported Currencies (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 22,
+		subtaskId: 23,
 		subtaskName: 'Odds and Push Updates',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 23,
+		subtaskId: 24,
 		subtaskName: 'Odds and Push Updates (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 24,
+		subtaskId: 25,
 		subtaskName: 'My Favorites',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 25,
+		subtaskId: 26,
 		subtaskName: 'My Favorites (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 26,
+		subtaskId: 27,
 		subtaskName: 'LMT, Live Stream, Statistics, Results',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 27,
+		subtaskId: 28,
 		subtaskName: 'LMT, Live Stream, Statistics, Results (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 28,
+		subtaskId: 29,
 		subtaskName: 'Parlay Bonus',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 29,
+		subtaskId: 30,
 		subtaskName: 'Parlay Bonus (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 30,
+		subtaskId: 31,
 		subtaskName: 'Bet Builder',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 31,
+		subtaskId: 32,
 		subtaskName: 'Bet Builder (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 32,
+		subtaskId: 33,
 		subtaskName: 'Price Boosts',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 33,
+		subtaskId: 34,
 		subtaskName: 'Price Boosts (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 34,
+		subtaskId: 35,
 		subtaskName: 'Success and Info Messages',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 35,
+		subtaskId: 36,
 		subtaskName: 'Success and Info Messages (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 36,
+		subtaskId: 37,
 		subtaskName: 'Error Messages',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
 	},
 	{
-		subtaskId: 37,
+		subtaskId: 38,
 		subtaskName: 'Error Messages (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
@@ -608,9 +660,13 @@ export const BackOfficeValues: ClientTaskFormType = {
 	clientSubTasks: backOfficeSubTasks 
 };
 
-export const OddsFeedIntegrationValues: ClientTaskFormType = {
+export const OddsFeedIntegrationValuesStg: ClientTaskFormType = {
 	...defaultValues,
-	clientSubTasks: oddsFeedIntegrationSubTasks 
+	clientSubTasks: oddsFeedIntegrationSubTasksStg
+};
+export const OddsFeedIntegrationValuesPrd: ClientTaskFormType = {
+	...defaultValues,
+	clientSubTasks: oddsFeedIntegrationSubTasksPrd
 };
 
 export const WalletIntegrationValues: ClientTaskFormType = {

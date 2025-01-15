@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { OddsFeedIntegrationValues } from '$constants/productFormValues';
+	import { OddsFeedIntegrationValuesStg,OddsFeedIntegrationValuesPrd } from '$constants/productFormValues';
 	import Environment from '$enums/Environment';
 	import ProductForm, { type ProductFormType } from './ProductForm';
 	import steps from '$stores/steps';
@@ -30,8 +30,8 @@
 	const title = $steps[step].title;
 
 	let initialValues = ($steps[step].formData as ProductFormType) || {
-		[Environment.STAGING]: OddsFeedIntegrationValues,
-		[Environment.PRODUCTION]: OddsFeedIntegrationValues
+		[Environment.STAGING]: OddsFeedIntegrationValuesStg,
+		[Environment.PRODUCTION]: OddsFeedIntegrationValuesPrd
 	};
 
 	let disabled = $state(true);
