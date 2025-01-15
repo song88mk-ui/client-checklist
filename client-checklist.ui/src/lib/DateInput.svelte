@@ -52,17 +52,6 @@
 		formattedValue = format(e.detail, 'MMMM d, yyyy');
 		isShowDatePicker = false;
 	};
-
-	const handleChangeDate = (e: Event) => {
-		e.preventDefault();
-		const newValue = new Date((e.target as HTMLInputElement).value);
-		if (!isNaN(newValue.getTime())) {
-			formattedValue = format(newValue, 'MMMM d, yyyy');
-			onSelectDate(newValue);
-		} else {
-			formattedValue = format(value || new Date(), 'MMMM d, yyyy');
-		}
-	};
 </script>
 
 <div
