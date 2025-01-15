@@ -6,7 +6,7 @@
 	import Alert from '../Alert.svelte';
 	import hasValue from '$utils/hasValue';
 
-	let { title, initialValues, back, isLoading, onSubmit,step, disabled = false } = $props<{
+	let { title, initialValues, back, isLoading, onSubmit, step, disabled = false } = $props<{
 		title: string;
 		initialValues: ProductFormType;
 		back?: () => void;
@@ -30,7 +30,7 @@
 	})
 </script>
 
-<form onsubmit={handleSubmit} class="flex flex-col gap-7">
+<form onsubmit={handleSubmit} class="cc-product-form flex flex-col gap-7">
     {#if hasValue($errors)}
         <div class="mb-5">
             <Alert variant="error" message={errorMsg} hasCloseButton={false} />
