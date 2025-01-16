@@ -22,7 +22,8 @@ builder.Services.AddTelemetry(telemetryOptions);
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddDbContextPool<ClientChecklistContext>(o => o.UseSqlServer(builder.Configuration["ConnectionStrings:ClientChecklist"], options =>
-                options.CommandTimeout(180)));
+                options.CommandTimeout(180).MigrationsAssembly("Client.Checklist.API")
+                ));
 builder.Services.AddScoped<AuthorizationFilter>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddHttpClient<IAuthRepository, AuthRepository>(client =>
