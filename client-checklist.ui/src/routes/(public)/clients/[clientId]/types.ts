@@ -17,7 +17,8 @@ export type ClientStep = {
     assignedTo: string;
     sortOrder: number;
     environment: number;
-    clientSubtasks: ClientSubtask[]
+    clientSubtasks: ClientSubtask[],
+    isExpanded: boolean;
 }
 
 export type Manager = {

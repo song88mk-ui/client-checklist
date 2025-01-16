@@ -96,7 +96,12 @@
 			}
 			loading = false;
 			let res: any = response?.data;
-			const clientSteps =  response?.data?.clientSteps
+			const clientSteps =  response?.data?.clientSteps.map((step: any) => {
+                return {
+                    ...step,
+                    isExpanded: true
+                }
+            })
 			client = {
 				...res?.client,
 				clientSteps

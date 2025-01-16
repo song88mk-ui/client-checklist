@@ -6,12 +6,11 @@
 	import ClientSubtaskComponent from './ClientSubtaskComponent.svelte';
 
 	export let clientStep: ClientStep;
-	let isOpen = false;
 	let status: number = 0;
 	let percentage = '0';
 
 	function toggle() {
-		isOpen = !isOpen;
+		clientStep.isExpanded = !clientStep.isExpanded;
 	}
 	function calculateProgress(clientSubtasks: ClientSubtask[]) {
 		if (clientSubtasks.length > 0) {
@@ -98,10 +97,10 @@
 				>
 			</div>
 			<ClientTaskStatus status={status}></ClientTaskStatus>
-			<img src={`/${isOpen ? 'arrow-up' : 'arrow-down'}.svg`} alt="logo" />
+			<img src={`/${clientStep.isExpanded ? 'arrow-up' : 'arrow-down'}.svg`} alt="logo" />
 		</div>
 	</div>
-	{#if isOpen && clientStep.clientSubtasks.length > 0}
+	{#if clientStep.isExpanded && clientStep.clientSubtasks.length > 0}
 		<div class="mx-[20px]" transition:fly={{ y: -10, duration: 300 }}>
 			<table class="mb-[10px] min-w-full">
 				<thead class="h-[36px]">
