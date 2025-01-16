@@ -25,6 +25,8 @@
 
         if (step && isReadWrite) return isEdit ? "Update" : "Create";
 
+        if (step && !isReadWrite) return "Close";
+
         return "Next";
     }
 
