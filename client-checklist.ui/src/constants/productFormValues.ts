@@ -728,7 +728,7 @@ const BASubTasksFeedIntegration: ClientSubTaskFormType[] = [
 	},
 ];
 
-const clientLaunchSubTasks: ClientSubTaskFormType[] = [
+const clientLaunchSubTasksWalletIntegration: ClientSubTaskFormType[] = [
 	{
 		subtaskId: 1,
 		subtaskName: 'Client Launch',
@@ -867,9 +867,9 @@ export const BAValuesFeedIntegration: ClientTaskFormType = {
 	clientSubTasks: BASubTasksFeedIntegration
 };
 
-export const ClientLaunchValues: ClientTaskFormType = {
+export const ClientLaunchValuesWalletIntegration: ClientTaskFormType = {
 	...defaultValues,
-	clientSubTasks: clientLaunchSubTasks
+	clientSubTasks: clientLaunchSubTasksWalletIntegration
 };
 
 export const ClientLaunchValuesBetValidation: ClientTaskFormType = {

@@ -2,7 +2,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
   	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { ClientLaunchValuesOddsFeedAndLive,ClientLaunchValuesBetValidation,BAValuesFeedIntegration,EndToEndTestValuesFeedIntegration } from '$constants/productFormValues';
+	import { ClientLaunchValuesOddsFeedAndLive,ClientLaunchValuesBetValidation,BAValuesFeedIntegration,EndToEndTestValuesFeedIntegration,ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
 	import Environment from "$enums/Environment";
 	import { type ProductFormType } from "./ProductForm";
     import ProductFormProd from "./ProductForm/ProductFormProd.svelte";
@@ -26,6 +26,9 @@
     
 	const title = $steps[step].title;
 	const TASKS:any = {
+        8:$steps[step].formData as ProductFormType || {
+		    [Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
+	    },
 		7:$steps[step].formData as ProductFormType || {
 		[Environment.STAGING]: ClientLaunchValuesBetValidation,
 		[Environment.PRODUCTION]: ClientLaunchValuesOddsFeedAndLive

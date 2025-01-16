@@ -70,6 +70,6 @@
 	{:else if step === 7 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
 		<ClientLaunchFeedIntegration {back} {next} {step}/>
 	{:else if step === 8 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-		<ClientLaunchForm {back} {next} {step}/>
+		<ClientLaunchFeedIntegration {back} {next} {step}/>
 	{/if}
 </div>

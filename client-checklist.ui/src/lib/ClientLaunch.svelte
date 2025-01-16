@@ -2,7 +2,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
   	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { ClientLaunchValues } from '$constants/productFormValues';
+	import { ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
 	import Environment from "$enums/Environment";
 	import ProductForm, { type ProductFormType } from "./ProductForm";
     import steps from '$stores/steps';
@@ -25,8 +25,8 @@
 	const title = $steps[step].title;
 
 	let initialValues = $steps[step].formData as ProductFormType || {
-		[Environment.STAGING]: ClientLaunchValues,
-		[Environment.PRODUCTION]: ClientLaunchValues
+		[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
+		[Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
 	};
 
     let error = $state('');

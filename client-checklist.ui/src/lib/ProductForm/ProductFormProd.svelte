@@ -22,6 +22,10 @@
 		onSubmit
 	});
 	const TASKS:any = {
+		8:[
+			{title:"Client Launch",name:Environment.PRODUCTION,
+			clientTask:$form[Environment.PRODUCTION],errors:$errors[Environment.PRODUCTION]},		
+		],
 		7:[
 			{title:"Bet Validation",name:Environment.STAGING,
 			clientTask:$form[Environment.STAGING],errors:$errors[Environment.STAGING]},
