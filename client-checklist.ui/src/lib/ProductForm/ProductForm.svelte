@@ -1,41 +1,54 @@
 <script lang="ts">
 	import { createForm } from 'svelte-forms-lib';
 	import validationSchema, { type ProductFormType } from './validationSchema';
+    import auth from '$stores/auth';
 	import ClientTask from './ClientTask.svelte';
 	import Environment from '$enums/Environment';
 	import Alert from '../Alert.svelte';
 	import hasValue from '$utils/hasValue';
+	import { AccessType } from '$enums/role';
 
-	let { title, initialValues, back, isLoading, onSubmit,step, disabled = false } = $props<{
+	let { title, initialValues, back, isLoading, onSubmit, step, isEdit = false, disabled = false } = $props<{
 		title: string;
 		initialValues: ProductFormType;
 		back?: () => void;
 		step?: () => number;
 		isLoading?: boolean;
 		onSubmit: (values: ProductFormType) => void;
+        isEdit: boolean;
 		disabled?: boolean;
 	}>();
-	
-	let errorMsg = $state('')
+
+	let errorMsg = $state('');
+    let nextButtonLabel = (): string => {
+        const isReadWrite = AccessType.READWRITE === $auth?.accessType
+
+        if (step && isReadWrite) return isEdit ? "Update" : "Create";
+
+        if (step && !isReadWrite) return "Close";
+
+        return "Next";
+    }
+
 	const { form, errors, updateField, handleSubmit } = createForm({
 		initialValues,
 		validationSchema,
 		onSubmit
 	});
-    
-	$effect(()=>{
-		if(hasValue($errors)){
-			errorMsg = "Please fill all the fields correctly."
+
+	$effect(() => {
+		if (hasValue($errors)) {
+			errorMsg = 'Please fill all the fields correctly.';
 		}
-	})
+	});
 </script>
 
-<form onsubmit={handleSubmit} class="flex flex-col gap-7">
-    {#if hasValue($errors)}
-        <div class="mb-5">
-            <Alert variant="error" message={errorMsg} hasCloseButton={false} />
-        </div>
-    {/if}
+<form onsubmit={handleSubmit} class="cc-product-form flex flex-col gap-7">
+	{#if hasValue($errors)}
+			<div class="mb-5">
+					<Alert variant="error" message={errorMsg} hasCloseButton={false} />
+			</div>
+	{/if}
 	<ClientTask
 		title={`${title} (${Environment.STAGING})`}
 		name={Environment.STAGING}
@@ -62,9 +75,9 @@
 				onclick={back}>Back</button
 			>
 			<button
-				onclick={()=>window.scrollTo({ top: 0, behavior: 'smooth' })}
+				onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
 				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
-				disabled={isLoading}>{step ? 'Create': 'Next'}</button
+				disabled={isLoading}>{nextButtonLabel()}</button
 			>
 		</div>
 	</div>

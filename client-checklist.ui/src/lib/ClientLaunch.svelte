@@ -1,12 +1,12 @@
-
 <script lang="ts">
 	import { goto } from '$app/navigation';
-  	import { type EditProductPayload } from '$api/request.DTO.model';
+	import { type EditProductPayload } from '$api/request.DTO.model';
 	import { ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
-	import Environment from "$enums/Environment";
-	import ProductForm, { type ProductFormType } from "./ProductForm";
-    import steps from '$stores/steps';
-    import auth from '$stores/auth';
+	import Environment from '$enums/Environment';
+	import ProductForm, { type ProductFormType } from './ProductForm';
+	import steps from '$stores/steps';
+	import auth from '$stores/auth';
+	import Product from '$utils/client';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
 	import Step from '$enums/Step';
@@ -14,12 +14,18 @@
 	import type { ClientInformationFormType } from './ClientInformationForm';
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
+	import { AccessType } from '$enums/role';
 
-    const { createProduct, editProduct } = APIGateway();
-	const { back, step } = $props<{
+	const { createProduct, editProduct } = APIGateway();
+	const {
+		back,
+		step,
+		isEdit = false
+	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
+		isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
@@ -29,11 +35,23 @@
 		[Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
 	};
 
-    let error = $state('');
+	let error = $state('');
 	let isLoading = $state(false);
 	let message = $state('');
+	let disabled = $state(false);
+
+	$effect(() => {
+		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+	});
 
 	const handleSubmit = async (values: ProductFormType) => {
+		if (disabled) {
+			setTimeout(() => {
+				goto("/");
+			}, 3000);
+			return;
+		}
+
 		isLoading = true;
 
 		let response;
@@ -43,12 +61,15 @@
 			response = await handleCreateProduct(values);
 		}
 
-		isLoading = false;
-
 		if (response.some((res) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
+			isLoading = false;
 			return;
 		}
+
+		setTimeout(() => {
+			goto("/");
+		}, 3000);
 
 		const [stagingResponse, productionResponse] = response;
 
@@ -98,35 +119,40 @@
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
 		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
-			message = 'The account Song88 has been successfully created';
-			setTimeout(() => {
-				goto("/");
-			}, 3000);
+			message = `${Product[$selectedIntegration]} has been successfully created`;
 		}
 		return response;
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
-		const stagingProduct = editProduct({
-			...values[Environment.STAGING],
-			stepName: '',
-		} as EditProductPayload, {
-			'x-user-token': $auth?.userToken as string
-		});
-		const productionProduct = editProduct({
-			...values[Environment.PRODUCTION],
-			stepName: '',
-		} as EditProductPayload,{
+		const stagingProduct = editProduct(
+			{
+				...values[Environment.STAGING],
+				stepName: ''
+			} as EditProductPayload,
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+		const productionProduct = editProduct(
+			{
+				...values[Environment.PRODUCTION],
+				stepName: ''
+			} as EditProductPayload,
+			{
 				'x-user-token': $auth?.userToken as string
 			}
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-
+		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+			message = `${Product[$selectedIntegration]} has been successfully updated`;
+		}
+		
 		return response;
 	};
 
-    $effect(() => {
+	$effect(() => {
 		if (error) {
 			setTimeout(() => {
 				error = '';
@@ -143,8 +169,10 @@
 
 {#if message}
 	<div class="mb-5">
-		<Alert variant="success"  {message} hasCloseButton={false} />
+		<Alert variant="success" {message} hasCloseButton={false} />
 	</div>
 {/if}
 
-<ProductForm {step} {title} {initialValues} {back} {isLoading} onSubmit={handleSubmit}/>
+<div class="cc-client-launch">
+	<ProductForm {step} {title} {initialValues} {back} {isLoading} {isEdit} {disabled} onSubmit={handleSubmit} />
+</div>

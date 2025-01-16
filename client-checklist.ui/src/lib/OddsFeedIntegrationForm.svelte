@@ -34,12 +34,16 @@
 		[Environment.PRODUCTION]: OddsFeedIntegrationValuesPrd
 	};
 
-	let disabled = $state(true);
 	let error = $state('');
 	let isLoading = $state(false);
+	let disabled = $state(false);
+
+	$effect(() => {
+		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+	});
 
 	const handleSubmit = async (values: ProductFormType) => {
-		if (isEdit && AccessType.READWRITE !== $auth?.accessType) {
+		if (disabled) {
 			next();
 			return;
 		}
