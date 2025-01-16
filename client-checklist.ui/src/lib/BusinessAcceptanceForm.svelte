@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { BAValues } from '$constants/productFormValues';
-	import Environment from '$enums/Environment';
-	import ProductForm, { type ProductFormType } from './ProductForm';
-	import steps from '$stores/steps';
-	import auth from '$stores/auth';
+  	import { type EditProductPayload } from '$api/request.DTO.model';
+	import { BAValuesWalletIntegration } from '$constants/productFormValues';
+	import Environment from "$enums/Environment";
+	import ProductForm, { type ProductFormType } from "./ProductForm";
+    import steps from '$stores/steps';
+    import auth from '$stores/auth';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from './Alert.svelte';
 	import Step from '$enums/Step';
@@ -29,9 +29,9 @@
 
 	const title = $steps[step].title;
 
-	let initialValues = ($steps[step].formData as ProductFormType) || {
-		[Environment.STAGING]: BAValues,
-		[Environment.PRODUCTION]: BAValues
+	let initialValues = $steps[step].formData as ProductFormType || {
+		[Environment.STAGING]: BAValuesWalletIntegration,
+		[Environment.PRODUCTION]: BAValuesWalletIntegration
 	};
 
 	let error = $state('');
