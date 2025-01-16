@@ -1,7 +1,7 @@
 
 <script lang="ts">
   	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { BAValues } from '$constants/productFormValues';
+	import { BAValuesWalletIntegration } from '$constants/productFormValues';
 	import Environment from "$enums/Environment";
 	import ProductForm, { type ProductFormType } from "./ProductForm";
     import steps from '$stores/steps';
@@ -24,8 +24,8 @@
 	const title = $steps[step].title;
 
 	let initialValues = $steps[step].formData as ProductFormType || {
-		[Environment.STAGING]: BAValues,
-		[Environment.PRODUCTION]: BAValues
+		[Environment.STAGING]: BAValuesWalletIntegration,
+		[Environment.PRODUCTION]: BAValuesWalletIntegration
 	};
 
     let error = $state('');

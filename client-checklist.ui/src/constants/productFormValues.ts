@@ -216,7 +216,7 @@ const MTSSubTasks: ClientSubTaskFormType[] = [
 	},
 ];
 
-const endToEndTestSubTasks: ClientSubTaskFormType[] = [
+const endToEndTestSubTasksWalletIntegration: ClientSubTaskFormType[] = [
         {
             subtaskId: 1,
             subtaskName: "Visiting the URL site",
@@ -352,6 +352,37 @@ const endToEndTestSubTasks: ClientSubTaskFormType[] = [
         }
 ]
 
+const endToEndTestSubTasksFeedIntegration: ClientSubTaskFormType[] = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Odds Feed',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'Live Data',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 1,
+		subtaskName: 'Bet Validation',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'Performance Test',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	}
+];
+
 const operationsSubTasks: ClientSubTaskFormType[] = [
 	{
 		subtaskId: 1,
@@ -369,7 +400,7 @@ const operationsSubTasks: ClientSubTaskFormType[] = [
 	}
 ];
 
-const BASubTasks: ClientSubTaskFormType[] = [
+const BASubTasksWalletIntegration: ClientSubTaskFormType[] = [
 	{
 		subtaskId: 1,
 		subtaskName: 'Visiting the URL site',
@@ -638,10 +669,137 @@ const BASubTasks: ClientSubTaskFormType[] = [
 	},
 ];
 
+const BASubTasksFeedIntegration: ClientSubTaskFormType[] = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Odds Feed',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'Odds Feed (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 3,
+		subtaskName: 'Live Data',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 4,
+		subtaskName: 'Live Data (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 5,
+		subtaskName: 'Bet Validation',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 6,
+		subtaskName: 'Bet Validation (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 7,
+		subtaskName: 'Performance Test',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 8,
+		subtaskName: 'Performance Test (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+];
+
 const clientLaunchSubTasks: ClientSubTaskFormType[] = [
 	{
 		subtaskId: 1,
 		subtaskName: 'Client Launch',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+];
+
+const clientLaunchSubTasksBetValidation: ClientSubTaskFormType[] = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Bet Validation',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+];
+const clientLaunchSubTasksOddsFeedAndLive: ClientSubTaskFormType[] = [
+	{
+		subtaskId: 1,
+		subtaskName: 'Basketball',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 2,
+		subtaskName: 'Basketball (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 3,
+		subtaskName: 'Baseball',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 4,
+		subtaskName: 'Baseball(Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 5,
+		subtaskName: 'Cricket',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 6,
+		subtaskName: 'Cricket (Client)',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 7,
+		subtaskName: 'Tennis',
+		comment: '',
+		taskStatusId: ClientRowStatus.NotStarted,
+		assignedTo: ''
+	},
+	{
+		subtaskId: 8,
+		subtaskName: 'Tennis (Client)',
 		comment: '',
 		taskStatusId: ClientRowStatus.NotStarted,
 		assignedTo: ''
@@ -685,9 +843,14 @@ export const MTSValues: ClientTaskFormType = {
 	clientSubTasks: MTSSubTasks
 };
 
-export const EndToEndTestValues: ClientTaskFormType = {
+export const EndToEndTestValuesWalletIntegration: ClientTaskFormType = {
     ...defaultValues,
-    clientSubTasks: endToEndTestSubTasks
+    clientSubTasks: endToEndTestSubTasksWalletIntegration
+}
+
+export const EndToEndTestValuesFeedIntegration: ClientTaskFormType = {
+    ...defaultValues,
+    clientSubTasks: endToEndTestSubTasksFeedIntegration
 }
 
 export const OperationsValues: ClientTaskFormType = {
@@ -695,12 +858,26 @@ export const OperationsValues: ClientTaskFormType = {
 	clientSubTasks: operationsSubTasks
 };
 
-export const BAValues: ClientTaskFormType = {
+export const BAValuesWalletIntegration: ClientTaskFormType = {
 	...defaultValues,
-	clientSubTasks: BASubTasks
+	clientSubTasks: BASubTasksWalletIntegration
+};
+export const BAValuesFeedIntegration: ClientTaskFormType = {
+	...defaultValues,
+	clientSubTasks: BASubTasksFeedIntegration
 };
 
 export const ClientLaunchValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: clientLaunchSubTasks
+};
+
+export const ClientLaunchValuesBetValidation: ClientTaskFormType = {
+	...defaultValues,
+	clientSubTasks: clientLaunchSubTasksBetValidation
+};
+
+export const ClientLaunchValuesOddsFeedAndLive: ClientTaskFormType = {
+	...defaultValues,
+	clientSubTasks: clientLaunchSubTasksOddsFeedAndLive
 };
