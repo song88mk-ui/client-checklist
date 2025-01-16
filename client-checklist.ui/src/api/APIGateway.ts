@@ -1,5 +1,6 @@
 import type {
 	CreateClientPayload,
+	EditClientPayload,
 	CreateProductPayload,
 	LoginPayload,
 	LogoutPayload,
@@ -10,6 +11,7 @@ import BaseAPIService from './BaseAPIService';
 import type { APIGatewayType, APIResponse } from './models';
 import type {
 	CreateClientResponse,
+	EditClientResponse,
 	CreateProductResponse,
 	EditProductResponse,
 	FetchClientsResponse,
@@ -73,6 +75,19 @@ const APIGateway = (): APIGatewayType => {
 		return res;
 	};
 
+	const editClient = async (
+		payload: EditClientPayload,
+		headers: Record<string, string>
+	): Promise<APIResponse<EditClientResponse>> => {
+		const res = await fetchPrivate<EditClientPayload, EditClientResponse>(
+			'PUT',
+			'/v1/clients',
+			payload,
+			headers
+		);
+		return res;
+	};
+
 	const getClientTaskStatus = async (
 		clientId: string,
 		headers: Record<string, string>
@@ -118,6 +133,7 @@ const APIGateway = (): APIGatewayType => {
 		fetchClients,
 		clientStatus,
 		createClient,
+		editClient,
 		getClientTaskStatus,
 		createProduct,
 		editProduct

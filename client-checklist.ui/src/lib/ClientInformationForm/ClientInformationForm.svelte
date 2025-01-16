@@ -14,7 +14,7 @@
 	import validationSchema, { type ClientInformationFormType } from './validationSchema';
 	import { AccessType } from '$enums/role';
 
-	const { createClient } = APIGateway();
+	const { createClient, editClient } = APIGateway();
 	let { next, isEdit = false } = $props();
 	let isLoading = $state(false);
 	let disabled = $state(false);
@@ -24,6 +24,7 @@
 	});
 
 	let initialValues = {
+		clientId: '',
 		clientName: '',
 		domain: '',
 		sslCert: '',
@@ -49,7 +50,11 @@
 
 	$effect(() => {
 		if ($steps[Step.ClientInformation]?.formData) {
-			updateInitialValues($steps[Step.ClientInformation]?.formData as ClientInformationFormType);
+			const formData = $steps[Step.ClientInformation]?.formData as ClientInformationFormType;
+			updateInitialValues({
+				...formData,
+				clientId: formData?.clientId || ''
+			});
 		} else {
 			updateInitialValues(initialValues);
 		}
@@ -65,8 +70,6 @@
 			}
 
 			isLoading = true;
-
-            console.log("here 1");
 
 			const {
 				clientName,
@@ -92,8 +95,6 @@
 				socialAccount
 			} = values;
 
-            console.log("here 2");
-
 			const formData = {
 				...values,
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -113,17 +114,24 @@
 				socialAccount
 			};
 
-            console.log("here 3");
+			let response;
+			if (formData.clientId) {
+				response = await editClient(formData, {
+					'x-user-token': $auth?.userToken as string
+				});
+				console.log(response)
+			} else {
+				response = await createClient(formData, {
+					'x-user-token': $auth?.userToken as string
+				});
+			}
 
-			const response: any = await createClient(formData, {
-				'x-user-token': $auth?.userToken as string
-			});
 			isLoading = false;
 
 			if (response.statusCode === StatusCode.Success) {
 				$steps[Step.ClientInformation].formData = {
+					...values,
 					clientId: response.data,
-					...values
 				};
 				next();
 			}

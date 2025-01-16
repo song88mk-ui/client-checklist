@@ -51,6 +51,10 @@ export type CreateClientPayload = {
     socialAccount: string
 };
 
+export type EditClientPayload = {
+    clientId: string
+} & CreateClientPayload;
+
 export type ClientSubtask = {
     assignedTo: string;
     comment: string;
