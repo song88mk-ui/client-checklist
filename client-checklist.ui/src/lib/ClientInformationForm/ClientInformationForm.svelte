@@ -66,8 +66,6 @@
 
 			isLoading = true;
 
-            console.log("here 1");
-
 			const {
 				clientName,
 				domain,
@@ -92,8 +90,6 @@
 				socialAccount
 			} = values;
 
-            console.log("here 2");
-
 			const formData = {
 				...values,
 				serviceTypeId: servicesTypeId[$selectedIntegration],
@@ -112,8 +108,6 @@
 				},
 				socialAccount
 			};
-
-            console.log("here 3");
 
 			const response: any = await createClient(formData, {
 				'x-user-token': $auth?.userToken as string
