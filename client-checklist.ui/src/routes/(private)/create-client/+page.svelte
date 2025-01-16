@@ -3,6 +3,7 @@
 	import BusinessAcceptanceForm from '$lib/BusinessAcceptanceForm.svelte';
 	import ClientInformationForm from '$lib/ClientInformationForm';
 	import ClientLaunchForm from '$lib/ClientLaunch.svelte';
+	import ClientLaunchFeedIntegration from '$lib/ClientLaunchFeedIntegration.svelte';
 	import EndToEndTestForm from '$lib/EndToEndTestForm.svelte';
 	import MTSForm from '$lib/MTSForm.svelte';
 	import OperationsForm from '$lib/OperationsForm.svelte';
@@ -55,7 +56,7 @@
 	{:else if step === 4 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
 		<MTSForm {back} {next} {step}/>
 	{:else if step === 4 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<EndToEndTestForm {back} {next} {step}/>
+		<ClientLaunchFeedIntegration {back} {next} {step}/>
 	{:else if step === 5 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
 		<EndToEndTestForm {back} {next} {step}/>
 	{:else if step === 5 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
@@ -63,12 +64,12 @@
 	{:else if step === 6 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
 		<OperationsForm {back} {next} {step}/>
 	{:else if step === 6 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<BusinessAcceptanceForm {back} {next} {step}/>
+		<ClientLaunchFeedIntegration {back} {next} {step}/>
 	{:else if step === 7 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
 		<BusinessAcceptanceForm {back} {next} {step}/>
 	{:else if step === 7 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<ClientLaunchForm {back} {next} {step}/>
+		<ClientLaunchFeedIntegration {back} {next} {step}/>
 	{:else if step === 8 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-		<ClientLaunchForm {back} {next} {step}/>
+		<ClientLaunchFeedIntegration {back} {next} {step}/>
 	{/if}
 </div>
