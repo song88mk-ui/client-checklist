@@ -1,7 +1,8 @@
 import type { ClientDto } from '$api/GetClients.DTO';
 import services from '$constants/services';
+import type { Client } from '$types/client';
 
-export const toClientViewModel = (client: ClientDto) => {
+export const toClientViewModel = (client: ClientDto): Client => {
 	return {
 		id: client.clientId,
 		companyName: client.clientName,

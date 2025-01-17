@@ -11,6 +11,7 @@
 	import ClientListHeader from '$lib/ClientListHeader.svelte';
 	import type { ClientDto, GetClientsResponseDto } from '$api/GetClients.DTO';
 	import { toClientViewModel } from '$mapper/ClientMapper';
+	import type { Client } from '$types/client';
 
 	const { removeAuth } = AuthService;
 
@@ -38,8 +39,9 @@
 		}
 
 		$clients = (response.data as GetClientsResponseDto)
-				.clients
-				.map((client: ClientDto) => (toClientViewModel(client)));
+			.clients
+			.map((client: ClientDto) => (toClientViewModel(client)))
+			.sort((a: Client, b: Client) => a.companyName.localeCompare(b.companyName));
 	});
 
 	$: if ($deletedClient) {
@@ -49,24 +51,26 @@
 	}
 </script>
 
-{#if isLoading}
-	<div class="flex h-full items-center justify-center">Loading...</div>
-{/if}
-
-{#if error}
-	<div class="flex h-full items-center justify-center">{error}</div>
-{/if}
-
-{#if !isLoading && !error}
-	{#if $deletedClient}
-		<Alert
-			variant="success"
-			message={`The account ${$deletedClient.companyName} has been successfully deleted.`}
-			hasCloseButton={false}
-		/>
+<div class="cc-dashboard-page">
+	{#if isLoading}
+		<div class="flex h-full items-center justify-center">Loading...</div>
 	{/if}
-	<ClientListHeader></ClientListHeader>
-	{#each $clients as client}
-		<ClientRow {client} />
-	{/each}
-{/if}
+
+	{#if error}
+		<div class="flex h-full items-center justify-center">{error}</div>
+	{/if}
+
+	{#if !isLoading && !error}
+		{#if $deletedClient}
+			<Alert
+				variant="success"
+				message={`The account ${$deletedClient.companyName} has been successfully deleted.`}
+				hasCloseButton={false}
+			/>
+		{/if}
+		<ClientListHeader />
+		{#each $clients as client}
+			<ClientRow {client} />
+		{/each}
+	{/if}
+</div>
