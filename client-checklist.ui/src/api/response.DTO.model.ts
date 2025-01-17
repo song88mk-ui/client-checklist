@@ -45,6 +45,8 @@ export type ClientStatusResponse = null;
 
 export type CreateClientResponse = string;
 
+export type EditClientResponse = string;
+
 export type ClientSubtask = {
 	assignedTo: string;
 	comment: string;
