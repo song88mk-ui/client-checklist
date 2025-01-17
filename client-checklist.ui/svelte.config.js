@@ -22,6 +22,7 @@ const config = {
 			$constants: './src/constants',
 			$utils: './src/utils',
 			$services: './src/services',
+			$mapper: './src/mapper',
 		}
 	}
 };
