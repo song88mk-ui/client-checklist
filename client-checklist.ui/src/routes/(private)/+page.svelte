@@ -7,6 +7,7 @@
 	import AuthService from '$services/AuthService';
 	import auth from '$stores/auth';
 	import { clients, deletedClient } from '$stores/client';
+	import type { Client } from '$types/client';
 	import { onMount } from 'svelte';
 	import ClientListHeader from '$lib/ClientListHeader.svelte';
 	import type { ClientDto, GetClientsResponseDto } from '$api/GetClients.DTO';

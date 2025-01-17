@@ -104,6 +104,7 @@
 	});
 </script>
 
+<div class="cc-edit-client-page">
 {#if isLoading}
 	<div class="flex h-full items-center justify-center">Loading...</div>
 {/if}
@@ -113,7 +114,6 @@
 {/if}
 
 {#if !error && !isLoading}
-<div class="cc-edit-client">
 	<div class="mb-10">
 		<h1 class="text-3xl font-bold">{Product[$selectedIntegration]}</h1>
 	</div>
@@ -143,5 +143,5 @@
 			<ClientLaunchForm isEdit {back} {next} {step} />
 		{/if}
 	</div>
-</div>
 {/if}
+</div>

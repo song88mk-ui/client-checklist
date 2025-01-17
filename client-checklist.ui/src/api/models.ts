@@ -2,6 +2,7 @@ import type {
 	CreateClientPayload,
 	CreateProductPayload,
 	EditProductPayload,
+	EditClientPayload,
 	LoginPayload,
 	LogoutPayload,
 	ClientStatusPayload
@@ -10,6 +11,7 @@ import type {
 	CreateClientResponse,
 	CreateProductResponse,
 	EditProductResponse,
+	EditClientResponse,
 	FetchClientsResponse,
 	GetClientTaskStatusResponse,
 	LoginAPIResponse,
@@ -69,6 +71,10 @@ export type APIGatewayType = {
 		payload: CreateClientPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateClientResponse>>;
+	editClient: (
+		payload: EditClientPayload,
+		headers: Record<string, string>
+	) => Promise<APIResponse<EditClientResponse>>;
 	getClientTaskStatus: (
 		clientId: string,
 		headers: Record<string, string>
