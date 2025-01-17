@@ -1,10 +1,8 @@
 <script lang="ts">
 	import APIGateway from '$api/APIGateway';
-	import { goto } from '$app/navigation';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from '$lib/Alert.svelte';
 	import ClientRow from '$lib/ClientRow.svelte';
-	import AuthService from '$services/AuthService';
 	import auth from '$stores/auth';
 	import { clients, deletedClient } from '$stores/client';
 	import type { Client } from '$types/client';
@@ -12,9 +10,7 @@
 	import ClientListHeader from '$lib/ClientListHeader.svelte';
 	import type { ClientDto, GetClientsResponseDto } from '$api/GetClients.DTO';
 	import { toClientViewModel } from '$mapper/ClientMapper';
-	import type { Client } from '$types/client';
-
-	const { removeAuth } = AuthService;
+	import { PageGuard } from '$services/PageGuard';
 
 	let isLoading = false;
 	let error = '';
@@ -29,11 +25,7 @@
 		isLoading = false;
 
 		if (response.error) {
-			const { statusCode } = response.error;
-			if (statusCode === 401) {
-				removeAuth();
-				await goto('/login');
-			}
+			await PageGuard(response.error.statusCode)
 
 			error = ErrorMessages.FetchClientsFailed;
 			return;
