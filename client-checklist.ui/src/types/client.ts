@@ -9,7 +9,7 @@ export type Client = {
 	mainDecisionMaker: string;
 	status: ClientRowStatus;
 	clientToken: string;
-    isActive: boolean;
+	isActive: boolean;
 };
 
 export type Clients = Client[] | [];

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import APIGateway from '$api/APIGateway';
 	import { goto } from '$app/navigation';
-	import services from '$constants/services';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from '$lib/Alert.svelte';
 	import ClientRow from '$lib/ClientRow.svelte';
@@ -10,8 +9,11 @@
 	import { clients, deletedClient } from '$stores/client';
 	import type { Client } from '$types/client';
 	import { onMount } from 'svelte';
+	import ClientListHeader from '$lib/ClientListHeader.svelte';
+	import type { ClientDto, GetClientsResponseDto } from '$api/GetClients.DTO';
+	import { toClientViewModel } from '$mapper/ClientMapper';
+	import type { Client } from '$types/client';
 
-	const { fetchClients } = APIGateway();
 	const { removeAuth } = AuthService;
 
 	let isLoading = false;
@@ -20,7 +22,7 @@
 	onMount(async () => {
 		isLoading = true;
 
-		const response = await fetchClients({
+		const response = await APIGateway().fetchClients({
 			'x-user-token': $auth?.userToken as string
 		});
 
@@ -37,34 +39,11 @@
 			return;
 		}
 
-		$clients = (
-			response.data as {
-				clients: {
-					clientId: string;
-					clientName: string;
-					domain: string;
-					targetLaunchDate: string;
-					serviceTypeId: number;
-					mainDecisionMaker: { name: string };
-					taskStatus: number;
-					clientToken: string;
-					isActive: boolean;
-				}[];
-			}
-		).clients.map((client) => ({
-			id: client.clientId,
-			companyName: client.clientName,
-			domain: client.domain,
-			targetLaunchDate: client.targetLaunchDate,
-			services: services[client.serviceTypeId],
-			mainDecisionMaker: client.mainDecisionMaker.name,
-			status: client.taskStatus,
-			clientToken: client.clientToken,
-			isActive: client.isActive
-		})).sort((a: Client, b: Client) => a.companyName.localeCompare(b.companyName));
+		$clients = (response.data as GetClientsResponseDto)
+			.clients
+			.map((client: ClientDto) => (toClientViewModel(client)))
+			.sort((a: Client, b: Client) => a.companyName.localeCompare(b.companyName));
 	});
-
-	let headerCss = 'pl-3 font-[600] text-[13px] text-[#000] leading-[16.34px]';
 
 	$: if ($deletedClient) {
 		setTimeout(() => {
@@ -74,34 +53,25 @@
 </script>
 
 <div class="cc-dashboard-page">
-    {#if isLoading}
-        <div class="flex h-full items-center justify-center">Loading...</div>
-    {/if}
-    
-    {#if error}
-        <div class="flex h-full items-center justify-center">{error}</div>
-    {/if}
-    
-    {#if !isLoading && !error}
-        {#if $deletedClient}
-            <Alert
-                variant="success"
-                message={`The account ${$deletedClient.companyName} has been successfully deleted.`}
-                hasCloseButton={false}
-            />
-        {/if}
-        <div class="mb-[15px] mt-[15px] flex w-full flex-row items-center">
-            <span class={`${headerCss} w-[10%]`}>Company</span>
-            <span class={`${headerCss} w-[10%]`}>Domain</span>
-            <span class={`${headerCss} w-[10%]`}>Target Launch Date</span>
-            <span class={`${headerCss} w-[30%]`}>Services</span>
-            <span class={`${headerCss} w-[10%]`}>Main Decision Maker</span>
-            <span class={`${headerCss} w-[10%]`}>Status</span>
-            <span class={`${headerCss} w-[10%] text-center`}>Actions</span>
-            <span class={`${headerCss} w-[10%] text-center`}>Enable/Disable</span>
-        </div>
-        {#each $clients as client}
-            <ClientRow {client} />
-        {/each}
-    {/if}
+	{#if isLoading}
+		<div class="flex h-full items-center justify-center">Loading...</div>
+	{/if}
+
+	{#if error}
+		<div class="flex h-full items-center justify-center">{error}</div>
+	{/if}
+
+	{#if !isLoading && !error}
+		{#if $deletedClient}
+			<Alert
+				variant="success"
+				message={`The account ${$deletedClient.companyName} has been successfully deleted.`}
+				hasCloseButton={false}
+			/>
+		{/if}
+		<ClientListHeader />
+		{#each $clients as client}
+			<ClientRow {client} />
+		{/each}
+	{/if}
 </div>
