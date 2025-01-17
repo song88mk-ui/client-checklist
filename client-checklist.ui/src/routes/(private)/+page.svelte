@@ -8,6 +8,7 @@
 	import AuthService from '$services/AuthService';
 	import auth from '$stores/auth';
 	import { clients, deletedClient } from '$stores/client';
+	import type { Client } from '$types/client';
 	import { onMount } from 'svelte';
 
 	const { fetchClients } = APIGateway();
@@ -36,7 +37,21 @@
 			return;
 		}
 
-		$clients = (response.data as { clients: { clientId: string, clientName: string, domain: string, targetLaunchDate: string, serviceTypeId: number, mainDecisionMaker: { name: string }, taskStatus: number, clientToken: string, isActive: boolean }[] }).clients.map((client) => ({
+		$clients = (
+			response.data as {
+				clients: {
+					clientId: string;
+					clientName: string;
+					domain: string;
+					targetLaunchDate: string;
+					serviceTypeId: number;
+					mainDecisionMaker: { name: string };
+					taskStatus: number;
+					clientToken: string;
+					isActive: boolean;
+				}[];
+			}
+		).clients.map((client) => ({
 			id: client.clientId,
 			companyName: client.clientName,
 			domain: client.domain,
@@ -46,7 +61,7 @@
 			status: client.taskStatus,
 			clientToken: client.clientToken,
 			isActive: client.isActive
-		}));
+		})).sort((a: Client, b: Client) => a.companyName.localeCompare(b.companyName));
 	});
 
 	let headerCss = 'pl-3 font-[600] text-[13px] text-[#000] leading-[16.34px]';
@@ -82,7 +97,7 @@
 		<span class={`${headerCss} w-[10%]`}>Main Decision Maker</span>
 		<span class={`${headerCss} w-[10%]`}>Status</span>
 		<span class={`${headerCss} w-[10%] text-center`}>Actions</span>
-        <span class={`${headerCss} w-[10%] text-center`}>Enable/Disable</span>
+		<span class={`${headerCss} w-[10%] text-center`}>Enable/Disable</span>
 	</div>
 	{#each $clients as client}
 		<ClientRow {client} />
