@@ -1,15 +1,15 @@
 <script lang="ts">
-  	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { BAValuesWalletIntegration } from '$constants/productFormValues';
-	import Environment from "$enums/Environment";
-	import ProductForm, { type ProductFormType } from "./ProductForm";
-    import steps from '$stores/steps';
-    import auth from '$stores/auth';
+	import { type EditProductPayload } from '$api/request.DTO.model';
+	import { EndToEndTestValuesWalletIntegration } from '$constants/productFormValues';
+	import Environment from '$enums/Environment';
+	import ProductForm, { type ProductFormType } from '../ProductForm';
+	import steps from '$stores/steps';
+	import auth from '$stores/auth';
 	import { ErrorMessages } from '$enums/ErrorMessages';
-	import Alert from './Alert.svelte';
+	import Alert from '../Alert.svelte';
 	import Step from '$enums/Step';
 	import APIGateway from '$api/APIGateway';
-	import type { ClientInformationFormType } from './ClientInformationForm';
+	import type { ClientInformationFormType } from '../ClientInformationForm';
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 	import { AccessType } from '$enums/role';
@@ -30,8 +30,8 @@
 	const title = $steps[step].title;
 
 	let initialValues = $steps[step].formData as ProductFormType || {
-		[Environment.STAGING]: BAValuesWalletIntegration,
-		[Environment.PRODUCTION]: BAValuesWalletIntegration
+		[Environment.STAGING]: EndToEndTestValuesWalletIntegration,
+		[Environment.PRODUCTION]: EndToEndTestValuesWalletIntegration
 	};
 
 	let error = $state('');
@@ -86,7 +86,7 @@
 		const stagingProduct = createProduct(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.BusinessAcceptanceTest,
+				stepId: Step.EndToEndFunctionalPerformanceTest,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 0,
@@ -100,7 +100,7 @@
 		const productionProduct = createProduct(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.BusinessAcceptanceTest,
+				stepId: Step.EndToEndFunctionalPerformanceTest,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,

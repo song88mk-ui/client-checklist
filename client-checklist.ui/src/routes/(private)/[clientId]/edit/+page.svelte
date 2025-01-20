@@ -1,17 +1,17 @@
 <script lang="ts">
-	import BackOfficeForm from '$lib/BackOfficeForm.svelte';
-	import BusinessAcceptanceForm from '$lib/BusinessAcceptanceForm.svelte';
+	import BackOfficeForm from '$lib/StepsForm/BackOfficeForm.svelte';
+	import BusinessAcceptanceForm from '$lib/StepsForm/BusinessAcceptanceForm.svelte';
 	import ClientInformationForm, {
 		type ClientInformationFormType
 	} from '$lib/ClientInformationForm';
-	import ClientLaunchForm from '$lib/ClientLaunch.svelte';
-	import EndToEndTestForm from '$lib/EndToEndTestForm.svelte';
-	import MTSForm from '$lib/MTSForm.svelte';
-	import OperationsForm from '$lib/OperationsForm.svelte';
+	import ClientLaunchForm from '$lib/StepsForm/ClientLaunch.svelte';
+	import EndToEndTestForm from '$lib/StepsForm/EndToEndTestForm.svelte';
+	import MTSForm from '$lib/StepsForm/MTSForm.svelte';
+	import OperationsForm from '$lib/StepsForm/OperationsForm.svelte';
 	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
-	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
-	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
-	import OddsFeedIntegrationForm from '$lib/OddsFeedIntegrationForm.svelte';
+	import SportsbookPlayerSiteUiuxForm from '$lib/StepsForm/SportsbookPlayerSiteUIUXForm.svelte';
+	import WalletIntegrationForm from '$lib/StepsForm/WalletIntegrationForm.svelte';
+	import OddsFeedIntegrationForm from '$lib/StepsForm/OddsFeedIntegrationForm.svelte';
 	import Product from '$utils/client';
 	import { page } from '$app/stores';
 	import APIGateway from '$api/APIGateway';
