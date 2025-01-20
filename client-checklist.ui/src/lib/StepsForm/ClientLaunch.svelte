@@ -1,36 +1,39 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
-	import Environment from '$enums/Environment';
-	import ProductForm, { type ProductFormType } from '../ProductForm';
-	import steps from '$stores/steps';
-	import auth from '$stores/auth';
-	import Product from '$utils/client';
-	import { ErrorMessages } from '$enums/ErrorMessages';
-	import Alert from '../Alert.svelte';
-	import Step from '$enums/Step';
 	import APIGateway from '$api/APIGateway';
-	import type { ClientInformationFormType } from '../ClientInformationForm';
+	import { type EditProductPayload } from '$api/request.DTO.model';
+	import { goto } from '$app/navigation';
+	import { ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
 	import { servicesTypeId } from '$constants/services';
+	import Environment from '$enums/Environment';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import Step from '$enums/Step';
+	import auth from '$stores/auth';
 	import selectedIntegration from '$stores/integration';
-	import { AccessType } from '$enums/role';
+	import steps from '$stores/steps';
+	import Product from '$utils/client';
+	import Alert from '../Alert.svelte';
+	import type { ClientInformationFormType } from '../ClientInformationForm';
+	import ProductForm, { type ProductFormType } from '../ProductForm';
 
 	const { createProduct, editProduct } = APIGateway();
 	const {
 		back,
 		step,
+		isSuperAdmin,
 		isEdit = false
 	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
+		isSuperAdmin?: boolean;
 		isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
+	const finishFormButtonLabel: string =
+		isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
 
-	let initialValues = $steps[step].formData as ProductFormType || {
+	let initialValues = ($steps[step].formData as ProductFormType) || {
 		[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
 		[Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
 	};
@@ -41,13 +44,13 @@
 	let disabled = $state(false);
 
 	$effect(() => {
-		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+		disabled = isEdit && !isSuperAdmin;
 	});
 
 	const handleSubmit = async (values: ProductFormType) => {
 		if (disabled) {
 			setTimeout(() => {
-				goto("/");
+				goto('/');
 			}, 3000);
 			return;
 		}
@@ -68,7 +71,7 @@
 		}
 
 		setTimeout(() => {
-			goto("/");
+			goto('/');
 		}, 3000);
 
 		const [stagingResponse, productionResponse] = response;
@@ -118,7 +121,7 @@
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
 			message = `${Product[$selectedIntegration]} has been successfully created`;
 		}
 		return response;
@@ -145,10 +148,10 @@
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
 			message = `${Product[$selectedIntegration]} has been successfully updated`;
 		}
-		
+
 		return response;
 	};
 
@@ -174,5 +177,5 @@
 {/if}
 
 <div class="cc-client-launch">
-	<ProductForm {step} {title} {initialValues} {back} {isLoading} {isEdit} {disabled} onSubmit={handleSubmit} />
+	<ProductForm {finishFormButtonLabel} {title} {initialValues} {back} {isLoading} {disabled} onSubmit={handleSubmit} />
 </div>

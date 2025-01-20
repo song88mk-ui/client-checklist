@@ -26,12 +26,14 @@
 	import Step from '$enums/Step';
 	import groupedByStepId from '$utils/groupedByStepId';
 	import type { ProductFormType } from '$lib/ProductForm';
+	import { AccessType } from '$enums/role';
 
 	const { getClientTaskStatus } = APIGateway();
 
 	let step = $state(0);
 	let error = $state('');
 	let isLoading = $state(true);
+    let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
 
 	const back = () => {
 		if (step > 0) {
@@ -124,23 +126,23 @@
 		{#if $steps[step].stepId === Step.ClientInformation}
 			<ClientInformationForm isEdit {next} />
 		{:else if $steps[step].stepId === Step.BackOffice}
-			<BackOfficeForm isEdit {back} {next} {step} />
+			<BackOfficeForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.WalletIntegration}
-			<WalletIntegrationForm isEdit {back} {next} {step} />
+			<WalletIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.OddsfeedIntegration}
-			<OddsFeedIntegrationForm isEdit {back} {next} {step} />
+			<OddsFeedIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.SportsbookPlayerSite}
-			<SportsbookPlayerSiteUiuxForm isEdit {back} {next} {step} />
+			<SportsbookPlayerSiteUiuxForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.ManagedTradingServices}
-			<MTSForm isEdit {back} {next} {step} />
+			<MTSForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.EndToEndFunctionalPerformanceTest}
-			<EndToEndTestForm isEdit {back} {next} {step} />
+			<EndToEndTestForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.Operations}
-			<OperationsForm isEdit {back} {next} {step} />
+			<OperationsForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.BusinessAcceptanceTest}
-			<BusinessAcceptanceForm isEdit {back} {next} {step} />
+			<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.ClientLaunch}
-			<ClientLaunchForm isEdit {back} {next} {step} />
+			<ClientLaunchForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{/if}
 	</div>
 {/if}
