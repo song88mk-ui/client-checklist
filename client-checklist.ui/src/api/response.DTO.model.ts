@@ -1,5 +1,4 @@
 import type Role from '$enums/role';
-import type { ClientSubtask } from './request.DTO.model';
 import type Services from '$enums/Services';
 
 export type LoginAPIResponse = {
@@ -46,10 +45,20 @@ export type ClientStatusResponse = null;
 
 export type CreateClientResponse = string;
 
+export type EditClientResponse = string;
+
+export type ClientSubtask = {
+	assignedTo: string;
+	comment: string;
+	subtaskId: number;
+	subtaskName: string;
+	taskStatus: number;
+}
+
 export type ClientStep = {
 	clientStepId: number;
 	clientId: string;
-	stepId: number;
+	step: number;
 	stepName: string;
 	serviceTypeId: Services;
 	environment: number;

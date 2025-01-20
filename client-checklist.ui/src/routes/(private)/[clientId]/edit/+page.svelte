@@ -1,17 +1,18 @@
 <script lang="ts">
-	import BackOfficeForm from '$lib/BackOfficeForm.svelte';
-	import BusinessAcceptanceForm from '$lib/BusinessAcceptanceForm.svelte';
+	import BackOfficeForm from '$lib/StepsForm/BackOfficeForm.svelte';
+	import BusinessAcceptanceForm from '$lib/StepsForm/BusinessAcceptanceForm.svelte';
 	import ClientInformationForm, {
 		type ClientInformationFormType
 	} from '$lib/ClientInformationForm';
-	import ClientLaunchForm from '$lib/ClientLaunch.svelte';
-	import EndToEndTestForm from '$lib/EndToEndTestForm.svelte';
-	import MTSForm from '$lib/MTSForm.svelte';
-	import OperationsForm from '$lib/OperationsForm.svelte';
+	import ClientLaunchForm from '$lib/StepsForm/ClientLaunch.svelte';
+	import EndToEndTestForm from '$lib/StepsForm/EndToEndTestForm.svelte';
+	import MTSForm from '$lib/StepsForm/MTSForm.svelte';
+	import OperationsForm from '$lib/StepsForm/OperationsForm.svelte';
 	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
-	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
-	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
-	import OddsFeedIntegrationForm from '$lib/OddsFeedIntegrationForm.svelte';
+	import SportsbookPlayerSiteUiuxForm from '$lib/StepsForm/SportsbookPlayerSiteUIUXForm.svelte';
+	import WalletIntegrationForm from '$lib/StepsForm/WalletIntegrationForm.svelte';
+	import OddsFeedIntegrationForm from '$lib/StepsForm/OddsFeedIntegrationForm.svelte';
+	import Product from '$utils/client';
 	import { page } from '$app/stores';
 	import APIGateway from '$api/APIGateway';
 	import auth from '$stores/auth';
@@ -84,7 +85,15 @@
 			} as ClientInformationFormType;
 		}
 		if (clientSteps.length) {
-			const stepData = groupedByStepId(clientSteps);
+			const formattedClientSteps = clientSteps.map((step) => ({
+				...step,
+				clientSubtasks: step.clientSubtasks.map((subtask) => ({
+					...subtask,
+					taskStatusId: subtask.taskStatus
+				}))
+			}));
+			
+			const stepData = groupedByStepId(formattedClientSteps);
 
 			$steps.map((step) => {
 				if (stepData[step.stepId]) {
@@ -95,6 +104,7 @@
 	});
 </script>
 
+<div class="cc-edit-client-page">
 {#if isLoading}
 	<div class="flex h-full items-center justify-center">Loading...</div>
 {/if}
@@ -112,25 +122,26 @@
 	</div>
 	<div class="mb-10">
 		{#if $steps[step].stepId === Step.ClientInformation}
-			<ClientInformationForm {next} />
+			<ClientInformationForm isEdit {next} />
 		{:else if $steps[step].stepId === Step.BackOffice}
-			<BackOfficeForm {back} {next} {step} />
+			<BackOfficeForm isEdit {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.WalletIntegration}
-			<WalletIntegrationForm {back} {next} {step} />
+			<WalletIntegrationForm isEdit {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.OddsfeedIntegration}
-			<OddsFeedIntegrationForm {back} isEdit {next} {step} />
+			<OddsFeedIntegrationForm isEdit {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.SportsbookPlayerSite}
-			<SportsbookPlayerSiteUiuxForm {back} {next} {step} />
+			<SportsbookPlayerSiteUiuxForm isEdit {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.ManagedTradingServices}
-			<MTSForm {back} {next} {step} />
+			<MTSForm isEdit {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.EndToEndFunctionalPerformanceTest}
-			<EndToEndTestForm {back} {next} {step} />
+			<EndToEndTestForm isEdit {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.Operations}
-			<OperationsForm {back} {next} {step} />
+			<OperationsForm isEdit {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.BusinessAcceptanceTest}
-			<BusinessAcceptanceForm {back} {next} {step} />
+			<BusinessAcceptanceForm isEdit {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.ClientLaunch}
-			<ClientLaunchForm {back} {next} {step} />
+			<ClientLaunchForm isEdit {back} {next} {step} />
 		{/if}
 	</div>
 {/if}
+</div>

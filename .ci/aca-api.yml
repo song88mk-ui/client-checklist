@@ -26,10 +26,10 @@ variables:
 
 stages:
   - stage: build
-    displayName: Docker Build
+    displayName: Build
     jobs:
       - job: docker_build
-        displayName: Build App via Docker
+        displayName: Docker Build
         steps:
           - checkout: self
             clean: true
@@ -41,7 +41,7 @@ stages:
             inputs:
               targetType: inline
               script: |
-                PKG_VERSION=v$(jq -r '.version' client-checklist-api/.version)
+                PKG_VERSION=v$(jq -r '.version' client-checklist.api/.version)
                 BUILD_NUMBER="Client-Checklist.API-${PKG_VERSION}.${BUILD_BUILDID}"
                 echo "##vso[task.setvariable variable=VERSION]${PKG_VERSION}"
                 echo "##vso[build.updatebuildnumber]${BUILD_NUMBER}"
@@ -66,8 +66,8 @@ stages:
     dependsOn: build
     displayName: Staging - Deploy ACA
     jobs:
-      - deployment: Deployment
-        displayName: Deploy to ACA
+      - deployment: staging_deployment_stage
+        displayName: Staging::deployment.ACA
         pool:
           vmImage: "ubuntu-latest"
         environment:
@@ -123,8 +123,8 @@ stages:
     variables:
       - group: PRODUCTION_TRIGGER_STAGE1 # requires approval
     jobs:
-      - deployment: Deployment
-        displayName: Deploy to ACA
+      - deployment: production_deployment_stage
+        displayName: Production::deployment.ACA
         pool:
           vmImage: "ubuntu-latest"
         environment:

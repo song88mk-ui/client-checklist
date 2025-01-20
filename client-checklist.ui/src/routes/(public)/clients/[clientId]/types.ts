@@ -17,7 +17,8 @@ export type ClientStep = {
     assignedTo: string;
     sortOrder: number;
     environment: number;
-    clientSubtasks: ClientSubtask[]
+    clientSubtasks: ClientSubtask[],
+    isExpanded: boolean;
 }
 
 export type Manager = {
@@ -37,7 +38,7 @@ export type ClientInformation = {
     serviceTypeId: number;
     sslCertificate: string;
     targetLaunchDate: string;
-    taskStatus: number;
+    taskStatusId: number;
     technicalManager: Manager
     clientSteps: ClientStep[];
 };

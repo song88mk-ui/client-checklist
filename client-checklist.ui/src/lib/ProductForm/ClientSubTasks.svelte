@@ -60,6 +60,7 @@
 					<StatusSelect
 						value={subTask.taskStatusId}
 						onSelectStatus={(status) => handleSelectStatus(index, status)}
+                        elementId={`${name}-${subTask.subtaskName}-status`}
 						{disabled}
 					/>
 				</td>

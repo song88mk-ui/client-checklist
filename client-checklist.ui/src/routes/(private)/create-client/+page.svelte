@@ -1,16 +1,16 @@
 <script lang="ts">
-	import BackOfficeForm from '$lib/BackOfficeForm.svelte';
-	import BusinessAcceptanceForm from '$lib/BusinessAcceptanceForm.svelte';
+	import BackOfficeForm from '$lib/StepsForm/BackOfficeForm.svelte';
+	import BusinessAcceptanceForm from '$lib/StepsForm/BusinessAcceptanceForm.svelte';
 	import ClientInformationForm from '$lib/ClientInformationForm';
-	import ClientLaunchForm from '$lib/ClientLaunch.svelte';
-	import EndToEndTestForm from '$lib/EndToEndTestForm.svelte';
-	import MTSForm from '$lib/MTSForm.svelte';
-	import OperationsForm from '$lib/OperationsForm.svelte';
+	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
+	import EndToEndTestForm from '$lib/StepsForm/EndToEndTestForm.svelte';
+	import MTSForm from '$lib/StepsForm/MTSForm.svelte';
+	import OperationsForm from '$lib/StepsForm/OperationsForm.svelte';
 	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import ProgressStep from '$lib/ProgressStep/ProgressStep.svelte';
-	import SportsbookPlayerSiteUiuxForm from '$lib/SportsbookPlayerSiteUIUXForm.svelte';
-	import WalletIntegrationForm from '$lib/WalletIntegrationForm.svelte';
-	import OddsFeedIntegrationForm from '$lib/OddsFeedIntegrationForm.svelte';
+	import SportsbookPlayerSiteUiuxForm from '$lib/StepsForm/SportsbookPlayerSiteUIUXForm.svelte';
+	import WalletIntegrationForm from '$lib/StepsForm/WalletIntegrationForm.svelte';
+	import OddsFeedIntegrationForm from '$lib/StepsForm/OddsFeedIntegrationForm.svelte';
 	import selectedIntegration from '$stores/integration';
 	import services, { servicesTypeId } from '$constants/services';
 	import steps from '$stores/steps';
@@ -40,35 +40,46 @@
 	<ProgressStep bind:step />
 </div>
 <div class="mb-10">
-	{#if step === 0}
-		<ClientInformationForm {next} />
-	{:else if step === 1}
-		<BackOfficeForm {back} {next} {step}/>
-	{:else if step === 2 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-		<WalletIntegrationForm {back} {next} {step}/>
-	{:else if step === 2 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<OddsFeedIntegrationForm {back} {next} {step} />
-    {:else if step === 3  && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-        <SportsbookPlayerSiteUiuxForm {back} {next} {step} />
-	{:else if step === 3  && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<MTSForm {back} {next} {step}/>
-	{:else if step === 4 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-		<MTSForm {back} {next} {step}/>
-	{:else if step === 4 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<EndToEndTestForm {back} {next} {step}/>
-	{:else if step === 5 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-		<EndToEndTestForm {back} {next} {step}/>
-	{:else if step === 5 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<OperationsForm {back} {next} {step}/>
-	{:else if step === 6 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-		<OperationsForm {back} {next} {step}/>
-	{:else if step === 6 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<BusinessAcceptanceForm {back} {next} {step}/>
-	{:else if step === 7 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-		<BusinessAcceptanceForm {back} {next} {step}/>
-	{:else if step === 7 && $selectedIntegration === IntegrationType.FEED_INTEGRATION}
-		<ClientLaunchForm {back} {next} {step}/>
-	{:else if step === 8 && $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
-		<ClientLaunchForm {back} {next} {step}/>
+
+	{#if $selectedIntegration === IntegrationType.FEED_INTEGRATION}
+		{#if step === 0}
+			<ClientInformationForm {next} />
+		{:else if step === 1}
+			<BackOfficeForm {back} {next} {step}/>
+		{:else if step === 2}
+			<OddsFeedIntegrationForm {back} {next} {step} />
+		{:else if step === 3 }
+			<MTSForm {back} {next} {step}/>
+		{:else if step === 4}
+			<ClientLaunchFeedIntegration {back} {next} {step}/>
+		{:else if step === 5}
+			<OperationsForm {back} {next} {step}/>
+		{:else if step === 6}
+			<ClientLaunchFeedIntegration {back} {next} {step}/>
+		{:else if step === 7}
+			<ClientLaunchFeedIntegration {back} {next} {step}/>
+		{/if}
+	{/if}
+
+	{#if $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
+		{#if step === 0}
+			<ClientInformationForm {next} />
+		{:else if step === 1}
+			<BackOfficeForm {back} {next} {step}/>
+		{:else if step === 2}
+			<WalletIntegrationForm {back} {next} {step}/>
+		{:else if step === 3 }
+			<SportsbookPlayerSiteUiuxForm {back} {next} {step} />
+		{:else if step === 4}
+			<MTSForm {back} {next} {step}/>
+		{:else if step === 5 }
+			<EndToEndTestForm {back} {next} {step}/>
+		{:else if step === 6 }
+			<OperationsForm {back} {next} {step}/>
+		{:else if step === 7}
+			<BusinessAcceptanceForm {back} {next} {step}/>
+		{:else if step === 8}
+			<ClientLaunchFeedIntegration {back} {next} {step}/>
+		{/if}
 	{/if}
 </div>

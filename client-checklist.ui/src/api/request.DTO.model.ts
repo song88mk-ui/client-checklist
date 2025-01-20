@@ -30,7 +30,8 @@ export type CreateClientPayload = {
     financeManagerName: string,
     financeManagerNumber: string,
     languages: string[],
-    launchDate: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    launchDate: any,
     mainDecisionMaker: Manager,
     mainDecisionMakerName: string,
     mainDecisionMakerNumber: string,
@@ -49,6 +50,10 @@ export type CreateClientPayload = {
     technicalManagerNumber: string,
     socialAccount: string
 };
+
+export type EditClientPayload = {
+    clientId: string
+} & CreateClientPayload;
 
 export type ClientSubtask = {
     assignedTo: string;
