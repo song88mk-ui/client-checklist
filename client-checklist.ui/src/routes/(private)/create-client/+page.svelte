@@ -12,7 +12,7 @@
 	import WalletIntegrationForm from '$lib/StepsForm/WalletIntegrationForm.svelte';
 	import OddsFeedIntegrationForm from '$lib/StepsForm/OddsFeedIntegrationForm.svelte';
 	import selectedIntegration from '$stores/integration';
-	import Product from '$utils/client';
+	import services, { servicesTypeId } from '$constants/services';
 	import steps from '$stores/steps';
 	import IntegrationType from "$enums/integrationType";
 
@@ -34,7 +34,7 @@
 </script>
 
 <div class="mb-10">
-	<h1 class="text-3xl font-bold">{Product[$selectedIntegration]}</h1>
+	<h1 class="text-3xl font-bold">{services[servicesTypeId[$selectedIntegration]]}</h1>
 </div>
 <div class="mx-auto mb-10 max-w-screen-lg">
 	<ProgressStep bind:step />

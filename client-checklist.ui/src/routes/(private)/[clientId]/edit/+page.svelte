@@ -19,7 +19,7 @@
 	import { onMount } from 'svelte';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import type { GetClientTaskStatusResponse } from '$api/response.DTO.model';
-	import { servicesType } from '$constants/services';
+	import services, { servicesType, servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import steps from '$stores/steps';
@@ -115,7 +115,7 @@
 
 {#if !error && !isLoading}
 	<div class="mb-10">
-		<h1 class="text-3xl font-bold">{Product[$selectedIntegration]}</h1>
+		<h1 class="text-3xl font-bold">{services[servicesTypeId[$selectedIntegration]]}</h1>
 	</div>
 	<div class="mx-auto mb-10 max-w-screen-lg">
 		<ProgressStep bind:step />
