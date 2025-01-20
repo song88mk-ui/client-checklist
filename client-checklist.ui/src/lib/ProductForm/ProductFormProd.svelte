@@ -6,13 +6,14 @@
 	import Alert from '../Alert.svelte';
 	import hasValue from '$utils/hasValue';
 
-	let { initialValues, back, isLoading, onSubmit,step, disabled = false } = $props<{
+	let { initialValues, back, isLoading, onSubmit, finishFormButtonLabel, step, disabled = false } = $props<{
 		title: string;
 		initialValues: ProductFormType;
+		onSubmit: (values: ProductFormType) => void;
+        finishFormButtonLabel: string;
 		back?: () => void;
 		step?: () => number;
 		isLoading?: boolean;
-		onSubmit: (values: ProductFormType) => void;
 		disabled?: boolean;
 	}>();
 	let errorMsg = $state('')
@@ -76,7 +77,7 @@
 			<button
 				onclick={()=>window.scrollTo({ top: 0, behavior: 'smooth' })}
 				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
-				disabled={isLoading}>{step ? 'Create': 'Next'}</button
+				disabled={isLoading}>{finishFormButtonLabel}</button
 			>
 		</div>
 	</div>
