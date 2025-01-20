@@ -49,6 +49,7 @@
 					<Alert variant="error" message={errorMsg} hasCloseButton={false} />
 			</div>
 	{/if}
+
 	<ClientTask
 		title={`${title} (${Environment.STAGING})`}
 		name={Environment.STAGING}

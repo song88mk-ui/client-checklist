@@ -1,21 +1,20 @@
 <script lang="ts">
 	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { BackOfficeValues } from '$constants/productFormValues';
-	import auth from '$stores/auth';
+	import { SportsbookPlayerSiteValues } from '$constants/productFormValues';
 	import Environment from '$enums/Environment';
-	import ProductForm, { type ProductFormType } from './ProductForm';
-	import selectedIntegration from '$stores/integration';
-	import APIGateway from '$api/APIGateway';
-	import { ErrorMessages } from '$enums/ErrorMessages';
-	import Alert from './Alert.svelte';
-	import Step from '$enums/Step';
-	import type { ClientInformationFormType } from './ClientInformationForm';
+	import ProductForm, { type ProductFormType } from '../ProductForm';
 	import steps from '$stores/steps';
+	import auth from '$stores/auth';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import Alert from '../Alert.svelte';
+	import Step from '$enums/Step';
+	import APIGateway from '$api/APIGateway';
+	import type { ClientInformationFormType } from '../ClientInformationForm';
 	import { servicesTypeId } from '$constants/services';
+	import selectedIntegration from '$stores/integration';
 	import { AccessType } from '$enums/role';
 
 	const { createProduct, editProduct } = APIGateway();
-
 	const {
 		back,
 		next,
@@ -31,8 +30,8 @@
 	const title = $steps[step].title;
 
 	let initialValues = ($steps[step].formData as ProductFormType) || {
-		[Environment.STAGING]: BackOfficeValues,
-		[Environment.PRODUCTION]: BackOfficeValues
+		[Environment.STAGING]: SportsbookPlayerSiteValues,
+		[Environment.PRODUCTION]: SportsbookPlayerSiteValues
 	};
 
 	let error = $state('');
@@ -48,13 +47,14 @@
 			next();
 			return;
 		}
-
 		isLoading = true;
 
-		const response =
-			values[Environment.STAGING].id && values[Environment.PRODUCTION].id
-				? await handleEditProduct(values)
-				: await handleCreateProduct(values);
+		let response;
+		if (values[Environment.STAGING].id && values[Environment.PRODUCTION].id) {
+			response = await handleEditProduct(values);
+		} else {
+			response = await handleCreateProduct(values);
+		}
 
 		isLoading = false;
 
@@ -85,7 +85,7 @@
 		const stagingProduct = createProduct(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.BackOffice,
+				stepId: Step.SportsbookPlayerSite,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 0,
@@ -99,7 +99,7 @@
 		const productionProduct = createProduct(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.BackOffice,
+				stepId: Step.SportsbookPlayerSite,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,
@@ -155,4 +155,4 @@
 	</div>
 {/if}
 
-<ProductForm {title} {initialValues} {back} {isLoading} {disabled} onSubmit={handleSubmit} />
+<ProductForm {title} {initialValues} {back} {disabled} onSubmit={handleSubmit} />
