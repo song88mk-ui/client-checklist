@@ -41,7 +41,7 @@
 		if (!Array.isArray(items) || items.length === 0) {
 			return 0;
 		}
-		const totalItems = items.length;
+		const totalItems = items.filter((item) => item > 0).length;
 		const itemCount = items.reduce((count, item) => {
 			return item === itemToCheck ? count + 1 : count;
 		}, 0);
