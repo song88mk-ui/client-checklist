@@ -102,7 +102,7 @@
 		const stagingProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: serviceStep.ClientLaunch,
+				stepId: step,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 0,
@@ -116,7 +116,7 @@
 		const productionProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: serviceStep.ClientLaunch,
+				stepId: step,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,
@@ -129,7 +129,7 @@
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
 		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
-			message = 'The account Song88 has been successfully created';
+			message = 'The account has been successfully created';
 			setTimeout(() => {
 				goto('/');
 			}, 3000);
@@ -153,7 +153,12 @@
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-
+		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
+			message = 'The account has been successfully updated';
+			setTimeout(() => {
+				goto('/');
+			}, 3000);
+		}
 		return response;
 	};
 

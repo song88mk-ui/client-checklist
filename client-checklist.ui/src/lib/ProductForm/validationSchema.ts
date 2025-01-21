@@ -44,7 +44,7 @@ const clientTaskFormSchema = yup.object().shape({
 	targetDateCompleted: yup.mixed().nullable(),
 	actualDateCompleted: yup.mixed().nullable(),
 	clientSubTasks: clientSubTaskFormSchema
-});
+}).optional();
 
 const productFormSchema = yup.object().shape({
 	[Environment.STAGING]: clientTaskFormSchema,
