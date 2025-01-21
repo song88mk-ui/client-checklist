@@ -19,7 +19,7 @@
 
 	let queryToken = searchParams.get('token');
 
-	const { getClientTaskStatus } = APIGateway();
+	const { getClient } = APIGateway();
 	let client: ClientInformation | null = $state(null);
 	let clientProgress: ClientProgressStatus = $state({
 		notStarted: 0,
@@ -87,7 +87,7 @@
 				LocalStorage.setValue('firstView', 'true');
 			}
 
-			const response = await getClientTaskStatus(clientId, {
+			const response = await getClient(clientId, {
 				'x-user-token': queryToken ? queryToken : ''
 			});
 

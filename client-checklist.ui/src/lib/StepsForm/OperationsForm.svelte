@@ -40,7 +40,7 @@
 	let error = $state('');
 	let isLoading = $state(false);
 	let disabled = $state(false);
-	const serviceStep = Step[IntegrationType.FEED_INTEGRATION]
+	const serviceStep = Step[$selectedIntegration]
 
 	$effect(() => {
 		disabled = isEdit && !isSuperAdmin;

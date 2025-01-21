@@ -27,13 +27,15 @@
 	import groupedByStepId from '$utils/groupedByStepId';
 	import type { ProductFormType } from '$lib/ProductForm';
 	import { AccessType } from '$enums/role';
+	import IntegrationType from '$enums/integrationType';
+	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
 
-	const { updateStep } = APIGateway();
+	const { getClient } = APIGateway();
 
 	let step = $state(0);
 	let error = $state('');
 	let isLoading = $state(true);
-    let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
+	let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
 
 	const back = () => {
 		if (step > 0) {
@@ -45,8 +47,10 @@
 		step++;
 	};
 
+	const serviceStep = Step[$selectedIntegration];
+
 	onMount(async () => {
-		const response = await getClientTaskStatus($page.params.clientId, {
+		const response = await getClient($page.params.clientId, {
 			'x-user-token': $auth?.userToken || ''
 		});
 
@@ -62,7 +66,7 @@
 		if (client) {
 			$selectedIntegration = servicesType[client.serviceTypeId];
 			$steps = INTEGRATION_STEPS[$selectedIntegration];
-			$steps[Step.ClientInformation].formData = {
+			$steps[serviceStep.ClientInformation].formData = {
 				clientId: client.clientId,
 				clientName: client.clientName,
 				domain: client.domain,
@@ -94,7 +98,7 @@
 					taskStatusId: subtask.taskStatus
 				}))
 			}));
-			
+
 			const stepData = groupedByStepId(formattedClientSteps);
 
 			$steps.map((step) => {
@@ -107,43 +111,63 @@
 </script>
 
 <div class="cc-edit-client-page">
-{#if isLoading}
-	<div class="flex h-full items-center justify-center">Loading...</div>
-{/if}
+	{#if isLoading}
+		<div class="flex h-full items-center justify-center">Loading...</div>
+	{/if}
 
-{#if error}
-	<div class="flex h-full items-center justify-center">{error}</div>
-{/if}
+	{#if error}
+		<div class="flex h-full items-center justify-center">{error}</div>
+	{/if}
 
-{#if !error && !isLoading}
-	<div class="mb-10">
-		<h1 class="text-3xl font-bold">{services[servicesTypeId[$selectedIntegration]]}</h1>
-	</div>
-	<div class="mx-auto mb-10 max-w-screen-lg">
-		<ProgressStep bind:step />
-	</div>
-	<div class="mb-10">
-		{#if $steps[step].stepId === Step.ClientInformation}
-			<ClientInformationForm isEdit {next} />
-		{:else if $steps[step].stepId === Step.BackOffice}
-			<BackOfficeForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{:else if $steps[step].stepId === Step.WalletIntegration}
-			<WalletIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{:else if $steps[step].stepId === Step.OddsfeedIntegration}
-			<OddsFeedIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{:else if $steps[step].stepId === Step.SportsbookPlayerSite}
-			<SportsbookPlayerSiteUiuxForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{:else if $steps[step].stepId === Step.ManagedTradingServices}
-			<MTSForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{:else if $steps[step].stepId === Step.EndToEndFunctionalPerformanceTest}
-			<EndToEndTestForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{:else if $steps[step].stepId === Step.Operations}
-			<OperationsForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{:else if $steps[step].stepId === Step.BusinessAcceptanceTest}
-			<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{:else if $steps[step].stepId === Step.ClientLaunch}
-			<ClientLaunchForm isEdit {isSuperAdmin} {back} {next} {step} />
-		{/if}
-	</div>
-{/if}
+	{#if !error && !isLoading}
+		<div class="mb-10">
+			<h1 class="text-3xl font-bold">{services[servicesTypeId[$selectedIntegration]]}</h1>
+		</div>
+		<div class="mx-auto mb-10 max-w-screen-lg">
+			<ProgressStep bind:step />
+		</div>
+		<div class="mb-10">
+			{#if $selectedIntegration === IntegrationType.FEED_INTEGRATION}
+				{#if step === 0}
+					<ClientInformationForm isEdit {next} />
+				{:else if step === 1}
+					<BackOfficeForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 2}
+					<OddsFeedIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 3 }
+					<MTSForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 4}
+					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 5}
+					<OperationsForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 6}
+					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 7}
+					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} isLaunch={true} {back} {next} {step} />
+				{/if}
+			{/if}
+
+			{#if $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
+				{#if step === 0}
+					<ClientInformationForm isEdit {next} />
+				{:else if step === 1}
+					<BackOfficeForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 2}
+					<WalletIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 3 }
+					<SportsbookPlayerSiteUiuxForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 4}
+					<MTSForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 5 }
+					<EndToEndTestForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 6 }
+					<OperationsForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 7}
+					<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />
+				{:else if step === 8}
+					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} isLaunch={true} {back} {next} {step} />
+				{/if}
+			{/if}
+		</div>
+	{/if}
 </div>
