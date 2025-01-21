@@ -14,7 +14,7 @@
 	import { servicesTypeId } from '$constants/services';
 	import { AccessType } from '$enums/role';
 
-	const { createProduct, editProduct } = APIGateway();
+	const { createStep, updateStep } = APIGateway();
 
 	const {
 		back,
@@ -38,6 +38,7 @@
 	let error = $state('');
 	let isLoading = $state(false);
 	let disabled = $state(false);
+	const serviceStep = Step[$selectedIntegration]
 
 	$effect(() => {
 		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
@@ -58,7 +59,7 @@
 
 		isLoading = false;
 
-		if (response.some((res) => res.error)) {
+		if (response.some((res: any) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
 			return;
 		}
@@ -81,11 +82,11 @@
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {
-		const clientFormData = $steps[Step.ClientInformation].formData;
-		const stagingProduct = createProduct(
+		const clientFormData = $steps[serviceStep.ClientInformation].formData;
+		const stagingProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.BackOffice,
+				stepId: serviceStep.BackOffice,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 0,
@@ -96,10 +97,10 @@
 			}
 		);
 
-		const productionProduct = createProduct(
+		const productionProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.BackOffice,
+				stepId: serviceStep.BackOffice,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,
@@ -116,7 +117,7 @@
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
-		const stagingProduct = editProduct(
+		const stagingProduct = updateStep(
 			{
 				...values[Environment.STAGING],
 				stepName: ''
@@ -125,7 +126,7 @@
 				'x-user-token': $auth?.userToken as string
 			}
 		);
-		const productionProduct = editProduct(
+		const productionProduct = updateStep(
 			{
 				...values[Environment.PRODUCTION],
 				stepName: ''

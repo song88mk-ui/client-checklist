@@ -15,7 +15,7 @@
 		step?: () => number;
 		isLoading?: boolean;
 		onSubmit: (values: ProductFormType) => void;
-        isEdit: boolean;
+        isEdit?: boolean;
 		disabled?: boolean;
 	}>();
 

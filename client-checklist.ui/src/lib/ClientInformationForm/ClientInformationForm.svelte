@@ -14,7 +14,7 @@
 	import validationSchema, { type ClientInformationFormType } from './validationSchema';
 	import { AccessType } from '$enums/role';
 
-	const { createClient, editClient } = APIGateway();
+	const { createClient, updateClient } = APIGateway();
 	let { next, isEdit = false } = $props();
 	let isLoading = $state(false);
 	let disabled = $state(false);
@@ -48,9 +48,11 @@
 		socialAccount: ''
 	};
 
+	const serviceSteps = Step[$selectedIntegration]
+
 	$effect(() => {
-		if ($steps[Step.ClientInformation]?.formData) {
-			const formData = $steps[Step.ClientInformation]?.formData as ClientInformationFormType;
+		if ($steps[serviceSteps.ClientInformation]?.formData) {
+			const formData = $steps[serviceSteps.ClientInformation]?.formData as ClientInformationFormType;
 			updateInitialValues({
 				...formData,
 				clientId: formData?.clientId || ''
@@ -72,14 +74,10 @@
 			isLoading = true;
 
 			const {
-				clientName,
-				domain,
-				sslCert,
 				languages,
 				currencies,
 				sports,
 				markets,
-				launchDate,
 				mainDecisionMakerName,
 				mainDecisionMakerNumber,
 				financeManagerName,
@@ -116,7 +114,7 @@
 
 			let response;
 			if (formData.clientId) {
-				response = await editClient(formData, {
+				response = await updateClient(formData, {
 					'x-user-token': $auth?.userToken as string
 				});
 				console.log(response)
@@ -129,14 +127,14 @@
 			isLoading = false;
 
 			if (response.statusCode === StatusCode.Success) {
-				$steps[Step.ClientInformation].formData = {
+				$steps[serviceSteps.ClientInformation].formData = {
 					...values,
 					clientId: response.data,
 				};
 				next();
 			}
 
-			if ((response.error as any)?.statusCode === StatusCode.UnAuthorized) {
+			if ((response.error)?.statusCode === StatusCode.UnAuthorized) {
 				$auth = null;
 				LocalStorage.removeValue('userToken');
 				LocalStorage.removeValue('accessType');

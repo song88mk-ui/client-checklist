@@ -15,6 +15,7 @@
 	import Product from '$utils/client';
 	import steps from '$stores/steps';
 	import IntegrationType from "$enums/integrationType";
+	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 
 	let step = $state(0);
 
@@ -31,6 +32,8 @@
 	$effect(() => {
 		$steps = INTEGRATION_STEPS[$selectedIntegration];
 	})
+
+
 </script>
 
 <div class="mb-10">
@@ -79,7 +82,7 @@
 		{:else if step === 7}
 			<BusinessAcceptanceForm {back} {next} {step}/>
 		{:else if step === 8}
-			<ClientLaunchFeedIntegration {back} {next} {step}/>
+			<ClientLaunchWalletIntegration {back} {next} {step}/>
 		{/if}
 	{/if}
 </div>

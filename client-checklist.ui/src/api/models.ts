@@ -62,8 +62,8 @@ export type APIService = {
 export type APIGatewayType = {
 	login: (payload: LoginPayload) => Promise<APIResponse<LoginAPIResponse>>;
 	logout: (payload: LogoutPayload) => Promise<APIResponse<LogoutAPIResponse>>;
-	fetchClients: (headers: Record<string, string>) => Promise<APIResponse<FetchClientsResponse>>;
-	clientStatus: (
+	getClients: (headers: Record<string, string>) => Promise<APIResponse<FetchClientsResponse>>;
+	getClientStatus: (
 		payload: ClientStatusPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<ClientStatusResponse>>;
@@ -71,19 +71,19 @@ export type APIGatewayType = {
 		payload: CreateClientPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateClientResponse>>;
-	editClient: (
+	updateClient: (
 		payload: EditClientPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<EditClientResponse>>;
-	getClientTaskStatus: (
+	getClient: (
 		clientId: string,
 		headers: Record<string, string>
 	) => Promise<APIResponse<GetClientTaskStatusResponse>>;
-	createProduct: (
+	createStep: (
 		payload: CreateProductPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<CreateProductResponse>>;
-	editProduct: (
+	updateStep: (
 		formData: EditProductPayload,
 		headers: Record<string, string>
 	) => Promise<APIResponse<EditProductResponse>>;

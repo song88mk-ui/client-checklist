@@ -16,7 +16,7 @@
 	import selectedIntegration from '$stores/integration';
 	import { AccessType } from '$enums/role';
 
-	const { createProduct, editProduct } = APIGateway();
+	const { createStep, updateStep } = APIGateway();
 	const {
 		back,
 		step,
@@ -39,6 +39,7 @@
 	let isLoading = $state(false);
 	let message = $state('');
 	let disabled = $state(false);
+	const serviceStep = Step[$selectedIntegration];
 
 	$effect(() => {
 		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
@@ -47,7 +48,7 @@
 	const handleSubmit = async (values: ProductFormType) => {
 		if (disabled) {
 			setTimeout(() => {
-				goto("/");
+				goto('/');
 			}, 3000);
 			return;
 		}
@@ -61,14 +62,14 @@
 			response = await handleCreateProduct(values);
 		}
 
-		if (response.some((res) => res.error)) {
+		if (response.some((res: any) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
 			isLoading = false;
 			return;
 		}
 
 		setTimeout(() => {
-			goto("/");
+			goto('/');
 		}, 3000);
 
 		const [stagingResponse, productionResponse] = response;
@@ -88,11 +89,11 @@
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {
-		const clientFormData = $steps[Step.ClientInformation].formData;
-		const stagingProduct = createProduct(
+		const clientFormData = $steps[serviceStep.ClientInformation].formData;
+		const stagingProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.ClientLaunch,
+				stepId: serviceStep.ClientLaunch,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 0,
@@ -103,10 +104,10 @@
 			}
 		);
 
-		const productionProduct = createProduct(
+		const productionProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.ClientLaunch,
+				stepId: serviceStep.ClientLaunch,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,
@@ -118,14 +119,14 @@
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
 			message = `${Product[$selectedIntegration]} has been successfully created`;
 		}
 		return response;
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
-		const stagingProduct = editProduct(
+		const stagingProduct = updateStep(
 			{
 				...values[Environment.STAGING],
 				stepName: ''
@@ -134,7 +135,7 @@
 				'x-user-token': $auth?.userToken as string
 			}
 		);
-		const productionProduct = editProduct(
+		const productionProduct = updateStep(
 			{
 				...values[Environment.PRODUCTION],
 				stepName: ''
@@ -145,10 +146,10 @@
 		);
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
-		if(response.some((res) => res.message === "Success" && res.statusCode === 100)){
+		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
 			message = `${Product[$selectedIntegration]} has been successfully updated`;
 		}
-		
+
 		return response;
 	};
 

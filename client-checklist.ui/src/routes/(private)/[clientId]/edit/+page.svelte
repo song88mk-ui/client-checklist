@@ -27,7 +27,7 @@
 	import groupedByStepId from '$utils/groupedByStepId';
 	import type { ProductFormType } from '$lib/ProductForm';
 
-	const { getClientTaskStatus } = APIGateway();
+	const { updateStep } = APIGateway();
 
 	let step = $state(0);
 	let error = $state('');
