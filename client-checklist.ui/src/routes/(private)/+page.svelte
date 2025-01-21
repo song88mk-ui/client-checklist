@@ -18,7 +18,7 @@
 	onMount(async () => {
 		isLoading = true;
 
-		const response = await APIGateway().fetchClients({
+		const response = await APIGateway().getClients({
 			'x-user-token': $auth?.userToken as string
 		});
 

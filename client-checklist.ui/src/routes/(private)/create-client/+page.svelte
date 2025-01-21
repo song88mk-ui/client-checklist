@@ -16,6 +16,7 @@
 	import services, { servicesTypeId } from '$constants/services';
 	import steps from '$stores/steps';
 	import IntegrationType from "$enums/integrationType";
+	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import { AccessType } from '$enums/role';
 
 	let step = $state(0);
@@ -34,6 +35,8 @@
 	$effect(() => {
 		$steps = INTEGRATION_STEPS[$selectedIntegration];
 	})
+
+
 </script>
 
 <div class="mb-10">

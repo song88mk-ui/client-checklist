@@ -1,0 +1,179 @@
+<script lang="ts">
+	import { goto } from '$app/navigation';
+	import { type EditProductPayload } from '$api/request.DTO.model';
+	import { ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
+	import Environment from '$enums/Environment';
+	import ProductForm, { type ProductFormType } from '../ProductForm';
+	import steps from '$stores/steps';
+	import auth from '$stores/auth';
+	import Product from '$utils/client';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import Alert from '../Alert.svelte';
+	import Step from '$enums/Step';
+	import APIGateway from '$api/APIGateway';
+	import type { ClientInformationFormType } from '../ClientInformationForm';
+	import { servicesTypeId } from '$constants/services';
+	import selectedIntegration from '$stores/integration';
+	import { AccessType } from '$enums/role';
+
+	const { createStep, updateStep } = APIGateway();
+	const {
+		back,
+		step,
+		isEdit = false
+	} = $props<{
+		back: () => void;
+		next: () => void;
+		step: number;
+		isEdit?: boolean;
+	}>();
+
+	const title = $steps[step].title;
+
+	let initialValues = $steps[step].formData as ProductFormType || {
+		[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
+		[Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
+	};
+
+	let error = $state('');
+	let isLoading = $state(false);
+	let message = $state('');
+	let disabled = $state(false);
+	const serviceStep = Step[$selectedIntegration];
+
+	$effect(() => {
+		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+	});
+
+	const handleSubmit = async (values: ProductFormType) => {
+		if (disabled) {
+			setTimeout(() => {
+				goto('/');
+			}, 3000);
+			return;
+		}
+
+		isLoading = true;
+
+		let response;
+		if (values[Environment.STAGING].id && values[Environment.PRODUCTION].id) {
+			response = await handleEditProduct(values);
+		} else {
+			response = await handleCreateProduct(values);
+		}
+
+		if (response.some((res: any) => res.error)) {
+			error = ErrorMessages.CreateProductFailed;
+			isLoading = false;
+			return;
+		}
+
+		setTimeout(() => {
+			goto('/');
+		}, 3000);
+
+		const [stagingResponse, productionResponse] = response;
+
+		if (stagingResponse.data && productionResponse.data) {
+			$steps[step].formData = {
+				[Environment.STAGING]: {
+					id: stagingResponse.data.id,
+					...values[Environment.STAGING]
+				},
+				[Environment.PRODUCTION]: {
+					id: productionResponse.data.id,
+					...values[Environment.PRODUCTION]
+				}
+			};
+		}
+	};
+
+	const handleCreateProduct = async (values: ProductFormType) => {
+		const clientFormData = $steps[serviceStep.ClientInformation].formData;
+		const stagingProduct = createStep(
+			{
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
+				stepId: serviceStep.ClientLaunch,
+				stepName: '',
+				serviceTypeId: servicesTypeId[$selectedIntegration],
+				environment: 0,
+				...values[Environment.STAGING]
+			},
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const productionProduct = createStep(
+			{
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
+				stepId: serviceStep.ClientLaunch,
+				stepName: '',
+				serviceTypeId: servicesTypeId[$selectedIntegration],
+				environment: 1,
+				...values[Environment.PRODUCTION]
+			},
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const response = await Promise.all([stagingProduct, productionProduct]);
+		if (response.some((res: any) => res.message === 'Success' && res.statusCode === 100)) {
+			message = `${Product[$selectedIntegration]} has been successfully created`;
+		}
+		return response;
+	};
+
+	const handleEditProduct = async (values: ProductFormType) => {
+		const stagingProduct = updateStep(
+			{
+				...values[Environment.STAGING],
+				stepName: ''
+			} as EditProductPayload,
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+		const productionProduct = updateStep(
+			{
+				...values[Environment.PRODUCTION],
+				stepName: ''
+			} as EditProductPayload,
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const response = await Promise.all([stagingProduct, productionProduct]);
+		if (response.some((res: any) => res.message === 'Success' && res.statusCode === 100)) {
+			message = `${Product[$selectedIntegration]} has been successfully updated`;
+		}
+
+		return response;
+	};
+
+	$effect(() => {
+		if (error) {
+			setTimeout(() => {
+				error = '';
+			}, 5000);
+		}
+	});
+</script>
+
+{#if error}
+	<div class="mb-5">
+		<Alert variant="error" message={error} hasCloseButton={false} />
+	</div>
+{/if}
+
+{#if message}
+	<div class="mb-5">
+		<Alert variant="success" {message} hasCloseButton={false} />
+	</div>
+{/if}
+
+<div class="cc-client-launch">
+	<ProductForm {step} {title} {initialValues} {back} {isLoading} {isEdit} {disabled} onSubmit={handleSubmit} />
+</div>

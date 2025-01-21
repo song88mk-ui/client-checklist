@@ -13,8 +13,9 @@
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 	import { AccessType } from '$enums/role';
+	import IntegrationType from '$enums/integrationType';
 
-	const { createProduct, editProduct } = APIGateway();
+	const { createStep, updateStep } = APIGateway();
 	const {
 		back,
 		next,
@@ -39,6 +40,7 @@
 	let error = $state('');
 	let isLoading = $state(false);
 	let disabled = $state(false);
+	const serviceStep = Step[IntegrationType.FEED_INTEGRATION]
 
 	$effect(() => {
 		disabled = isEdit && !isSuperAdmin;
@@ -84,11 +86,11 @@
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {
-		const clientFormData = $steps[Step.ClientInformation].formData;
-		const stagingProduct = createProduct(
+		const clientFormData = $steps[serviceStep.ClientInformation].formData;
+		const stagingProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.OddsfeedIntegration,
+				stepId: serviceStep.OddsfeedIntegration,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 0,
@@ -99,10 +101,10 @@
 			}
 		);
 
-		const productionProduct = createProduct(
+		const productionProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.OddsfeedIntegration,
+				stepId: serviceStep.OddsfeedIntegration,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,
@@ -119,7 +121,7 @@
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
-		const stagingProduct = editProduct(
+		const stagingProduct = updateStep(
 			{
 				...values[Environment.STAGING],
 				stepName: ''
@@ -128,7 +130,7 @@
 				'x-user-token': $auth?.userToken as string
 			}
 		);
-		const productionProduct = editProduct(
+		const productionProduct = updateStep(
 			{
 				...values[Environment.PRODUCTION],
 				stepName: ''

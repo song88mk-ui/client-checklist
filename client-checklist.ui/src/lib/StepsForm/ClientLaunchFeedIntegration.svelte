@@ -22,7 +22,7 @@
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 
-	const { createProduct, editProduct } = APIGateway();
+	const { createStep, updateStep } = APIGateway();
 	const { back, step, isSuperAdmin, isLaunch = false, isEdit = false } = $props<{
 		back: () => void;
 		next: () => void;
@@ -62,6 +62,7 @@
 	let error = $state('');
 	let isLoading = $state(false);
 	let message = $state('');
+	const serviceStep = Step[$selectedIntegration];
 
 	const handleSubmit = async (values: ProductFormType) => {
 		isLoading = true;
@@ -97,11 +98,11 @@
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {
-		const clientFormData = $steps[Step.ClientInformation].formData;
-		const stagingProduct = createProduct(
+		const clientFormData = $steps[serviceStep.ClientInformation].formData;
+		const stagingProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.ClientLaunch,
+				stepId: serviceStep.ClientLaunch,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 0,
@@ -112,10 +113,10 @@
 			}
 		);
 
-		const productionProduct = createProduct(
+		const productionProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: Step.ClientLaunch,
+				stepId: serviceStep.ClientLaunch,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,
@@ -137,13 +138,13 @@
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
-		const stagingProduct = editProduct({
+		const stagingProduct = updateStep({
 			...values[Environment.STAGING],
 			stepName: ''
 		} as EditProductPayload, {
 			'x-user-token': $auth?.userToken as string
 		});
-		const productionProduct = editProduct({
+		const productionProduct = updateStep({
 				...values[Environment.PRODUCTION],
 				stepName: ''
 			} as EditProductPayload, {

@@ -3,12 +3,14 @@
 	import { STATUS_COLORS } from './const';
 	import StepStatus from '$enums/StepStatus';
 	import steps from '$stores/steps';
+	import selectedIntegration from '$stores/integration';
 	import Step from '$enums/Step';
 
 	let { step = $bindable() } = $props<{ step: number }>();
+	let serviceSteps = Step[$selectedIntegration];
 
 	const updateStep = (index: number) => {
-		if ($steps[Step.ClientInformation].formData) {
+		if ($steps[serviceSteps.ClientInformation].formData) {
 			step = index;
 		}
 	};
@@ -16,7 +18,7 @@
 	$effect(() => {
 		if ($steps.length > 0) {
 			$steps.forEach((s, i) => {
-				s.status = s.formData ? StepStatus.Completed : StepStatus.Inactive
+				s.status = s.formData ? StepStatus.Completed : StepStatus.Inactive;
 
 				if (i === step) {
 					s.status = StepStatus.Active;
@@ -46,7 +48,8 @@
 			</div>
 			{#if index < $steps.length - 1}
 				{#if $steps[index + 1].status === StepStatus.Completed}
-					<div class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[StepStatus.Completed].line}`}></div>
+					<div
+						class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[StepStatus.Completed].line}`}></div>
 				{:else}
 					<div class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[status].line}`}></div>
 				{/if}
