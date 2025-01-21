@@ -23,13 +23,23 @@
 	import selectedIntegration from '$stores/integration';
 
 	const { createStep, updateStep } = APIGateway();
-	const { back, step } = $props<{
+	const { back, step, isSuperAdmin, isLaunch = false, isEdit = false } = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
+        isSuperAdmin: boolean;
+        isLaunch?: boolean;
+        isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
+    
+    const finishFormButtonLabel = (): string => {
+        if (!isLaunch) return "Next";
+
+        return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
+    }
+
 	const TASKS: Record<number, ProductFormType> = {
 		8: $steps[step].formData as ProductFormType || {
 			[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
@@ -168,5 +178,5 @@
 	</div>
 {/if}
 
-<ProductFormProd {step} {title} {initialValues} {back} {isLoading} onSubmit={handleSubmit} />
+<ProductFormProd finishFormButtonLabel={finishFormButtonLabel()} {step} {title} {initialValues} {back} {isLoading} onSubmit={handleSubmit} />
 

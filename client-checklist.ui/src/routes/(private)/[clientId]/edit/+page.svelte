@@ -19,19 +19,21 @@
 	import { onMount } from 'svelte';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import type { GetClientTaskStatusResponse } from '$api/response.DTO.model';
-	import { servicesType } from '$constants/services';
+	import services, { servicesType, servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import steps from '$stores/steps';
 	import Step from '$enums/Step';
 	import groupedByStepId from '$utils/groupedByStepId';
 	import type { ProductFormType } from '$lib/ProductForm';
+	import { AccessType } from '$enums/role';
 
 	const { updateStep } = APIGateway();
 
 	let step = $state(0);
 	let error = $state('');
 	let isLoading = $state(true);
+    let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
 
 	const back = () => {
 		if (step > 0) {
@@ -115,7 +117,7 @@
 
 {#if !error && !isLoading}
 	<div class="mb-10">
-		<h1 class="text-3xl font-bold">{Product[$selectedIntegration]}</h1>
+		<h1 class="text-3xl font-bold">{services[servicesTypeId[$selectedIntegration]]}</h1>
 	</div>
 	<div class="mx-auto mb-10 max-w-screen-lg">
 		<ProgressStep bind:step />
@@ -124,23 +126,23 @@
 		{#if $steps[step].stepId === Step.ClientInformation}
 			<ClientInformationForm isEdit {next} />
 		{:else if $steps[step].stepId === Step.BackOffice}
-			<BackOfficeForm isEdit {back} {next} {step} />
+			<BackOfficeForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.WalletIntegration}
-			<WalletIntegrationForm isEdit {back} {next} {step} />
+			<WalletIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.OddsfeedIntegration}
-			<OddsFeedIntegrationForm isEdit {back} {next} {step} />
+			<OddsFeedIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.SportsbookPlayerSite}
-			<SportsbookPlayerSiteUiuxForm isEdit {back} {next} {step} />
+			<SportsbookPlayerSiteUiuxForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.ManagedTradingServices}
-			<MTSForm isEdit {back} {next} {step} />
+			<MTSForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.EndToEndFunctionalPerformanceTest}
-			<EndToEndTestForm isEdit {back} {next} {step} />
+			<EndToEndTestForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.Operations}
-			<OperationsForm isEdit {back} {next} {step} />
+			<OperationsForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.BusinessAcceptanceTest}
-			<BusinessAcceptanceForm isEdit {back} {next} {step} />
+			<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{:else if $steps[step].stepId === Step.ClientLaunch}
-			<ClientLaunchForm isEdit {back} {next} {step} />
+			<ClientLaunchForm isEdit {isSuperAdmin} {back} {next} {step} />
 		{/if}
 	</div>
 {/if}

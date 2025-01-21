@@ -1,18 +1,17 @@
 <script lang="ts">
+	import APIGateway from '$api/APIGateway';
 	import { type EditProductPayload } from '$api/request.DTO.model';
 	import { BackOfficeValues } from '$constants/productFormValues';
-	import auth from '$stores/auth';
-	import Environment from '$enums/Environment';
-	import ProductForm, { type ProductFormType } from '../ProductForm';
-	import selectedIntegration from '$stores/integration';
-	import APIGateway from '$api/APIGateway';
-	import { ErrorMessages } from '$enums/ErrorMessages';
-	import Alert from '../Alert.svelte';
-	import Step from '$enums/Step';
-	import type { ClientInformationFormType } from '../ClientInformationForm';
-	import steps from '$stores/steps';
 	import { servicesTypeId } from '$constants/services';
-	import { AccessType } from '$enums/role';
+	import Environment from '$enums/Environment';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import Step from '$enums/Step';
+	import auth from '$stores/auth';
+	import selectedIntegration from '$stores/integration';
+	import steps from '$stores/steps';
+	import Alert from '../Alert.svelte';
+	import type { ClientInformationFormType } from '../ClientInformationForm';
+	import ProductForm, { type ProductFormType } from '../ProductForm';
 
 	const { createStep, updateStep } = APIGateway();
 
@@ -20,11 +19,13 @@
 		back,
 		next,
 		step,
-		isEdit = false
+        isSuperAdmin,
+		isEdit = false,
 	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
+		isSuperAdmin?: boolean;
 		isEdit?: boolean;
 	}>();
 
@@ -41,7 +42,7 @@
 	const serviceStep = Step[$selectedIntegration]
 
 	$effect(() => {
-		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+		disabled = isEdit && !isSuperAdmin;
 	});
 
 	const handleSubmit = async (values: ProductFormType) => {
@@ -156,4 +157,4 @@
 	</div>
 {/if}
 
-<ProductForm {title} {initialValues} {back} {isLoading} {disabled} onSubmit={handleSubmit} />
+<ProductForm finishFormButtonLabel="Next" {title} {initialValues} {back} {isLoading} {disabled} onSubmit={handleSubmit} />

@@ -19,11 +19,13 @@
 		back,
 		next,
 		step,
+        isSuperAdmin,
 		isEdit = false
 	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
+		isSuperAdmin?: boolean;
 		isEdit?: boolean;
 	}>();
 
@@ -40,7 +42,7 @@
 	const serviceStep = Step[$selectedIntegration];
 
 	$effect(() => {
-		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+		disabled = isEdit && !isSuperAdmin;
 	});
 
 	const handleSubmit = async (values: ProductFormType) => {
@@ -157,4 +159,4 @@
 	</div>
 {/if}
 
-<ProductForm {title} {initialValues} {back} {disabled} onSubmit={handleSubmit} />
+<ProductForm finishFormButtonLabel="Next" {title} {initialValues} {back} {disabled} onSubmit={handleSubmit} />
