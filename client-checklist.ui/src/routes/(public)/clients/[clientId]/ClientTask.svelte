@@ -45,7 +45,7 @@
 		const itemCount = items.reduce((count, item) => {
 			return item === itemToCheck ? count + 1 : count;
 		}, 0);
-		const percentage = (itemCount / totalItems) * 100;
+		const percentage = totalItems > 0 ? (itemCount / totalItems) * 100 : 0;
 		return percentage;
 	}
 
