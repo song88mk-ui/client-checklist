@@ -44,7 +44,11 @@
 	</span>
 	<div class="flex w-[10%] cursor-pointer flex-row items-center justify-center py-5 pl-3">
 		<a href={`/${client.id}/edit`} class="cursor-pointer p-2">
-			<img alt="icon-edit" src="/icon-edit.svg" />
+			{#if isSuperAdmin}
+				<img alt="icon-edit" src="/icon-edit.svg" />
+			{:else}
+				<img alt="icon-view" src="/icon-view.svg" />
+			{/if}
 		</a>
 		<button on:click={handleShowGenerateLinkModal} class="cursor-pointer p-2">
 			<img alt="icon-link" src="/icon-link.svg" />
