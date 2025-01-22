@@ -1,22 +1,7 @@
 import { ClientRowStatus } from '$enums/ClientRowStatus';
 import type { ClientSubTaskFormType, ClientTaskFormType } from '$lib/ProductForm/validationSchema';
 
-const backOfficeSubTasks: ClientSubTaskFormType[] = [
-	{
-		subtaskId: 1,
-		subtaskName: 'Client Account Set Up',
-		comment: '',
-		taskStatusId: ClientRowStatus.NotStarted,
-		assignedTo: ''
-	},
-	{
-		subtaskId: 2,
-		subtaskName: 'Back Office User Account',
-		comment: '',
-		taskStatusId: ClientRowStatus.NotStarted,
-		assignedTo: ''
-	}
-];
+
 
 const oddsFeedIntegrationSubTasksStg: ClientSubTaskFormType[] = [
 	{
@@ -806,16 +791,6 @@ const clientLaunchSubTasksOddsFeedAndLive: ClientSubTaskFormType[] = [
 ];
 
 
-const defaultValues = {
-	assignedTo: '',
-	targetDateCompleted: null,
-	actualDateCompleted: null
-};
-
-export const BackOfficeValues: ClientTaskFormType = {
-	...defaultValues,
-	clientSubTasks: backOfficeSubTasks 
-};
 
 export const OddsFeedIntegrationValuesStg: ClientTaskFormType = {
 	...defaultValues,

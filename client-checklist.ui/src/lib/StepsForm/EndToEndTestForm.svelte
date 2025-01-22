@@ -12,7 +12,6 @@
 	import type { ClientInformationFormType } from '../ClientInformationForm';
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
-	import { AccessType } from '$enums/role';
 
 	const { createStep, updateStep } = APIGateway();
 	const {

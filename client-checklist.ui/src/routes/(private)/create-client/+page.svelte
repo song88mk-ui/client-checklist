@@ -57,11 +57,11 @@
 		{:else if step === 3 }
 			<MTSForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 4}
-			<ClientLaunchFeedIntegration {isSuperAdmin} {back} {next} {step}/>
+			<EndToEndTestForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 5}
 			<OperationsForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 6}
-			<ClientLaunchFeedIntegration {isSuperAdmin} {back} {next} {step}/>
+			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 7}
 			<ClientLaunchFeedIntegration {isSuperAdmin} isLaunch={true} {back} {next} {step}/>
 		{/if}

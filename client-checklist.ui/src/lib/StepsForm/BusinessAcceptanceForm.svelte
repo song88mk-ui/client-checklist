@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { BAValuesWalletIntegration } from '$constants/productFormValues';
+	import { BAValuesFeedIntegration, BAValuesWalletIntegration } from '$constants/productFormValues';
 	import Environment from '$enums/Environment';
 	import ProductForm, { type ProductFormType } from '../ProductForm';
 	import steps from '$stores/steps';
@@ -13,13 +13,14 @@
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 	import { AccessType } from '$enums/role';
+	import IntegrationType from '$enums/integrationType';
 
 	const { createStep, updateStep } = APIGateway();
 	const {
 		back,
 		next,
 		step,
-        isSuperAdmin,
+		isSuperAdmin,
 		isEdit = false
 	} = $props<{
 		back: () => void;
@@ -30,16 +31,16 @@
 	}>();
 
 	const title = $steps[step].title;
+	const serviceStep = Step[$selectedIntegration];
 
 	let initialValues = $steps[step].formData as ProductFormType || {
-		[Environment.STAGING]: BAValuesWalletIntegration,
-		[Environment.PRODUCTION]: BAValuesWalletIntegration
+		[Environment.STAGING]:  BAValuesWalletIntegration,
+		[Environment.PRODUCTION]: $selectedIntegration === IntegrationType.WALLET_INTEGRATION ? BAValuesWalletIntegration : BAValuesFeedIntegration
 	};
 
 	let error = $state('');
 	let isLoading = $state(false);
 	let disabled = $state(false);
-	const serviceStep = Step[$selectedIntegration];
 
 	$effect(() => {
 		disabled = isEdit && !isSuperAdmin;
