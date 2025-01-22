@@ -33,10 +33,7 @@
 	const title = $steps[step].title;
 	const serviceStep = Step[$selectedIntegration];
 
-	let initialValues = $steps[step].formData as ProductFormType || {
-		[Environment.STAGING]:  BAValuesWalletIntegration,
-		[Environment.PRODUCTION]: $selectedIntegration === IntegrationType.WALLET_INTEGRATION ? BAValuesWalletIntegration : BAValuesFeedIntegration
-	};
+	let initialValues = $steps[step].formData as ProductFormType || initFormValues[integratiopnmType][step];
 
 	let error = $state('');
 	let isLoading = $state(false);

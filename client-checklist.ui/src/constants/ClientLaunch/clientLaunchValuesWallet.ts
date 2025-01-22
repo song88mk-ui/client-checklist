@@ -3,10 +3,10 @@ import { defaultValues, generateSubTask } from '$constants/commonValues';
 import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 const MTSOddsFeedSubTasks: ClientSubTaskFormType[] = [
-	generateSubTask(1, 'Client Launch', '', ClientRowStatus.NotStarted, ''),
+	generateSubTask(1, 'Client Launch'),
 ];
 
-export const MTSOddsFeedValues: ClientTaskFormType = {
+export const ClientLaunchWalletValues: ClientTaskFormType = {
 	...defaultValues,
 	clientSubTasks: MTSOddsFeedSubTasks
 };

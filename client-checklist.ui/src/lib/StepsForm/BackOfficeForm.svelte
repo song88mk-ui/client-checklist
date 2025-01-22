@@ -1,7 +1,6 @@
 <script lang="ts">
 	import APIGateway from '$api/APIGateway';
 	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { BackOfficeValues } from '$constants/productFormValues';
 	import { servicesTypeId } from '$constants/services';
 	import Environment from '$enums/Environment';
 	import { ErrorMessages } from '$enums/ErrorMessages';

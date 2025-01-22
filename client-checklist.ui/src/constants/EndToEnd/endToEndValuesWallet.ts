@@ -3,25 +3,25 @@ import { defaultValues, generateSubTask } from '$constants/commonValues';
 import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 const endToEndWalletSubTasks: ClientSubTaskFormType[] = [
-	generateSubTask(1, 'Visiting the URL site', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(2, 'Log in / Log out', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(3, 'Search Functionality', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(4, 'Bet Placement', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(5, 'Odds Format', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(6, 'Full and Partial Cashout', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(7, 'Settlement', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(8, 'Bet Slip / My Bets', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(9, 'Bet History', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(10, 'Supported Languges', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(11, 'Supported Currencies', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(12, 'Odds and Push Updates', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(13, 'My Favorites', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(14, 'LMT, Live Stream, Statistics, Results', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(15, 'Parlay Bonus', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(16, 'Bet Builder', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(17, 'Price Boosts', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(18, 'Happy Path Messages', '', ClientRowStatus.NotStarted, ''),
-	generateSubTask(19, 'Invalid Error Messages', '', ClientRowStatus.NotStarted, '')
+	generateSubTask(1, 'Visiting the URL site'),
+	generateSubTask(2, 'Log in / Log out'),
+	generateSubTask(3, 'Search Functionality'),
+	generateSubTask(4, 'Bet Placement'),
+	generateSubTask(5, 'Odds Format'),
+	generateSubTask(6, 'Full and Partial Cashout'),
+	generateSubTask(7, 'Settlement'),
+	generateSubTask(8, 'Bet Slip / My Bets'),
+	generateSubTask(9, 'Bet History'),
+	generateSubTask(10, 'Supported Languges'),
+	generateSubTask(11, 'Supported Currencies'),
+	generateSubTask(12, 'Odds and Push Updates'),
+	generateSubTask(13, 'My Favorites'),
+	generateSubTask(14, 'LMT, Live Stream, Statistics, Results'),
+	generateSubTask(15, 'Parlay Bonus'),
+	generateSubTask(16, 'Bet Builder'),
+	generateSubTask(17, 'Price Boosts'),
+	generateSubTask(18, 'Happy Path Messages'),
+	generateSubTask(19, 'Invalid Error Messages')
 ];
 
 export const EndToEndWalletValues: ClientTaskFormType = {

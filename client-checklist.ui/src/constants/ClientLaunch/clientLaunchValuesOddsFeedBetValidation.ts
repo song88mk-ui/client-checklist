@@ -2,11 +2,11 @@ import type { ClientSubTaskFormType, ClientTaskFormType } from '$lib/ProductForm
 import { defaultValues, generateSubTask } from '$constants/commonValues';
 import { ClientRowStatus } from '$enums/ClientRowStatus';
 
-const MTSWalletSubTasks: ClientSubTaskFormType[] = [
-	generateSubTask(1, 'Bet Validation', '', ClientRowStatus.NotStarted, ''),
+const subTasks: ClientSubTaskFormType[] = [
+	generateSubTask(1, 'Bet Validation'),
 ];
 
-export const MTSWalletValues: ClientTaskFormType = {
+export const ClientLaunchBetValidationValues: ClientTaskFormType = {
 	...defaultValues,
-	clientSubTasks: MTSWalletSubTasks
+	clientSubTasks: subTasks
 };
