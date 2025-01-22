@@ -23,20 +23,17 @@
 	import selectedIntegration from '$stores/integration';
 
 	const { createStep, updateStep } = APIGateway();
-	const { back, step, isSuperAdmin, isLaunch = false, isEdit = false } = $props<{
+	const { back, step, isSuperAdmin, isEdit = false } = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
         isSuperAdmin: boolean;
-        isLaunch?: boolean;
         isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
     
     const finishFormButtonLabel = (): string => {
-        if (!isLaunch) return "Next";
-
         return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
     }
 

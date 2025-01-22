@@ -63,7 +63,7 @@
 		{:else if step === 6}
 			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 7}
-			<ClientLaunchFeedIntegration {isSuperAdmin} isLaunch={true} {back} {next} {step}/>
+			<ClientLaunchFeedIntegration {isSuperAdmin} {back} {next} {step}/>
 		{/if}
 	{/if}
 
@@ -85,7 +85,7 @@
 		{:else if step === 7}
 			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 8}
-			<ClientLaunchFeedIntegration {isSuperAdmin} isLaunch={true} {back} {next} {step}/>
+			<ClientLaunchWalletIntegration {isSuperAdmin} {back} {next} {step}/>
 		{/if}
 	{/if}
 </div>

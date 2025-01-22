@@ -1,34 +1,39 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
-	import Environment from '$enums/Environment';
-	import ProductForm, { type ProductFormType } from '../ProductForm';
-	import steps from '$stores/steps';
-	import auth from '$stores/auth';
-	import Product from '$utils/client';
-	import { ErrorMessages } from '$enums/ErrorMessages';
-	import Alert from '../Alert.svelte';
-	import Step from '$enums/Step';
 	import APIGateway from '$api/APIGateway';
-	import type { ClientInformationFormType } from '../ClientInformationForm';
+	import { type EditProductPayload } from '$api/request.DTO.model';
+	import { goto } from '$app/navigation';
+	import { ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
 	import { servicesTypeId } from '$constants/services';
+	import Environment from '$enums/Environment';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import Step from '$enums/Step';
+	import auth from '$stores/auth';
 	import selectedIntegration from '$stores/integration';
-	import { AccessType } from '$enums/role';
+	import steps from '$stores/steps';
+	import Product from '$utils/client';
+	import Alert from '../Alert.svelte';
+	import type { ClientInformationFormType } from '../ClientInformationForm';
+	import ProductForm, { type ProductFormType } from '../ProductForm';
 
 	const { createStep, updateStep } = APIGateway();
 	const {
 		back,
 		step,
+        isSuperAdmin,
 		isEdit = false
 	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
+		isSuperAdmin?: boolean;
 		isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
+
+    const finishFormButtonLabel = (): string => {
+        return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
+    }
 
 	let initialValues = $steps[step].formData as ProductFormType || {
 		[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
@@ -42,7 +47,7 @@
 	const serviceStep = Step[$selectedIntegration];
 
 	$effect(() => {
-		disabled = isEdit && AccessType.READWRITE !== $auth?.accessType;
+		disabled = isEdit && !isSuperAdmin;
 	});
 
 	const handleSubmit = async (values: ProductFormType) => {
@@ -175,5 +180,5 @@
 {/if}
 
 <div class="cc-client-launch">
-	<ProductForm {step} {title} {initialValues} {back} {isLoading} {isEdit} {disabled} onSubmit={handleSubmit} />
+	<ProductForm finishFormButtonLabel={finishFormButtonLabel()} {title} {initialValues} {back} {isLoading} {isEdit} {disabled} onSubmit={handleSubmit} />
 </div>
