@@ -23,7 +23,6 @@
 		step,
 		isEdit = false,
 		isSuperAdmin
-
 	} = $props<{
 		back: () => void;
 		next: () => void;

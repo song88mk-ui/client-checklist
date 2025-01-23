@@ -1,86 +1,89 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { type EditProductPayload } from '$api/request.DTO.model';
-	import Environment from '$enums/Environment';
-	import { type ProductFormType } from '../ProductForm';
-	import ProductFormProd from '../ProductForm/ProductFormProd.svelte';
-
-	import steps from '$stores/steps';
-	import auth from '$stores/auth';
-	import { ErrorMessages } from '$enums/ErrorMessages';
-	import Alert from '../Alert.svelte';
-	import Step from '$enums/Step';
 	import APIGateway from '$api/APIGateway';
+	import { type EditProductPayload } from '$api/request.DTO.model';
+	import ProductForm, { type ProductFormType } from '../ProductForm';
+	import steps from '$stores/steps';
+	import Product from '$utils/client';
+	import Alert from '../Alert.svelte';
 	import type { ClientInformationFormType } from '../ClientInformationForm';
+
 	import { servicesTypeId } from '$constants/services';
+	import Environment from '$enums/Environment';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import Step from '$enums/Step';
+	import auth from '$stores/auth';
 	import selectedIntegration from '$stores/integration';
+	import initialFormValues from '$constants/initialFormValues';
+	import { goto } from '$app/navigation';
+
 
 	const { createStep, updateStep } = APIGateway();
-	const { back, step, isSuperAdmin, isEdit = false } = $props<{
+	const {
+		back,
+		step,
+		isEdit = false,
+		isSuperAdmin
+	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
-        isSuperAdmin: boolean;
-        isEdit?: boolean;
+		isSuperAdmin?: boolean;
+		isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
-    
-    const finishFormButtonLabel = (): string => {
-        return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
-    }
 
-	const TASKS: Record<number, ProductFormType> = {
-		// 8: $steps[step].formData as ProductFormType || {
-		// 	[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
-		// 	[Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
-		// },
-		// 7: $steps[step].formData as ProductFormType || {
-		// 	[Environment.STAGING]: ClientLaunchValuesBetValidation,
-		// 	[Environment.PRODUCTION]: ClientLaunchValuesOddsFeedAndLive
-		// },
-		// 6: $steps[step].formData as ProductFormType || {
-		// 	[Environment.PRODUCTION]: BAValuesFeedIntegration
-		// },
-		// 4: $steps[step].formData as ProductFormType || {
-		// 	[Environment.PRODUCTION]: EndToEndTestValuesFeedIntegration
-		// }
+	const finishFormButtonLabel = (): string => {
+		return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
 	};
-	let initialValues = TASKS[step];
+
+	console.log("ALL FORMS", $steps);
+
+	const defaultValues = initialFormValues[$selectedIntegration][step];
+	let initialValues = $steps[step].formData as ProductFormType || defaultValues;
 
 
 	let error = $state('');
 	let isLoading = $state(false);
 	let message = $state('');
+	let disabled = $state(false);
 	const serviceStep = Step[$selectedIntegration];
 
+	$effect(() => {
+		disabled = isEdit && !isSuperAdmin;
+	});
+
 	const handleSubmit = async (values: ProductFormType) => {
+		if (disabled) {
+			setTimeout(() => {
+				goto('/');
+			}, 3000);
+			return;
+		}
+
 		isLoading = true;
 
 		let response;
-		if (values[Environment.STAGING].id && values[Environment.PRODUCTION].id) {
+		if (values[Environment.PRODUCTION].id) {
 			response = await handleEditProduct(values);
 		} else {
 			response = await handleCreateProduct(values);
 		}
 
-		isLoading = false;
-
-		if (response.some((res) => res.error)) {
+		if (response.error) {
 			error = ErrorMessages.CreateProductFailed;
+			isLoading = false;
 			return;
 		}
 
-		const [stagingResponse, productionResponse] = response;
+		setTimeout(() => {
+			goto('/');
+		}, 3000);
 
-		if (stagingResponse.data && productionResponse.data) {
+		if (response.data) {
 			$steps[step].formData = {
-				[Environment.STAGING]: {
-					id: stagingResponse.data.id,
-					...values[Environment.STAGING]
-				},
 				[Environment.PRODUCTION]: {
-					id: productionResponse.data.id,
+					id: response.data.id,
 					...values[Environment.PRODUCTION]
 				}
 			};
@@ -89,24 +92,10 @@
 
 	const handleCreateProduct = async (values: ProductFormType) => {
 		const clientFormData = $steps[serviceStep.ClientInformation].formData;
-		const stagingProduct = createStep(
-			{
-				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: step,
-				stepName: '',
-				serviceTypeId: servicesTypeId[$selectedIntegration],
-				environment: 0,
-				...values[Environment.STAGING]
-			},
-			{
-				'x-user-token': $auth?.userToken as string
-			}
-		);
-
 		const productionProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: step,
+				stepId: serviceStep.ClientLaunch,
 				stepName: '',
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				environment: 1,
@@ -117,38 +106,29 @@
 			}
 		);
 
-		const response = await Promise.all([stagingProduct, productionProduct]);
-		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
-			message = 'The account has been successfully created';
-			setTimeout(() => {
-				goto('/');
-			}, 3000);
+		const response = await productionProduct;
+		if (response.message === 'Success' && response.statusCode === 100) {
+			message = `${Product[$selectedIntegration]} has been successfully created`;
 		}
 		return response;
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
-		const stagingProduct = updateStep({
-			...values[Environment.STAGING],
-			stepName: ''
-		} as EditProductPayload, {
-			'x-user-token': $auth?.userToken as string
-		});
-		const productionProduct = updateStep({
+		const productionProduct = updateStep(
+			{
 				...values[Environment.PRODUCTION],
 				stepName: ''
-			} as EditProductPayload, {
+			} as EditProductPayload,
+			{
 				'x-user-token': $auth?.userToken as string
 			}
 		);
 
-		const response = await Promise.all([stagingProduct, productionProduct]);
-		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
-			message = 'The account has been successfully updated';
-			setTimeout(() => {
-				goto('/');
-			}, 3000);
+		const response = await productionProduct;
+		if (response.message === 'Success' && response.statusCode === 100) {
+			message = `${Product[$selectedIntegration]} has been successfully updated`;
 		}
+
 		return response;
 	};
 
@@ -173,5 +153,8 @@
 	</div>
 {/if}
 
-<ProductFormProd finishFormButtonLabel={finishFormButtonLabel()} {step} {title} {initialValues} {back} {isLoading} onSubmit={handleSubmit} />
+<div class="cc-client-launch">
+	<ProductForm isLaunch={true} finishFormButtonLabel={finishFormButtonLabel()} {title} {initialValues} {back}
+							 {isLoading} {disabled} onSubmit={handleSubmit} dataKeys={["bet-validation","sports"]}/>
 
+</div>

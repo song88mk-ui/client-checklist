@@ -4,7 +4,6 @@
 	import ClientInformationForm, {
 		type ClientInformationFormType
 	} from '$lib/ClientInformationForm';
-	import ClientLaunchForm from '$lib/StepsForm/ClientLaunch.svelte';
 	import EndToEndTestForm from '$lib/StepsForm/EndToEndTestForm.svelte';
 	import MTSForm from '$lib/StepsForm/MTSForm.svelte';
 	import OperationsForm from '$lib/StepsForm/OperationsForm.svelte';
@@ -12,7 +11,6 @@
 	import SportsbookPlayerSiteUiuxForm from '$lib/StepsForm/SportsbookPlayerSiteUIUXForm.svelte';
 	import WalletIntegrationForm from '$lib/StepsForm/WalletIntegrationForm.svelte';
 	import OddsFeedIntegrationForm from '$lib/StepsForm/OddsFeedIntegrationForm.svelte';
-	import Product from '$utils/client';
 	import { page } from '$app/stores';
 	import APIGateway from '$api/APIGateway';
 	import auth from '$stores/auth';
@@ -28,8 +26,8 @@
 	import type { ProductFormType } from '$lib/ProductForm';
 	import { AccessType } from '$enums/role';
 	import IntegrationType from '$enums/integrationType';
-	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
 	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
+	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
 
 	const { getClient } = APIGateway();
 
@@ -142,7 +140,7 @@
 				{:else if step === 5}
 					<OperationsForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 6}
-					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} {back} {next} {step} />
+					<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 7}
 					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} {back} {next} {step} />
 				{/if}
