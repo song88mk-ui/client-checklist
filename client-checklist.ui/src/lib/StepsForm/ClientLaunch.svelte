@@ -2,7 +2,6 @@
 	import APIGateway from '$api/APIGateway';
 	import { type EditProductPayload } from '$api/request.DTO.model';
 	import { goto } from '$app/navigation';
-	import { ClientLaunchValuesWalletIntegration } from '$constants/productFormValues';
 	import { servicesTypeId } from '$constants/services';
 	import Environment from '$enums/Environment';
 	import { ErrorMessages } from '$enums/ErrorMessages';
@@ -14,6 +13,7 @@
 	import Alert from '../Alert.svelte';
 	import type { ClientInformationFormType } from '../ClientInformationForm';
 	import ProductForm, { type ProductFormType } from '../ProductForm';
+	import initialFormValues from '$constants/initialFormValues';
 
 	const { createStep, updateStep } = APIGateway();
 	const {
@@ -33,10 +33,8 @@
 	const finishFormButtonLabel: string =
 		isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
 
-	let initialValues = ($steps[step].formData as ProductFormType) || {
-		[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
-		[Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
-	};
+	const defaultValues = initialFormValues[$selectedIntegration][step]
+	let initialValues = ($steps[step].formData as ProductFormType) || defaultValues
 
 	let error = $state('');
 	let isLoading = $state(false);

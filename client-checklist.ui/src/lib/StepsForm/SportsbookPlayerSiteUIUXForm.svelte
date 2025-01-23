@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { type EditProductPayload } from '$api/request.DTO.model';
-	import { SportsbookPlayerSiteValues } from '$constants/productFormValues';
 	import Environment from '$enums/Environment';
 	import ProductForm, { type ProductFormType } from '../ProductForm';
 	import steps from '$stores/steps';
@@ -12,8 +11,8 @@
 	import type { ClientInformationFormType } from '../ClientInformationForm';
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
-	import { AccessType } from '$enums/role';
 	import IntegrationType from '$enums/integrationType';
+	import initialFormValues from '$constants/initialFormValues';
 
 	const { createStep, updateStep } = APIGateway();
 	const {
@@ -32,10 +31,8 @@
 
 	const title = $steps[step].title;
 
-	let initialValues = ($steps[step].formData as ProductFormType) || {
-		[Environment.STAGING]: SportsbookPlayerSiteValues,
-		[Environment.PRODUCTION]: SportsbookPlayerSiteValues
-	};
+	const defaultValues = initialFormValues[$selectedIntegration][step]
+	let initialValues = ($steps[step].formData as ProductFormType) || defaultValues
 
 	let error = $state('');
 	let isLoading = $state(false);

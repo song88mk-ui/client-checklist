@@ -16,8 +16,8 @@
 	import services, { servicesTypeId } from '$constants/services';
 	import steps from '$stores/steps';
 	import IntegrationType from "$enums/integrationType";
-	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import { AccessType } from '$enums/role';
+		import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 
 	let step = $state(0);
     let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
@@ -47,6 +47,7 @@
 </div>
 <div class="mb-10">
 
+	<!-- refactor to separate component per service type -->
 	{#if $selectedIntegration === IntegrationType.FEED_INTEGRATION}
 		{#if step === 0}
 			<ClientInformationForm {next} />
@@ -57,13 +58,13 @@
 		{:else if step === 3 }
 			<MTSForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 4}
-			<ClientLaunchFeedIntegration {isSuperAdmin} {back} {next} {step}/>
+			<EndToEndTestForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 5}
 			<OperationsForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 6}
-			<ClientLaunchFeedIntegration {isSuperAdmin} {back} {next} {step}/>
+			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 7}
-			<ClientLaunchFeedIntegration {isSuperAdmin} isLaunch={true} {back} {next} {step}/>
+			<ClientLaunchFeedIntegration {isSuperAdmin} {back} {next} {step}/>
 		{/if}
 	{/if}
 
@@ -85,7 +86,7 @@
 		{:else if step === 7}
 			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step}/>
 		{:else if step === 8}
-			<ClientLaunchFeedIntegration {isSuperAdmin} isLaunch={true} {back} {next} {step}/>
+			<ClientLaunchWalletIntegration {isSuperAdmin} {back} {next} {step}/>
 		{/if}
 	{/if}
 </div>

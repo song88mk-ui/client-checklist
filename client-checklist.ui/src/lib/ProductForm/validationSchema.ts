@@ -9,20 +9,18 @@ export type ClientSubTaskFormType = {
 	assignedTo: string;
 };
 
-
 export type ClientTaskFormType = {
 	id?: string;
 	assignedTo: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	targetDateCompleted: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	actualDateCompleted: any;
 	clientSubTasks: ClientSubTaskFormType[];
 };
 
 export type ProductFormType = {
-	[Environment.STAGING]: ClientTaskFormType;
-	[Environment.PRODUCTION]: ClientTaskFormType;
+	[key: string]: ClientTaskFormType;
 };
 
 const clientSubTaskFormSchema = yup.array().of(
@@ -35,20 +33,27 @@ const clientSubTaskFormSchema = yup.array().of(
 	})
 );
 
-const clientTaskFormSchema = yup.object().shape({
-	assignedTo: yup.string().when('disabled', {
-		is: false,
-		then: (schema) => schema.min(1, 'Assigned to is required'),
-		otherwise: (schema) => schema
-	}),
-	targetDateCompleted: yup.mixed().nullable(),
-	actualDateCompleted: yup.mixed().nullable(),
-	clientSubTasks: clientSubTaskFormSchema
-}).optional();
+const clientTaskFormSchema = yup
+	.object()
+	.shape({
+		assignedTo: yup.string().when('disabled', {
+			is: false,
+			then: (schema) => schema.min(1, 'Assigned to is required'),
+			otherwise: (schema) => schema
+		}),
+		targetDateCompleted: yup.mixed().nullable(),
+		actualDateCompleted: yup.mixed().nullable(),
+		clientSubTasks: clientSubTaskFormSchema
+	})
+	.nullable()
+	.notRequired();
 
-const productFormSchema = yup.object().shape({
+export const validationSchema = yup.object().shape({
 	[Environment.STAGING]: clientTaskFormSchema,
 	[Environment.PRODUCTION]: clientTaskFormSchema
 });
 
-export default productFormSchema;
+export const validationProdSchema = yup.object().shape({
+	[Environment.PRODUCTION]: clientTaskFormSchema
+});
+
