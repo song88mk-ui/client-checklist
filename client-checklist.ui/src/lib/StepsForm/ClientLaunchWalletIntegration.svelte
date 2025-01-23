@@ -1,18 +1,21 @@
 <script lang="ts">
 	import APIGateway from '$api/APIGateway';
 	import { type EditProductPayload } from '$api/request.DTO.model';
-	import Environment from '$enums/Environment';
-	import { ErrorMessages } from '$enums/ErrorMessages';
-	import Step from '$enums/Step';
 	import ProductForm, { type ProductFormType } from '../ProductForm';
 	import steps from '$stores/steps';
-	import auth from '$stores/auth';
 	import Product from '$utils/client';
 	import Alert from '../Alert.svelte';
 	import type { ClientInformationFormType } from '../ClientInformationForm';
+
 	import { servicesTypeId } from '$constants/services';
+	import Environment from '$enums/Environment';
+	import { ErrorMessages } from '$enums/ErrorMessages';
+	import Step from '$enums/Step';
+	import auth from '$stores/auth';
 	import selectedIntegration from '$stores/integration';
 	import initialFormValues from '$constants/initialFormValues';
+	import { goto } from '$app/navigation';
+
 
 	const { createStep, updateStep } = APIGateway();
 	const {
@@ -20,22 +23,24 @@
 		step,
 		isEdit = false,
 		isSuperAdmin
+
 	} = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
-		isEdit?: boolean;
 		isSuperAdmin?: boolean;
+		isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
 
 	const finishFormButtonLabel = (): string => {
 		return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
-	}
+	};
 
 	const defaultValues = initialFormValues[$selectedIntegration][step];
 	let initialValues = $steps[step].formData as ProductFormType || defaultValues;
+
 
 	let error = $state('');
 	let isLoading = $state(false);
@@ -118,7 +123,7 @@
 			}
 		);
 
-		const response = await productionProduct
+		const response = await productionProduct;
 		if (response.message === 'Success' && response.statusCode === 100) {
 			message = `${Product[$selectedIntegration]} has been successfully updated`;
 		}
@@ -148,5 +153,7 @@
 {/if}
 
 <div class="cc-client-launch">
-	<ProductForm isLaunch={true} finishFormButtonLabel={finishFormButtonLabel()} {title} {initialValues} {back} {isLoading} {disabled} onSubmit={handleSubmit} />
+	<ProductForm isLaunch={true} finishFormButtonLabel={finishFormButtonLabel()} {title} {initialValues} {back}
+							 {isLoading} {disabled} onSubmit={handleSubmit} />
+
 </div>
