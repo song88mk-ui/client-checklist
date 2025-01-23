@@ -31,6 +31,7 @@
 		isEdit?: boolean;
 	}>();
 
+	const serviceStep = Step[$selectedIntegration];
 	const title = $steps[step].title;
 
 	const finishFormButtonLabel = (): string => {
@@ -42,12 +43,10 @@
 	const defaultValues = initialFormValues[$selectedIntegration][step];
 	let initialValues = $steps[step].formData as ProductFormType || defaultValues;
 
-
 	let error = $state('');
 	let isLoading = $state(false);
 	let message = $state('');
 	let disabled = $state(false);
-	const serviceStep = Step[$selectedIntegration];
 
 	$effect(() => {
 		disabled = isEdit && !isSuperAdmin;

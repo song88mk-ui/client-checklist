@@ -36,7 +36,6 @@
 		$steps = INTEGRATION_STEPS[$selectedIntegration];
 	});
 
-
 </script>
 
 <div class="mb-10">

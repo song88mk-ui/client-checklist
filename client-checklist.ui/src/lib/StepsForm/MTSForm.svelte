@@ -12,6 +12,7 @@
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 	import initialFormValues from '$constants/initialFormValues';
+	import IntegrationType from '$enums/integrationType';
 
 	const { createStep, updateStep } = APIGateway();
 	const {
@@ -78,6 +79,7 @@
 				}
 			};
 		}
+
 		next();
 	};
 
