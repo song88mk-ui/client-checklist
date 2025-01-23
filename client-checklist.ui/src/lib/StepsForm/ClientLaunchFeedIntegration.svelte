@@ -1,13 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { type EditProductPayload } from '$api/request.DTO.model';
-	import {
-		ClientLaunchValuesOddsFeedAndLive,
-		ClientLaunchValuesBetValidation,
-		BAValuesFeedIntegration,
-		EndToEndTestValuesFeedIntegration,
-		ClientLaunchValuesWalletIntegration
-	} from '$constants/productFormValues';
 	import Environment from '$enums/Environment';
 	import { type ProductFormType } from '../ProductForm';
 	import ProductFormProd from '../ProductForm/ProductFormProd.svelte';
@@ -23,38 +16,35 @@
 	import selectedIntegration from '$stores/integration';
 
 	const { createStep, updateStep } = APIGateway();
-	const { back, step, isSuperAdmin, isLaunch = false, isEdit = false } = $props<{
+	const { back, step, isSuperAdmin, isEdit = false } = $props<{
 		back: () => void;
 		next: () => void;
 		step: number;
         isSuperAdmin: boolean;
-        isLaunch?: boolean;
         isEdit?: boolean;
 	}>();
 
 	const title = $steps[step].title;
     
     const finishFormButtonLabel = (): string => {
-        if (!isLaunch) return "Next";
-
         return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
     }
 
 	const TASKS: Record<number, ProductFormType> = {
-		8: $steps[step].formData as ProductFormType || {
-			[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
-			[Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
-		},
-		7: $steps[step].formData as ProductFormType || {
-			[Environment.STAGING]: ClientLaunchValuesBetValidation,
-			[Environment.PRODUCTION]: ClientLaunchValuesOddsFeedAndLive
-		},
-		6: $steps[step].formData as ProductFormType || {
-			[Environment.PRODUCTION]: BAValuesFeedIntegration
-		},
-		4: $steps[step].formData as ProductFormType || {
-			[Environment.PRODUCTION]: EndToEndTestValuesFeedIntegration
-		}
+		// 8: $steps[step].formData as ProductFormType || {
+		// 	[Environment.STAGING]: ClientLaunchValuesWalletIntegration,
+		// 	[Environment.PRODUCTION]: ClientLaunchValuesWalletIntegration
+		// },
+		// 7: $steps[step].formData as ProductFormType || {
+		// 	[Environment.STAGING]: ClientLaunchValuesBetValidation,
+		// 	[Environment.PRODUCTION]: ClientLaunchValuesOddsFeedAndLive
+		// },
+		// 6: $steps[step].formData as ProductFormType || {
+		// 	[Environment.PRODUCTION]: BAValuesFeedIntegration
+		// },
+		// 4: $steps[step].formData as ProductFormType || {
+		// 	[Environment.PRODUCTION]: EndToEndTestValuesFeedIntegration
+		// }
 	};
 	let initialValues = TASKS[step];
 

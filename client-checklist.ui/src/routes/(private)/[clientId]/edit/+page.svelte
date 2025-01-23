@@ -29,6 +29,7 @@
 	import { AccessType } from '$enums/role';
 	import IntegrationType from '$enums/integrationType';
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
+	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 
 	const { getClient } = APIGateway();
 
@@ -143,7 +144,7 @@
 				{:else if step === 6}
 					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 7}
-					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} isLaunch={true} {back} {next} {step} />
+					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} {back} {next} {step} />
 				{/if}
 			{/if}
 
@@ -165,7 +166,7 @@
 				{:else if step === 7}
 					<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 8}
-					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} isLaunch={true} {back} {next} {step} />
+					<ClientLaunchWalletIntegration isEdit {isSuperAdmin} {back} {next} {step} />
 				{/if}
 			{/if}
 		</div>

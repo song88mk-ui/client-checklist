@@ -14,6 +14,7 @@ import { SportsbookValues } from '$constants/Sportsbook/sportsbookValues';
 import { MTSWalletValues } from '$constants/MTS/MTSValuesWallet';
 import { EndToEndWalletValues } from '$constants/EndToEnd/endToEndValuesWallet';
 import { ClientLaunchWalletValues } from '$constants/ClientLaunch/clientLaunchValuesWallet';
+import { BusinessAcceptanceWalletValues } from '$constants/BusinessAcceptance/businessAcceptanceValuesWallet';
 
 const WalletSteps = Step[IntegrationType.WALLET_INTEGRATION];
 const initialWalletFormValues: Record<
@@ -46,8 +47,8 @@ const initialWalletFormValues: Record<
 			[Environment.PRODUCTION]: OperationsValues
 		},
 		[WalletSteps.BusinessAcceptanceTest]: {
-			[Environment.STAGING]: OperationsValues,
-			[Environment.PRODUCTION]: OperationsValues
+			[Environment.STAGING]: BusinessAcceptanceWalletValues,
+			[Environment.PRODUCTION]: BusinessAcceptanceWalletValues
 		},
 		[WalletSteps.ClientLaunch]: {
 			[Environment.PRODUCTION]: ClientLaunchWalletValues

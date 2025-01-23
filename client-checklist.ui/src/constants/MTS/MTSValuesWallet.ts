@@ -4,17 +4,11 @@ import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 const MTSWalletSubTasks: ClientSubTaskFormType[] = [
 	generateSubTask(1, 'Limit ID Creation'),
-	generateSubTask(2, 'Limit ID Creation(Client)'),
-	generateSubTask(3, 'Liability Settings'),
-	generateSubTask(4, 'Liability Settings(Client)'),
-	generateSubTask(5, 'Bookmaker Settings'),
-	generateSubTask(6, 'Bookmaker Settings(Client)'),
-	generateSubTask(7, 'CCF'),
-	generateSubTask(8, 'CCF(Client)'),
-	generateSubTask(9, 'Tournament Hierachy'),
-	generateSubTask(10, 'Tournament Hierachy(Client)'),
-	generateSubTask(11, 'Test Bets for reports'),
-	generateSubTask(12, 'Test Bets for reports (Client)')
+	generateSubTask(2, 'Liability Settings'),
+	generateSubTask(3, 'Bookmaker Settings'),
+	generateSubTask(4, 'CCF'),
+	generateSubTask(5, 'Tournament Hierachy'),
+	generateSubTask(6, 'Test Bets for reports'),
 ];
 
 export const MTSWalletValues: ClientTaskFormType = {

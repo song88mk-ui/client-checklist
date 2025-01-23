@@ -4,25 +4,32 @@
 	import { createForm } from 'svelte-forms-lib';
 	import Alert from '../Alert.svelte';
 	import ClientTask from './ClientTask.svelte';
-	import validationSchema, { type ProductFormType } from './validationSchema';
+	import { type ProductFormType, validationProdSchema, validationSchema } from './validationSchema';
 
-	let { title, initialValues, back, isLoading, onSubmit, finishFormButtonLabel, disabled = false } = $props<{
+	let { title, initialValues, back, isLoading, onSubmit, finishFormButtonLabel, disabled = false, isLaunch = false } = $props<{
 		title: string;
 		initialValues: ProductFormType;
 		back?: () => void;
 		isLoading?: boolean;
 		onSubmit: (values: ProductFormType) => void;
-        finishFormButtonLabel: string;
+		finishFormButtonLabel: string;
 		disabled?: boolean;
+		isLaunch?: boolean;
 	}>();
 
 	let errorMsg = $state('');
 
+	// let { initalValues, validationSchema } = pageForm;
+
 	const { form, errors, updateField, handleSubmit } = createForm({
 		initialValues,
-		validationSchema,
+		validationSchema: isLaunch ? validationProdSchema : validationSchema,
 		onSubmit
 	});
+
+	console.log("INITIAL",initialValues);
+	console.log("ERROR", $errors);
+	console.log("FORM", $form);
 
 	$effect(() => {
 		if (hasValue($errors)) {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createForm } from 'svelte-forms-lib';
-	import validationSchema, { type ProductFormType } from './validationSchema';
+	import { type ProductFormType, validationSchema } from './validationSchema';
 	import ClientTask from './ClientTask.svelte';
 	import Environment from '$enums/Environment';
 	import Alert from '../Alert.svelte';
