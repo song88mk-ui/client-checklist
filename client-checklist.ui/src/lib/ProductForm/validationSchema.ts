@@ -1,4 +1,3 @@
-import Environment from '$enums/Environment';
 import * as yup from 'yup';
 
 export type ClientSubTaskFormType = {
@@ -48,12 +47,10 @@ const clientTaskFormSchema = yup
 	.nullable()
 	.notRequired();
 
-export const validationSchema = yup.object().shape({
-	[Environment.STAGING]: clientTaskFormSchema,
-	[Environment.PRODUCTION]: clientTaskFormSchema
-});
+export const createValidationSchema: any = (keys: string[]) => {
+	const schemaShape: Record<string, any> = {};
 
-export const validationProdSchema = yup.object().shape({
-	[Environment.PRODUCTION]: clientTaskFormSchema
-});
+	keys.forEach((key: string) => schemaShape[key] = clientTaskFormSchema);
 
+	return yup.object().shape(schemaShape);
+}

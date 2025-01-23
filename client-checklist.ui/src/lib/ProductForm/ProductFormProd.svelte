@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createForm } from 'svelte-forms-lib';
-	import { type ProductFormType, validationSchema } from './validationSchema';
+	import { createValidationSchema, type ProductFormType } from './validationSchema';
 	import ClientTask from './ClientTask.svelte';
 	import Environment from '$enums/Environment';
 	import Alert from '../Alert.svelte';
@@ -19,7 +19,7 @@
 	let errorMsg = $state('')
 	const { form, errors, updateField, handleSubmit } = createForm({
 		initialValues,
-		validationSchema,
+		validationSchema: createValidationSchema('production'),
 		onSubmit
 	});
 	const TASKS:any = {

@@ -1,12 +1,24 @@
 <script lang="ts">
-	import Environment from '$enums/Environment';
 	import hasValue from '$utils/hasValue';
 	import { createForm } from 'svelte-forms-lib';
 	import Alert from '../Alert.svelte';
 	import ClientTask from './ClientTask.svelte';
-	import { type ProductFormType, validationProdSchema, validationSchema } from './validationSchema';
+	import {
+		createValidationSchema,
+		type ProductFormType,
+	} from './validationSchema';
 
-	let { title, initialValues, back, isLoading, onSubmit, finishFormButtonLabel, disabled = false, isLaunch = false } = $props<{
+	let {
+		title,
+		initialValues,
+		back,
+		isLoading,
+		onSubmit,
+		finishFormButtonLabel,
+		disabled = false,
+		isLaunch = false,
+		dataKeys = ['staging', 'production']
+	} = $props<{
 		title: string;
 		initialValues: ProductFormType;
 		back?: () => void;
@@ -15,21 +27,25 @@
 		finishFormButtonLabel: string;
 		disabled?: boolean;
 		isLaunch?: boolean;
+		dataKeys?: string[];
 	}>();
 
 	let errorMsg = $state('');
+	const keys = isLaunch ? ['production'] : dataKeys;
+	const schema = createValidationSchema(keys);
 
 	// let { initalValues, validationSchema } = pageForm;
 
 	const { form, errors, updateField, handleSubmit } = createForm({
 		initialValues,
-		validationSchema: isLaunch ? validationProdSchema : validationSchema,
+		validationSchema: schema,
 		onSubmit
 	});
 
-	console.log("INITIAL",initialValues);
-	console.log("ERROR", $errors);
-	console.log("FORM", $form);
+	console.log('INITIAL', initialValues);
+	console.log('ERROR', $errors);
+	console.log('SCHEMA', schema);
+	console.log('FORM', $form);
 
 	$effect(() => {
 		if (hasValue($errors)) {
@@ -40,35 +56,30 @@
 
 <form onsubmit={handleSubmit} class="cc-product-form flex flex-col gap-7">
 	{#if hasValue($errors)}
-			<div class="mb-5">
-					<Alert variant="error" message={errorMsg} hasCloseButton={false} />
-			</div>
+		<div class="mb-5">
+			<Alert variant="error" message={errorMsg} hasCloseButton={false} />
+		</div>
 	{/if}
 
-	<ClientTask
-		title={`${title} (${Environment.STAGING})`}
-		name={Environment.STAGING}
-		clientTask={$form[Environment.STAGING]}
-		errors={$errors[Environment.STAGING]}
-		{updateField}
-		{disabled}
-	/>
+	{#each keys as key}
+		<ClientTask
+			title={`${title} (${key})`}
+			name={key}
+			clientTask={$form[key]}
+			errors={$errors[key]}
+			{disabled}
+			{updateField}
+		/>
+	{/each}
 
-	<ClientTask
-		title={`${title} (${Environment.PRODUCTION})`}
-		name={Environment.PRODUCTION}
-		clientTask={$form[Environment.PRODUCTION]}
-		errors={$errors[Environment.PRODUCTION]}
-		{disabled}
-		{updateField}
-	/>
 	<div class="text-right">
 		<div class="inline-flex gap-2">
 			<button
 				type="button"
 				class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
 				disabled={isLoading}
-				onclick={back}>Back</button
+				onclick={back}>Back
+			</button
 			>
 			<button
 				onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
