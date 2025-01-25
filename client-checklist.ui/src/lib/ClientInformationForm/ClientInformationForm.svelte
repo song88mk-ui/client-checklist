@@ -6,13 +6,13 @@
 	import selectedIntegration from '$stores/integration';
 	import Product from '../../utils/client';
 	import { StatusCode } from '$api/models';
-	import { goto } from '$app/navigation';
-	import { LocalStorage } from '../storage';
 	import steps from '$stores/steps';
+	import { sportsFeed } from '$stores/client-launch-feed';
 	import Step from '$enums/Step';
 	import { servicesTypeId } from '$constants/services';
 	import validationSchema, { type ClientInformationFormType } from './validationSchema';
 	import { AccessType } from '$enums/role';
+	import { PageGuard } from '$services/PageGuard';
 
 	const { createClient, updateClient } = APIGateway();
 	let { next, isEdit = false } = $props();
@@ -48,7 +48,7 @@
 		socialAccount: ''
 	};
 
-	const serviceSteps = Step[$selectedIntegration]
+	const serviceSteps = Step[$selectedIntegration];
 
 	$effect(() => {
 		if ($steps[serviceSteps.ClientInformation]?.formData) {
@@ -60,6 +60,7 @@
 		} else {
 			updateInitialValues(initialValues);
 		}
+
 	});
 
 	const { form, handleSubmit, errors, updateField, updateInitialValues } = createForm({
@@ -70,7 +71,6 @@
 				next();
 				return;
 			}
-
 			isLoading = true;
 
 			const {
@@ -93,12 +93,13 @@
 				socialAccount
 			} = values;
 
+			const sportsList = sports.split(',').map(item => item.trim()).filter(item => item !== '');
 			const formData = {
 				...values,
 				serviceTypeId: servicesTypeId[$selectedIntegration],
 				languages: languages.split(' '),
 				currencies: currencies.split(' '),
-				sports: sports.split(' '),
+				sports: sportsList,
 				markets: markets.split(' '),
 				mainDecisionMaker: { name: mainDecisionMakerName, number: mainDecisionMakerNumber },
 				financeManager: { name: financeManagerName, number: financeManagerNumber },
@@ -117,7 +118,6 @@
 				response = await updateClient(formData, {
 					'x-user-token': $auth?.userToken as string
 				});
-				console.log(response)
 			} else {
 				response = await createClient(formData, {
 					'x-user-token': $auth?.userToken as string
@@ -127,27 +127,25 @@
 			isLoading = false;
 
 			if (response.statusCode === StatusCode.Success) {
+				$sportsFeed = sportsList;
 				$steps[serviceSteps.ClientInformation].formData = {
 					...values,
-					clientId: response.data,
+					clientId: response.data
 				};
-				next();
-			}
 
-			if ((response.error)?.statusCode === StatusCode.UnAuthorized) {
-				$auth = null;
-				LocalStorage.removeValue('userToken');
-				LocalStorage.removeValue('accessType');
-				LocalStorage.removeValue('username');
-				goto('/login');
+				next();
+
 				return;
 			}
+			// $sports = values.sports;
+			await PageGuard(response.error?.statusCode);
 		}
 	});
 
 	const handleSelectDate = (selectedDate: Date) => {
 		updateField('launchDate', selectedDate.toISOString());
 	};
+
 </script>
 
 <form onsubmit={handleSubmit} class="flex flex-col gap-7">
@@ -213,10 +211,10 @@
 						Target Launch Date
 					</label>
 					<DateInput
-                        placeholder="Enter target launch date"
+						placeholder="Enter target launch date"
 						value={$form.launchDate ? new Date($form.launchDate).toISOString() : null}
 						onSelectDate={(selectedDate) => handleSelectDate(selectedDate)}
-                        elementId="clientInformation-targetLaunchDate"
+						elementId="clientInformation-targetLaunchDate"
 						{disabled}
 					/>
 				</div>
@@ -457,7 +455,8 @@
 			<button
 				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
 				type="submit"
-				disabled={isLoading}>Next</button
+				disabled={isLoading}>Next
+			</button
 			>
 		</div>
 	</div>

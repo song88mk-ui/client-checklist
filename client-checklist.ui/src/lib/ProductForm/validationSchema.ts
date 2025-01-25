@@ -35,22 +35,18 @@ const clientSubTaskFormSchema = yup.array().of(
 const clientTaskFormSchema = yup
 	.object()
 	.shape({
-		assignedTo: yup.string().when('disabled', {
-			is: false,
-			then: (schema) => schema.min(1, 'Assigned to is required'),
-			otherwise: (schema) => schema
-		}),
+		assignedTo: yup.string().min(1, 'Assigned to is required'),
 		targetDateCompleted: yup.mixed().nullable(),
 		actualDateCompleted: yup.mixed().nullable(),
 		clientSubTasks: clientSubTaskFormSchema
 	})
-	.nullable()
-	.notRequired();
 
 export const createValidationSchema: any = (keys: string[]) => {
 	const schemaShape: Record<string, any> = {};
 
-	keys.forEach((key: string) => schemaShape[key] = clientTaskFormSchema);
+	keys.forEach((key: string) => {
+		schemaShape[key] = clientTaskFormSchema;
+	});
 
 	return yup.object().shape(schemaShape);
-}
+};

@@ -1,6 +1,5 @@
 import type { ClientSubTaskFormType, ClientTaskFormType } from '$lib/ProductForm/validationSchema';
 import { defaultValues, generateSubTask } from '$constants/commonValues';
-import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 const businessAcceptanceOddsFeedSubTasks: ClientSubTaskFormType[] = [
 	generateSubTask(1, 'Odds Feed'),
