@@ -4,6 +4,7 @@
 	import ProductForm, { type ProductFormType } from '../ProductForm';
 	import steps from '$stores/steps';
 	import auth from '$stores/auth';
+	import { hasBetValidation } from '$stores/client-launch-feed';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Alert from '../Alert.svelte';
 	import Step from '$enums/Step';
@@ -12,6 +13,7 @@
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 	import initialFormValues from '$constants/initialFormValues';
+	import { ClientRowStatus } from '$enums/ClientRowStatus';
 	import IntegrationType from '$enums/integrationType';
 
 	const { createStep, updateStep } = APIGateway();
@@ -54,8 +56,10 @@
 		let response;
 		if (values[Environment.STAGING].id && values[Environment.PRODUCTION].id) {
 			response = await handleEditProduct(values);
+
 		} else {
 			response = await handleCreateProduct(values);
+
 		}
 
 		isLoading = false;
@@ -80,6 +84,11 @@
 			};
 		}
 
+		// TODO: special handling for bet validation for client launch page; Need to refactor
+		if ($selectedIntegration == IntegrationType.FEED_INTEGRATION) {
+				$hasBetValidation = values[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable
+		}
+
 		next();
 	};
 
@@ -98,6 +107,8 @@
 				'x-user-token': $auth?.userToken as string
 			}
 		);
+
+		console.log("VALUES", values[Environment.STAGING])
 
 		const productionProduct = createStep(
 			{

@@ -3,10 +3,8 @@
 	import { createForm } from 'svelte-forms-lib';
 	import Alert from '../Alert.svelte';
 	import ClientTask from './ClientTask.svelte';
-	import {
-		createValidationSchema,
-		type ProductFormType,
-	} from './validationSchema';
+	import { createValidationSchema, type ProductFormType } from './validationSchema';
+	import IntegrationType from '$enums/integrationType';
 
 	let {
 		title,
@@ -17,6 +15,7 @@
 		finishFormButtonLabel,
 		disabled = false,
 		isLaunch = false,
+		serviceType = IntegrationType.WALLET_INTEGRATION,
 		dataKeys = ['staging', 'production']
 	} = $props<{
 		title: string;
@@ -28,13 +27,15 @@
 		disabled?: boolean;
 		isLaunch?: boolean;
 		dataKeys?: string[];
+		serviceType?: string;
 	}>();
 
 	let errorMsg = $state('');
-	const keys = isLaunch ? ['production'] : dataKeys;
+	const keys = isLaunch && serviceType == IntegrationType.WALLET_INTEGRATION ? ['production'] : dataKeys;
 	const schema = createValidationSchema(keys);
 
-	// let { initalValues, validationSchema } = pageForm;
+	// TODO: Need to make the initial values pair with validation schema
+	// let { initialValues, validationSchema } = pageForm;
 
 	const { form, errors, updateField, handleSubmit } = createForm({
 		initialValues,
@@ -42,16 +43,16 @@
 		onSubmit
 	});
 
-	console.log('INITIAL', initialValues);
-	console.log('ERROR', $errors);
-	console.log('SCHEMA', schema);
-	console.log('FORM', $form);
-
 	$effect(() => {
 		if (hasValue($errors)) {
 			errorMsg = 'Please fill all the fields correctly.';
 		}
 	});
+
+	// TODO: Need to refactor to make it clean and reusable
+	const getStepTitle = (key: string) => {
+		return key === 'staging' && isLaunch && serviceType === IntegrationType.FEED_INTEGRATION ? "Bet Validation" : `${title} (${key})`
+	}
 </script>
 
 <form onsubmit={handleSubmit} class="cc-product-form flex flex-col gap-7">
@@ -63,7 +64,7 @@
 
 	{#each keys as key}
 		<ClientTask
-			title={`${title} (${key})`}
+			title={getStepTitle(key)}
 			name={key}
 			clientTask={$form[key]}
 			errors={$errors[key]}

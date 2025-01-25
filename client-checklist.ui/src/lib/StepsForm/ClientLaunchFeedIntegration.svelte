@@ -12,9 +12,14 @@
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Step from '$enums/Step';
 	import auth from '$stores/auth';
+	import { hasBetValidation, sportsFeed } from '$stores/client-launch-feed';
 	import selectedIntegration from '$stores/integration';
 	import initialFormValues from '$constants/initialFormValues';
 	import { goto } from '$app/navigation';
+	import { generateSubTask } from '$constants/commonValues';
+	import IntegrationType from '$enums/integrationType';
+	import { ClientRowStatus } from '$enums/ClientRowStatus';
+	import environment from '$enums/Environment';
 
 
 	const { createStep, updateStep } = APIGateway();
@@ -33,16 +38,61 @@
 
 	const serviceStep = Step[$selectedIntegration];
 	const title = $steps[step].title;
+	const dataKeys: string[] = [];
 
 	const finishFormButtonLabel = (): string => {
 		return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
 	};
 
-	console.log("ALL FORMS", $steps);
-
 	const defaultValues = initialFormValues[$selectedIntegration][step];
-	let initialValues = $steps[step].formData as ProductFormType || defaultValues;
 
+	const mtsFormData = $steps[serviceStep.ManagedTradingServices].formData;
+	// TODO: Need to refactor to make it clean; Bet validation from MTS form for odds feed integration
+	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && (mtsFormData as ProductFormType)[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable) {
+		defaultValues[Environment.STAGING] = {
+			assignedTo: '',
+			targetDateCompleted: null,
+			actualDateCompleted: null,
+			clientSubTasks: [generateSubTask(1, 'Bet Validation')]
+		};
+
+		dataKeys.push(Environment.STAGING);
+	}
+
+	const clientInfoFormData = $steps[serviceStep.ClientInformation].formData;
+	const sportsListFormData = (clientInfoFormData as ClientInformationFormType).sports.split(',').map(i => i.trim()).filter(x => x !== null);
+
+	console.log('SPORTS', sportsListFormData);
+	// TODO: Need to refactor; Sports list from Client Information form for odds feed integration; Create list of sports
+	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && sportsListFormData.length > 0) {
+		defaultValues[Environment.PRODUCTION] = {
+			assignedTo: '',
+			targetDateCompleted: null,
+			actualDateCompleted: null,
+			clientSubTasks: sportsListFormData.map((s, i) => generateSubTask(i + 1, s))
+		};
+
+	}
+
+	// TODO: Need to refactor; Edit list of sports from client info page
+	const clientLaunchFormData = $steps[step].formData;
+
+	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && clientLaunchFormData) {
+		const newSubTasksSports: any[] = [];
+		let listOfSports = (clientLaunchFormData as ProductFormType)[Environment.PRODUCTION].clientSubTasks;
+		sportsListFormData.forEach((s, i) => {
+			const clientInfoSport = listOfSports.find(ls => ls.subtaskName == s);
+			console.log('CLIENT INFO SPORTS', clientInfoSport);
+
+			const confirmSports = clientInfoSport || generateSubTask(i + 1, s);
+			newSubTasksSports.push(confirmSports);
+		});
+
+		(clientLaunchFormData as ProductFormType)[Environment.PRODUCTION].clientSubTasks = newSubTasksSports;
+	}
+
+	dataKeys.push(Environment.PRODUCTION);
+	let initialValues = clientLaunchFormData as ProductFormType || defaultValues;
 	let error = $state('');
 	let isLoading = $state(false);
 	let message = $state('');
@@ -69,7 +119,7 @@
 			response = await handleCreateProduct(values);
 		}
 
-		if (response.error) {
+		if (response.some((res: any) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
 			isLoading = false;
 			return;
@@ -79,18 +129,56 @@
 			goto('/');
 		}, 3000);
 
-		if (response.data) {
-			$steps[step].formData = {
-				[Environment.PRODUCTION]: {
-					id: response.data.id,
-					...values[Environment.PRODUCTION]
-				}
-			};
+		if ($hasBetValidation) {
+			const [stagingResponse, productionResponse] = response;
+
+			if (stagingResponse.data && productionResponse.data) {
+				$steps[step].formData = {
+					[Environment.STAGING]: {
+						id: stagingResponse.data.id,
+						...values[Environment.STAGING]
+					},
+					[Environment.PRODUCTION]: {
+						id: productionResponse.data.id,
+						...values[Environment.PRODUCTION]
+					}
+				};
+			}
+		} else {
+			const [productionResponse] = response;
+			if (productionResponse.data) {
+				$steps[step].formData = {
+					[Environment.PRODUCTION]: {
+						id: productionResponse.data.id,
+						...values[Environment.PRODUCTION]
+					}
+				};
+			}
 		}
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {
 		const clientFormData = $steps[serviceStep.ClientInformation].formData;
+		const promiseList: any = [];
+
+		if ($hasBetValidation) {
+			const stagingProduct = createStep(
+				{
+					clientId: (clientFormData as ClientInformationFormType).clientId || '',
+					stepId: serviceStep.ClientLaunch,
+					stepName: '',
+					serviceTypeId: servicesTypeId[$selectedIntegration],
+					environment: 0,
+					...values[Environment.STAGING]
+				},
+				{
+					'x-user-token': $auth?.userToken as string
+				}
+			);
+
+			promiseList.push(stagingProduct);
+		}
+
 		const productionProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
@@ -105,14 +193,32 @@
 			}
 		);
 
-		const response = await productionProduct;
-		if (response.message === 'Success' && response.statusCode === 100) {
+		promiseList.push(productionProduct);
+		const response = await Promise.all(promiseList);
+
+		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
 			message = `${Product[$selectedIntegration]} has been successfully created`;
 		}
 		return response;
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {
+		const promiseList: any = [];
+		if (values[Environment.STAGING]) {
+			const stagingProduct = updateStep(
+				{
+					...values[Environment.STAGING],
+					stepName: ''
+				} as EditProductPayload,
+				{
+					'x-user-token': $auth?.userToken as string
+				}
+			);
+
+			promiseList.push(stagingProduct);
+		}
+
+
 		const productionProduct = updateStep(
 			{
 				...values[Environment.PRODUCTION],
@@ -123,8 +229,11 @@
 			}
 		);
 
-		const response = await productionProduct;
-		if (response.message === 'Success' && response.statusCode === 100) {
+		promiseList.push(productionProduct);
+
+		const response = await Promise.all(promiseList);
+
+		if (response.some((res) => res.message === 'Success' && res.statusCode === 100)) {
 			message = `${Product[$selectedIntegration]} has been successfully updated`;
 		}
 
@@ -154,6 +263,7 @@
 
 <div class="cc-client-launch">
 	<ProductForm isLaunch={true} finishFormButtonLabel={finishFormButtonLabel()} {title} {initialValues} {back}
-							 {isLoading} {disabled} onSubmit={handleSubmit} dataKeys={["bet-validation","sports"]}/>
+				 {isLoading} {disabled} onSubmit={handleSubmit} dataKeys={dataKeys}
+				 serviceType={IntegrationType.FEED_INTEGRATION} />
 
 </div>

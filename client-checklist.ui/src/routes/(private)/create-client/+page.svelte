@@ -14,10 +14,14 @@
 	import selectedIntegration from '$stores/integration';
 	import services, { servicesTypeId } from '$constants/services';
 	import steps from '$stores/steps';
+	import { hasBetValidation } from '$stores/client-launch-feed';
 	import IntegrationType from '$enums/integrationType';
 	import { AccessType } from '$enums/role';
 	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
+
+	// TODO: Reset special cases; Need to refactor
+	$hasBetValidation = false;
 
 	let step = $state(0);
 	let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
