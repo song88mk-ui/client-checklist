@@ -1,4 +1,4 @@
-<script lang="ts">
+=<script lang="ts">
 	let {status} = $props()
 
 	const STATUS_BG: Record<number, string> = {
