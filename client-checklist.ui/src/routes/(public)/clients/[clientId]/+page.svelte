@@ -12,7 +12,7 @@
 	import { type ClientInformation, type ClientStep, type ClientProgressStatus } from './types';
 	import Environment from '$enums/Environment';
 	import { LocalStorage } from '$lib/storage';
-	import {DEFAULT_SERVICE_TEMPLATE} from './constant'
+	import { DEFAULT_SERVICE_TEMPLATE } from './constant';
 
 	const { clientId } = $page.params;
 	const { searchParams } = $page.url;
@@ -29,16 +29,17 @@
 	let currEnvironment: Environment = $state(Environment.STAGING);
 	let error: any = $state(null);
 	let loading = true;
+	let targetDate = '';
 
-	function changeCurrEnvironment(selectedEnvironment: Environment){
-		if(selectedEnvironment === Environment.STAGING){
-			currEnvironment = Environment.STAGING
-			return
+	function changeCurrEnvironment(selectedEnvironment: Environment) {
+		if (selectedEnvironment === Environment.STAGING) {
+			currEnvironment = Environment.STAGING;
+			return;
 		}
-		currEnvironment = Environment.PRODUCTION
+		currEnvironment = Environment.PRODUCTION;
 	}
 
-	function calculatePercentage(items: any, itemToCheck: any):number {
+	function calculatePercentage(items: any, itemToCheck: any): number {
 		if (!Array.isArray(items) || items.length === 0) {
 			return 0;
 		}
@@ -53,10 +54,10 @@
 	function calcClientStepProgress(clientSteps: ClientStep[]) {
 		const clientProgressStatus = clientSteps.map((item) => {
 			const taskProgress = item.clientSubtasks.map((clientSubtask) => clientSubtask.taskStatus);
-			const totalPercentage = calculatePercentage(taskProgress,2)
-			if(totalPercentage === 0) return 0
-			if(totalPercentage > 0 && totalPercentage < 100) return 1
-			if(totalPercentage === 100) return 2
+			const totalPercentage = calculatePercentage(taskProgress, 2);
+			if (totalPercentage === 0) return 0;
+			if (totalPercentage > 0 && totalPercentage < 100) return 1;
+			if (totalPercentage === 100) return 2;
 		});
 
 		clientProgress = {
@@ -65,19 +66,22 @@
 			completed: calculatePercentage(clientProgressStatus, 2)
 		};
 	}
-	function getClientTask(clientSteps: ClientStep[]):ClientStep[]{
-		let newClientSteps = []
-		if(client){
-			newClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId].map((templateClientStep:ClientStep)=>{
-				const result = clientSteps.find((x)=> x.step ==templateClientStep.step)
-				if(result){
-					return result
-				}
-				return templateClientStep
 
-			})
+	function getClientTask(clientSteps: ClientStep[]): ClientStep[] {
+		let newClientSteps = [];
+		if (client) {
+			newClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId].map((templateClientStep: ClientStep) => {
+				const result = clientSteps.find((x) => x.step == templateClientStep.step);
+
+				if (result) {
+					return result;
+				}
+
+				return templateClientStep;
+
+			});
 		}
-		return newClientSteps
+		return newClientSteps;
 	}
 
 	onMount(async () => {
@@ -93,28 +97,34 @@
 
 			if (response?.error) {
 				error = response.error;
-                loading = false;
+				loading = false;
 				return;
 			}
 
 			let res: any = response?.data;
-			const clientSteps =  response?.data?.clientSteps.map((step: any) => {
-                return {
-                    ...step,
-                    isExpanded: true
-                }
-            })
+			const clientSteps = response?.data?.clientSteps.map((step: any) => {
+				return {
+					...step,
+					isExpanded: true
+				};
+			});
 
 			client = {
 				...res?.client,
 				clientSteps
 			};
-            
+
+			targetDate = client?.targetLaunchDate ? new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			}) : '';
+
 			if (client && client.clientSteps.length > 0) {
 				calcClientStepProgress(client?.clientSteps);
 			}
 
-            loading = false;
+			loading = false;
 		} catch (err: any) {
 			error = err;
 			loading = false;
@@ -131,51 +141,47 @@
 </header>
 
 <div class="cc-client-view-page">
-    {#if error && !loading}
-        <div class="w-[95vw] mt-[60px] flex flex-col items-center justify-center mx-auto">
-            <img
-                src="/icon-warning.svg"
-                alt="icon-warning"
-                class={"h-[76px] w-[76px] mb-[25px]"}
-            />
-            <div class="w-full text-center bg-[#FCF8E3] py-[18px]">
-                <span class="block text-[#A68F64] font-[600] text-[32px] mb-[12px]">Site Disabled</span>
-                <span class="block text-[#A68F64] font-[600] text-[23px]">This site has been disabled by the site administrator. Please contact your Administrator. </span>
-            </div>
-        </div>
-    {/if}
-    
-    {#if client !== null && !loading}
-        <div class="flex-1 p-6">
-            <ClientDetails
-                CompanyName={client.clientName}
-                Domain={client?.domain}
-                LangSupported={client?.languages}
-                CurrencySupported={client?.currencies}
-                LaunchDate={new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                })}
-                ServiceToProvide={services[client.serviceTypeId]}
-            />
-            <ClientProgressBar
-                InProgress={clientProgress.inProgress}
-                NotStarted={clientProgress.notStarted}
-                Completed={clientProgress.completed}
-                CurrEnvironment={currEnvironment}
-                HandleChangeEnvironment={changeCurrEnvironment}
-            />
-            {#if currEnvironment === Environment.STAGING}
-                {#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
-                    <ClientTaskComponent {clientStep}  />
-                {/each}
-            {/if}
-            {#if currEnvironment === Environment.PRODUCTION}
-                {#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
-                    <ClientTaskComponent {clientStep}  />
-                {/each}
-            {/if}
-        </div>
-    {/if}
+	{#if error && !loading}
+		<div class="w-[95vw] mt-[60px] flex flex-col items-center justify-center mx-auto">
+			<img
+				src="/icon-warning.svg"
+				alt="icon-warning"
+				class={"h-[76px] w-[76px] mb-[25px]"}
+			/>
+			<div class="w-full text-center bg-[#FCF8E3] py-[18px]">
+				<span class="block text-[#A68F64] font-[600] text-[32px] mb-[12px]">Site Disabled</span>
+				<span class="block text-[#A68F64] font-[600] text-[23px]">This site has been disabled by the site administrator. Please contact your Administrator. </span>
+			</div>
+		</div>
+	{/if}
+
+	{#if client !== null && !loading}
+		<div class="flex-1 p-6">
+			<ClientDetails
+				CompanyName={client.clientName}
+				Domain={client?.domain}
+				LangSupported={client?.languages}
+				CurrencySupported={client?.currencies}
+				LaunchDate={targetDate}
+				ServiceToProvide={services[client.serviceTypeId]}
+			/>
+			<ClientProgressBar
+				InProgress={clientProgress.inProgress}
+				NotStarted={clientProgress.notStarted}
+				Completed={clientProgress.completed}
+				CurrEnvironment={currEnvironment}
+				HandleChangeEnvironment={changeCurrEnvironment}
+			/>
+			{#if currEnvironment === Environment.STAGING}
+				{#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
+					<ClientTaskComponent {clientStep} />
+				{/each}
+			{/if}
+			{#if currEnvironment === Environment.PRODUCTION}
+				{#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
+					<ClientTaskComponent {clientStep} />
+				{/each}
+			{/if}
+		</div>
+	{/if}
 </div>
