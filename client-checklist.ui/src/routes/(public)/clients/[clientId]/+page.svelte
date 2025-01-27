@@ -174,12 +174,12 @@
 			/>
 			{#if currEnvironment === Environment.STAGING}
 				{#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
-					<ClientTaskComponent {clientStep} />
+					<ClientTaskComponent serviceTypeId={client.serviceTypeId} {clientStep} />
 				{/each}
 			{/if}
 			{#if currEnvironment === Environment.PRODUCTION}
 				{#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
-					<ClientTaskComponent {clientStep} />
+					<ClientTaskComponent serviceTypeId={client.serviceTypeId} {clientStep} />
 				{/each}
 			{/if}
 		</div>
