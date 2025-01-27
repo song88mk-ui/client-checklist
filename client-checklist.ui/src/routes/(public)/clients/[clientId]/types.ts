@@ -12,6 +12,7 @@ export type ClientStep = {
     step: number;
     stepName: string;
     serviceTypeId: number;
+    serviceType?: number;
     targetDateCompleted: string;
     actualDateCompleted:string;
     assignedTo: string;

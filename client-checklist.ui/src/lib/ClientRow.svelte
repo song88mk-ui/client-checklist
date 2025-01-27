@@ -29,12 +29,12 @@
 </script>
 
 <div
-	class="mb-[12px] flex w-full flex-row items-center rounded-[5px] border-[1px] border-solid border-[#D6D6D6] bg-[#FFF]"
+	class="cc-client-row mb-[12px] flex w-full flex-row items-center rounded-[5px] border-[1px] border-solid border-[#D6D6D6] bg-[#FFF]"
 >
 	<span class={`${textCss} w-[10%] capitalize`}>{client.companyName}</span>
 	<span class={`${textCss} w-[10%] capitalize`}>{client.domain}</span>
 	<span class={`${textCss} w-[10%]`}
-		>{format(new Date(client.targetLaunchDate), 'MMMM dd, yyyy')}</span
+		>{client.targetLaunchDate ? format(new Date(client.targetLaunchDate), 'MMMM dd, yyyy') : ""}</span
 	>
 	<span class={`${textCss} w-[30%]`}>{client.services}</span>
 	<span class={`${textCss} w-[10%] capitalize`}>{client.mainDecisionMaker}</span>

@@ -40,7 +40,7 @@
 	>{clientSubtask.comment}</td
 	>
 	<td class="border-b border-[#ECECEC] px-4 py-2 text-start text-[14px] text-[#1A1A1A]"
-	>{clientSubtask.comment}</td
+	>{clientSubtask.assignedTo}</td
 	>
 	<td class="border-b border-[#ECECEC] px-4 py-2 text-start text-[14px] text-[#1A1A1A]"
 	>{@html TaskStatus(clientSubtask.taskStatus)}</td

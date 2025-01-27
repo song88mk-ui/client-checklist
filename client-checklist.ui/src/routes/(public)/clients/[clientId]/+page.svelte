@@ -67,10 +67,17 @@
 		};
 	}
 
-	function getClientTask(clientSteps: ClientStep[]): ClientStep[] {
+	function getClientTask(env: number, clientSteps: ClientStep[]): ClientStep[] {
 		let newClientSteps = [];
 		if (client) {
-			newClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId].map((templateClientStep: ClientStep) => {
+			newClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId]
+
+			if (env === 0) {
+				newClientSteps = newClientSteps.filter(x => x.stepName !== "Client Launch")
+			  	console.log("FILTER", newClientSteps)
+			}
+
+			newClientSteps = newClientSteps.map((templateClientStep: ClientStep) => {
 				const result = clientSteps.find((x) => x.step == templateClientStep.step);
 
 				if (result) {
@@ -81,6 +88,7 @@
 
 			});
 		}
+
 		return newClientSteps;
 	}
 
@@ -114,6 +122,16 @@
 				clientSteps
 			};
 
+			// Get client launch staging odds feed
+			const clientLaunchStagingOddsFeed = client?.clientSteps.find(x => x.serviceType == 2 && x.environment == 0 && x.step == 7);
+			const betValidationSubTask = clientLaunchStagingOddsFeed?.clientSubtasks[0];
+
+			client?.clientSteps.forEach(i => {
+				if (i.serviceType == 2 && i.step == 7 && i.environment == 1 && betValidationSubTask) {
+					return { ...i, clientSubtasks: i.clientSubtasks.push(betValidationSubTask) };
+				}
+			});
+
 			targetDate = client?.targetLaunchDate ? new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
 				year: 'numeric',
 				month: 'long',
@@ -123,7 +141,6 @@
 			if (client && client.clientSteps.length > 0) {
 				calcClientStepProgress(client?.clientSteps);
 			}
-
 			loading = false;
 		} catch (err: any) {
 			error = err;
@@ -173,12 +190,12 @@
 				HandleChangeEnvironment={changeCurrEnvironment}
 			/>
 			{#if currEnvironment === Environment.STAGING}
-				{#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
+				{#each getClientTask(0, client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
 					<ClientTaskComponent serviceTypeId={client.serviceTypeId} {clientStep} />
 				{/each}
 			{/if}
 			{#if currEnvironment === Environment.PRODUCTION}
-				{#each getClientTask(client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
+				{#each getClientTask(1, client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
 					<ClientTaskComponent serviceTypeId={client.serviceTypeId} {clientStep} />
 				{/each}
 			{/if}
