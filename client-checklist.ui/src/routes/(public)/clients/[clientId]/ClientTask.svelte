@@ -110,22 +110,22 @@
 				<thead class="h-[36px]">
 				<tr>
 					<th
-						class="bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
+						class="w-2/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
 					>Description
 					</th
 					>
 					<th
-						class="bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
+						class="w-2/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
 					>Comments
 					</th
 					>
 					<th
-						class="bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
+						class="w-1/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
 					>Assigned To
 					</th
 					>
 					<th
-						class="bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
+						class="w-1/6 text-center bg-[#F6F6F6] px-4 py-2 text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
 					>Status
 					</th
 					>

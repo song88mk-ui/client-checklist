@@ -1,17 +1,4 @@
-import IntegrationType from '$enums/integrationType';
 import { OddsFeedSteps, WalletSteps } from '$constants/initialFormValues';
-
-export const STEP_NAME: any = {
-	'1': 'Back Office',
-	'2': 'Wallet Integration',
-	'3': 'Odds Feed Integration',
-	'4': 'Sportsbook Player Site UI/UX',
-	'5': 'Managed Trading Services',
-	'6': 'End to End Functional & Performance Test',
-	'7': 'Operations',
-	'8': 'Business Acceptance Test',
-	'9': 'Client Launch'
-};
 
 export const STEP_NAME_BY_INTEGRATION: Record<number, any> = {
 	1: {
