@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
 	import { type ClientStep, type ClientSubtask } from './types';
-	import { STEP_NAME } from './constant';
+	import { STEP_NAME_BY_INTEGRATION } from './constant';
 	import ClientTaskStatus from './ClientTaskStatus.svelte';
 	import ClientSubtaskComponent from './ClientSubtaskComponent.svelte';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 	export let clientStep: ClientStep;
+	export let serviceTypeId: number;
 	let status: number = 0;
 	let percentage = '0';
 
@@ -63,7 +64,7 @@
 		<div class="flex">
 			<span
 				class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
-			>{STEP_NAME[clientStep.step]}</span
+			>{STEP_NAME_BY_INTEGRATION[serviceTypeId][clientStep.step]}</span
 			>
 			<div
 				class="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#0071BC] text-[12px] font-bold font-normal leading-none text-white"
