@@ -9,7 +9,12 @@
 	import ClientProgressBar from './ClientProgressBar.svelte';
 	import ClientOnBoarding from './ClientOnBoarding.svelte';
 	import { openModal } from '$stores/modal';
-	import { type ClientInformation, type ClientStep, type ClientProgressStatus } from './types';
+	import {
+		type ClientInformation,
+		type ClientStep,
+		type ClientProgressStatus,
+		type ClientStepTemplate
+	} from './types';
 	import Environment from '$enums/Environment';
 	import { LocalStorage } from '$lib/storage';
 	import { DEFAULT_SERVICE_TEMPLATE } from './constant';
@@ -28,8 +33,8 @@
 	});
 	let currEnvironment: Environment = $state(Environment.STAGING);
 	let error: any = $state(null);
-	let loading = true;
-	let targetDate = '';
+	let loading = $state(true);
+	let targetDate = $state('');
 
 	function changeCurrEnvironment(selectedEnvironment: Environment) {
 		if (selectedEnvironment === Environment.STAGING) {
@@ -67,29 +72,23 @@
 		};
 	}
 
-	function getClientTask(env: number, clientSteps: ClientStep[]): ClientStep[] {
-		let newClientSteps = [];
-		if (client) {
-			newClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId]
+	function getClientTask(env: number, clientSteps: ClientStep[]): ClientStepTemplate[] {
+		if (!client) return [];
+		let newClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId];
 
-			if (env === 0) {
-				newClientSteps = newClientSteps.filter(x => x.stepName !== "Client Launch")
-			  	console.log("FILTER", newClientSteps)
-			}
-
-			newClientSteps = newClientSteps.map((templateClientStep: ClientStep) => {
-				const result = clientSteps.find((x) => x.step == templateClientStep.step);
-
-				if (result) {
-					return result;
-				}
-
-				return templateClientStep;
-
-			});
+		if (env === 0) {
+			newClientSteps = newClientSteps.filter((x) => x.stepName !== 'Client Launch');
 		}
 
-		return newClientSteps;
+		return newClientSteps.map((templateClientStep: ClientStepTemplate) => {
+			const result = clientSteps.find((x) => x.step == templateClientStep.step);
+
+			if (result) {
+				return result;
+			}
+
+			return templateClientStep;
+		});
 	}
 
 	onMount(async () => {
@@ -123,20 +122,24 @@
 			};
 
 			// Get client launch staging odds feed
-			const clientLaunchStagingOddsFeed = client?.clientSteps.find(x => x.serviceType == 2 && x.environment == 0 && x.step == 7);
+			const clientLaunchStagingOddsFeed = client?.clientSteps.find(
+				(x) => x.serviceType == 2 && x.environment == 0 && x.step == 7
+			);
 			const betValidationSubTask = clientLaunchStagingOddsFeed?.clientSubtasks[0];
 
-			client?.clientSteps.forEach(i => {
+			client?.clientSteps.forEach((i) => {
 				if (i.serviceType == 2 && i.step == 7 && i.environment == 1 && betValidationSubTask) {
 					return { ...i, clientSubtasks: i.clientSubtasks.push(betValidationSubTask) };
 				}
 			});
 
-			targetDate = client?.targetLaunchDate ? new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric'
-			}) : '';
+			targetDate = client?.targetLaunchDate
+				? new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					})
+				: '';
 
 			if (client && client.clientSteps.length > 0) {
 				calcClientStepProgress(client?.clientSteps);
@@ -159,15 +162,13 @@
 
 <div class="cc-client-view-page">
 	{#if error && !loading}
-		<div class="w-[95vw] mt-[60px] flex flex-col items-center justify-center mx-auto">
-			<img
-				src="/icon-warning.svg"
-				alt="icon-warning"
-				class={"h-[76px] w-[76px] mb-[25px]"}
-			/>
-			<div class="w-full text-center bg-[#FCF8E3] py-[18px]">
-				<span class="block text-[#A68F64] font-[600] text-[32px] mb-[12px]">Site Disabled</span>
-				<span class="block text-[#A68F64] font-[600] text-[23px]">This site has been disabled by the site administrator. Please contact your Administrator. </span>
+		<div class="mx-auto mt-[60px] flex w-[95vw] flex-col items-center justify-center">
+			<img src="/icon-warning.svg" alt="icon-warning" class={'mb-[25px] h-[76px] w-[76px]'} />
+			<div class="w-full bg-[#FCF8E3] py-[18px] text-center">
+				<span class="mb-[12px] block text-[32px] font-[600] text-[#A68F64]">Site Disabled</span>
+				<span class="block text-[23px] font-[600] text-[#A68F64]"
+					>This site has been disabled by the site administrator. Please contact your Administrator.
+				</span>
 			</div>
 		</div>
 	{/if}
@@ -190,13 +191,19 @@
 				HandleChangeEnvironment={changeCurrEnvironment}
 			/>
 			{#if currEnvironment === Environment.STAGING}
-				{#each getClientTask(0, client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
-					<ClientTaskComponent serviceTypeId={client.serviceTypeId} {clientStep} />
+				{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
+					<ClientTaskComponent
+						serviceTypeId={client.serviceTypeId}
+						clientStep={clientStep as ClientStep}
+					/>
 				{/each}
 			{/if}
 			{#if currEnvironment === Environment.PRODUCTION}
-				{#each getClientTask(1, client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
-					<ClientTaskComponent serviceTypeId={client.serviceTypeId} {clientStep} />
+				{#each getClientTask( 1, client.clientSteps.filter((clientStep) => clientStep.environment === 1) ) as clientStep}
+					<ClientTaskComponent
+						serviceTypeId={client.serviceTypeId}
+						clientStep={clientStep as ClientStep}
+					/>
 				{/each}
 			{/if}
 		</div>

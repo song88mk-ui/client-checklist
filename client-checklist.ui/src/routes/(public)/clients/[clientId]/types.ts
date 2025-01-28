@@ -14,11 +14,11 @@ export type ClientStep = {
     serviceTypeId: number;
     serviceType?: number;
     targetDateCompleted: string;
-    actualDateCompleted:string;
+    actualDateCompleted: string;
     assignedTo: string;
     sortOrder: number;
     environment: number;
-    clientSubtasks: ClientSubtask[],
+    clientSubtasks: ClientSubtask[];
     isExpanded: boolean;
 }
 
@@ -33,7 +33,7 @@ export type ClientInformation = {
     customerServiceManager: Manager;
     domain: string;
     financeManager: Manager;
-    languages:string[];
+    languages: string[];
     mainDecisionMaker: Manager;
     productManager: Manager
     serviceTypeId: number;
@@ -46,6 +46,22 @@ export type ClientInformation = {
 
 export type ClientProgressStatus = {
     notStarted: number;
-    inProgress:number;
-    completed:number;
+    inProgress: number;
+    completed: number;
+}
+
+export type ClientStepTemplate = {
+    actualDateCompleted: string;
+    assignedTo: string;
+    clientId: string;
+    clientTaskId?: number | undefined;
+    clientStepId?: number;
+    clientSubtasks: ClientSubtask[];
+    environment: number;
+    serviceTypeId: number;
+    sortOrder: number;
+    step: number;
+    stepName: string;
+    targetDateCompleted: string;
+    isExpanded?: boolean;
 }
