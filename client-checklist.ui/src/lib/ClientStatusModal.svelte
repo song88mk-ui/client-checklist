@@ -5,11 +5,11 @@
 	import Alert from './Alert.svelte';
 	import auth from '$stores/auth';
 	import { ErrorMessages } from '$enums/ErrorMessages';
-	import { clients, selectedClient, deletedClient } from '$stores/client';
+	import { clients, selectedClient } from '$stores/client';
 	import type { ClientStatusPayload } from '$api/request.DTO.model';
 	import type { Client } from '$types/client';
 
-	const { clientStatus } = APIGateway();
+	const { getClientStatus } = APIGateway();
 
 	const handleCancel = () => {
 		closeModal();
@@ -29,7 +29,7 @@
 				statusId: currClient.isActive ? 0 : 1
 			};
 
-			const res = await clientStatus(payload, {
+			const res = await getClientStatus(payload, {
 				'x-user-token': $auth?.userToken as string
 			});
 
