@@ -135,10 +135,10 @@
 
 			targetDate = client?.targetLaunchDate
 				? new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric'
-					})
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric'
+				})
 				: '';
 
 			if (client && client.clientSteps.length > 0) {
@@ -154,9 +154,7 @@
 
 <header class="flex items-center bg-white p-5 shadow-md">
 	<h1 class="mr-3">
-		<a href="/">
-			<CompanyLogo size={136} />
-		</a>
+		<CompanyLogo size={136} />
 	</h1>
 </header>
 
@@ -167,7 +165,7 @@
 			<div class="w-full bg-[#FCF8E3] py-[18px] text-center">
 				<span class="mb-[12px] block text-[32px] font-[600] text-[#A68F64]">Site Disabled</span>
 				<span class="block text-[23px] font-[600] text-[#A68F64]"
-					>This site has been disabled by the site administrator. Please contact your Administrator.
+				>This site has been disabled by the site administrator. Please contact your Administrator.
 				</span>
 			</div>
 		</div>
@@ -191,7 +189,7 @@
 				HandleChangeEnvironment={changeCurrEnvironment}
 			/>
 			{#if currEnvironment === Environment.STAGING}
-				{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
+				{#each getClientTask(0, client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
 					<ClientTaskComponent
 						serviceTypeId={client.serviceTypeId}
 						clientStep={clientStep as ClientStep}
@@ -199,7 +197,7 @@
 				{/each}
 			{/if}
 			{#if currEnvironment === Environment.PRODUCTION}
-				{#each getClientTask( 1, client.clientSteps.filter((clientStep) => clientStep.environment === 1) ) as clientStep}
+				{#each getClientTask(1, client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
 					<ClientTaskComponent
 						serviceTypeId={client.serviceTypeId}
 						clientStep={clientStep as ClientStep}
