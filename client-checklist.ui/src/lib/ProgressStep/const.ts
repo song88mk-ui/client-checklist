@@ -33,8 +33,8 @@ const WALLET_INTEGRATION_STEPS: Step[] = [
     { title: 'Wallet Integration', status: StepStatus.Inactive, stepId: 2 },
     { title: 'Sportsbook Player Site UI/UX', status: StepStatus.Inactive, stepId: 3 },
     { title: 'Manage Trading Services', status: StepStatus.Inactive, stepId: 4 },
-    { title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 5 },
-    { title: 'Operations', status: StepStatus.Inactive, stepId: 6 },
+    { title: 'Operations', status: StepStatus.Inactive, stepId: 5 },
+    { title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 6 },
     { title: 'Business Acceptance Test', status: StepStatus.Inactive, stepId: 7 },
     { title: 'Client Launch', status: StepStatus.Inactive, stepId: 8 }
 ]
@@ -44,8 +44,8 @@ const FEED_INTEGRATION_STEPS: Step[] = [
     { title: 'Back Office', status: StepStatus.Inactive, stepId: 1 },
     { title: 'Odds Feed Integration', status: StepStatus.Inactive, stepId: 2 },
     { title: 'Manage Trading Services', status: StepStatus.Inactive, stepId: 3 },
-    { title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 4 },
-    { title: 'Operations', status: StepStatus.Inactive, stepId: 5 },
+    { title: 'Operations', status: StepStatus.Inactive, stepId: 4 },
+    { title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 5 },
     { title: 'Business Acceptance Test', status: StepStatus.Inactive, stepId: 6 },
     { title: 'Client Launch', status: StepStatus.Inactive, stepId: 7 }
 ]
