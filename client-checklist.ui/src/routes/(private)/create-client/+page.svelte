@@ -61,9 +61,9 @@
 		{:else if step === 3 }
 			<MTSForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 4}
-			<EndToEndTestForm {isSuperAdmin} {back} {next} {step} />
-		{:else if step === 5}
 			<OperationsForm {isSuperAdmin} {back} {next} {step} />
+		{:else if step === 5}
+			<EndToEndTestForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 6}
 			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 7}
@@ -83,9 +83,9 @@
 		{:else if step === 4}
 			<MTSForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 5 }
-			<EndToEndTestForm {isSuperAdmin} {back} {next} {step} />
-		{:else if step === 6 }
 			<OperationsForm {isSuperAdmin} {back} {next} {step} />
+		{:else if step === 6 }
+			<EndToEndTestForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 7}
 			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 8}
