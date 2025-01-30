@@ -39,13 +39,13 @@ const initialWalletFormValues: Record<
 			[Environment.STAGING]: MTSWalletValues,
 			[Environment.PRODUCTION]: MTSWalletValues
 		},
-		[WalletSteps.EndToEndFunctionalPerformanceTest]: {
-			[Environment.STAGING]: EndToEndWalletValues,
-			[Environment.PRODUCTION]: EndToEndWalletValues
-		},
 		[WalletSteps.Operations]: {
 			[Environment.STAGING]: OperationsValues,
 			[Environment.PRODUCTION]: OperationsValues
+		},
+		[WalletSteps.EndToEndFunctionalPerformanceTest]: {
+			[Environment.STAGING]: EndToEndWalletValues,
+			[Environment.PRODUCTION]: EndToEndWalletValues
 		},
 		[WalletSteps.BusinessAcceptanceTest]: {
 			[Environment.STAGING]: BusinessAcceptanceWalletValues,
@@ -72,13 +72,13 @@ const initialFeedFormValues: Record<string, Record<number, Record<string, Client
 			[Environment.STAGING]: MTSOddsFeedValues,
 			[Environment.PRODUCTION]: MTSOddsFeedValues
 		},
-		[OddsFeedSteps.EndToEndFunctionalPerformanceTest]: {
-			[Environment.STAGING]: EndToEndOddsFeedValues,
-			[Environment.PRODUCTION]: EndToEndOddsFeedValues
-		},
 		[OddsFeedSteps.Operations]: {
 			[Environment.STAGING]: OperationsValues,
 			[Environment.PRODUCTION]: OperationsValues
+		},
+		[OddsFeedSteps.EndToEndFunctionalPerformanceTest]: {
+			[Environment.STAGING]: EndToEndOddsFeedValues,
+			[Environment.PRODUCTION]: EndToEndOddsFeedValues
 		},
 		[OddsFeedSteps.BusinessAcceptanceTest]: {
 			[Environment.STAGING]: BusinessAcceptanceOddsFeedValues,
