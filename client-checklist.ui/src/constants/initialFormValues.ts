@@ -66,7 +66,7 @@ const initialFeedFormValues: Record<string, Record<number, Record<string, Client
 		},
 		[OddsFeedSteps.OddsfeedIntegration]: {
 			[Environment.STAGING]: OddsFeedIntegrationStagingValues,
-			[Environment.PRODUCTION]: OddsFeedIntegrationProdValues
+			[Environment.PRODUCTION]: OddsFeedIntegrationStagingValues
 		},
 		[OddsFeedSteps.ManagedTradingServices]: {
 			[Environment.STAGING]: MTSOddsFeedValues,
