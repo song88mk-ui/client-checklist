@@ -12,6 +12,7 @@
 	import { servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
 	import initialFormValues from '$constants/initialFormValues';
+	import getOverallStatus from '$utils/getOverallStatus';
 
 	const { createStep, updateStep } = APIGateway();
 	const {
@@ -65,6 +66,8 @@
 
 		const [stagingResponse, productionResponse] = response;
 
+		const previousStatus = getOverallStatus($steps);
+
 		if (stagingResponse.data && productionResponse.data) {
 			$steps[step].formData = {
 				[Environment.STAGING]: {
@@ -76,6 +79,11 @@
 					...values[Environment.PRODUCTION]
 				}
 			};
+
+			const currentStatus = getOverallStatus($steps);
+			if (previousStatus !== currentStatus) {
+				// API call to update the taskStatus
+			}
 		}
 		next();
 	};

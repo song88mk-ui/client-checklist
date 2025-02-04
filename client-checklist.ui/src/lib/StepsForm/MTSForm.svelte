@@ -15,6 +15,7 @@
 	import initialFormValues from '$constants/initialFormValues';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
 	import IntegrationType from '$enums/integrationType';
+	import getOverallStatus from '$utils/getOverallStatus';
 
 	const { createStep, updateStep } = APIGateway();
 	const {
@@ -71,6 +72,8 @@
 
 		const [stagingResponse, productionResponse] = response;
 
+		const previousStatus = getOverallStatus($steps);
+
 		if (stagingResponse.data && productionResponse.data) {
 			$steps[step].formData = {
 				[Environment.STAGING]: {
@@ -82,6 +85,11 @@
 					...values[Environment.PRODUCTION]
 				}
 			};
+
+			const currentStatus = getOverallStatus($steps);
+			if (previousStatus !== currentStatus) {
+				// API call to update the taskStatus
+			}
 		}
 
 		// TODO: special handling for bet validation for client launch page; Need to refactor

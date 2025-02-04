@@ -20,6 +20,7 @@
 	import IntegrationType from '$enums/integrationType';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
 	import environment from '$enums/Environment';
+	import getOverallStatus from '$utils/getOverallStatus';
 
 
 	const { createStep, updateStep } = APIGateway();
@@ -129,6 +130,8 @@
 			goto('/');
 		}, 3000);
 
+		const previousStatus = getOverallStatus($steps);
+
 		if ($hasBetValidation) {
 			const [stagingResponse, productionResponse] = response;
 
@@ -154,6 +157,11 @@
 					}
 				};
 			}
+		}
+
+		const currentStatus = getOverallStatus($steps);
+		if (previousStatus !== currentStatus) {
+			// API call to update the taskStatus
 		}
 	};
 
