@@ -28,6 +28,7 @@
 	import IntegrationType from '$enums/integrationType';
 	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
+	import getOverallStatus from '$utils/getOverallStatus';
 
 	const { getClient } = APIGateway();
 
@@ -107,6 +108,12 @@
 			});
 		}
 	});
+
+	$effect(() => {
+		if ($steps) {
+			getOverallStatus($steps);
+		}
+	})
 </script>
 
 <div class="cc-edit-client-page">

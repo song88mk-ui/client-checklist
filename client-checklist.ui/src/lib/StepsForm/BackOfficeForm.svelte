@@ -12,6 +12,7 @@
 	import type { ClientInformationFormType } from '../ClientInformationForm';
 	import ProductForm, { type ProductFormType } from '../ProductForm';
 	import initialFormValues from '$constants/initialFormValues';
+	import getOverallStatus from '$utils/getOverallStatus';
 
 	const { createStep, updateStep } = APIGateway();
 
@@ -66,6 +67,8 @@
 
 		const [stagingResponse, productionResponse] = response;
 
+		const previousStatus = getOverallStatus($steps);
+
 		if (stagingResponse.data && productionResponse.data) {
 			$steps[step].formData = {
 				[Environment.STAGING]: {
@@ -77,6 +80,11 @@
 					...values[Environment.PRODUCTION]
 				}
 			};
+
+			const currentStatus = getOverallStatus($steps);
+			if (previousStatus !== currentStatus) {
+				// API call to update the taskStatus
+			}
 		}
 		next();
 	};
