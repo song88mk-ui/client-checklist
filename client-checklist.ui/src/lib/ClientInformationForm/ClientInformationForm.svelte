@@ -13,6 +13,7 @@
 	import validationSchema, { type ClientInformationFormType } from './validationSchema';
 	import { AccessType } from '$enums/role';
 	import { PageGuard } from '$services/PageGuard';
+	import { toCreateClientPayload, toEditClientPayload } from '$mapper/ClientMapper';
 
 	const { createClient, updateClient } = APIGateway();
 	let { next, isEdit = false } = $props();
@@ -73,53 +74,13 @@
 			}
 			isLoading = true;
 
-			const {
-				languages,
-				currencies,
-				sports,
-				markets,
-				mainDecisionMakerName,
-				mainDecisionMakerNumber,
-				financeManagerName,
-				financeManagerNumber,
-				productManagerName,
-				productManagerNumber,
-				accountManagerName,
-				accountManagerNumber,
-				technicalManagerName,
-				technicalManagerNumber,
-				customerServiceManagerName,
-				customerServiceManagerNumber,
-				socialAccount
-			} = values;
-
-			const sportsList = sports.split(',').map(item => item.trim()).filter(item => item !== '');
-			const formData = {
-				...values,
-				serviceTypeId: servicesTypeId[$selectedIntegration],
-				languages: languages.split(' '),
-				currencies: currencies.split(' '),
-				sports: sportsList,
-				markets: markets.split(' '),
-				mainDecisionMaker: { name: mainDecisionMakerName, number: mainDecisionMakerNumber },
-				financeManager: { name: financeManagerName, number: financeManagerNumber },
-				productManager: { name: productManagerName, number: productManagerNumber },
-				accountManager: { name: accountManagerName, number: accountManagerNumber },
-				technicalManager: { name: technicalManagerName, number: technicalManagerNumber },
-				customerServiceManager: {
-					name: customerServiceManagerName,
-					number: customerServiceManagerNumber
-				},
-				socialAccount
-			};
-
 			let response;
-			if (formData.clientId) {
-				response = await updateClient(formData, {
+			if (values.clientId) {
+				response = await updateClient(toEditClientPayload($selectedIntegration, values), {
 					'x-user-token': $auth?.userToken as string
 				});
 			} else {
-				response = await createClient(formData, {
+				response = await createClient(toCreateClientPayload($selectedIntegration, values), {
 					'x-user-token': $auth?.userToken as string
 				});
 			}
@@ -127,7 +88,9 @@
 			isLoading = false;
 
 			if (response.statusCode === StatusCode.Success) {
-				$sportsFeed = sportsList;
+				const { sports } = values;
+				$sportsFeed = sports.split(',').map(item => item.trim()).filter(item => item !== '');
+				
 				$steps[serviceSteps.ClientInformation].formData = {
 					...values,
 					clientId: response.data

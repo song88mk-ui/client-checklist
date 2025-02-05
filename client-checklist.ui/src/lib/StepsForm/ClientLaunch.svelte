@@ -15,8 +15,9 @@
 	import ProductForm, { type ProductFormType } from '../ProductForm';
 	import initialFormValues from '$constants/initialFormValues';
 	import getOverallStatus from '$utils/getOverallStatus';
+	import { toEditClientPayload } from '$mapper/ClientMapper';
 
-	const { createStep, updateStep } = APIGateway();
+	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
 		back,
 		step,
@@ -91,8 +92,21 @@
 			};
 
 			const currentStatus = getOverallStatus($steps);
+			const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
+			
+			const formattedData = {
+				...toEditClientPayload($selectedIntegration, formData),
+				taskStatus: currentStatus
+			}
 			if (previousStatus !== currentStatus) {
-				// API call to update the taskStatus
+				const response = await updateClient(formattedData, {
+					'x-user-token': $auth?.userToken as string
+				});
+
+				if (response.error) {
+					error = ErrorMessages.CreateProductFailed;
+					return;
+				}
 			}
 		}
 	};

@@ -15,9 +15,10 @@
 	import selectedIntegration from '$stores/integration';
 	import initialFormValues from '$constants/initialFormValues';
 	import { goto } from '$app/navigation';
+	import getOverallStatus from '$utils/getOverallStatus';
+	import { toEditClientPayload } from '$mapper/ClientMapper';
 
-
-	const { createStep, updateStep } = APIGateway();
+	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
 		back,
 		step,
@@ -78,6 +79,8 @@
 			goto('/');
 		}, 3000);
 
+		const previousStatus = getOverallStatus($steps);
+
 		if (response.data) {
 			$steps[step].formData = {
 				[Environment.PRODUCTION]: {
@@ -85,6 +88,24 @@
 					...values[Environment.PRODUCTION]
 				}
 			};
+
+			const currentStatus = getOverallStatus($steps);
+			const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
+			
+			const formattedData = {
+				...toEditClientPayload($selectedIntegration, formData),
+				taskStatus: currentStatus
+			}
+			if (previousStatus !== currentStatus) {
+				const response = await updateClient(formattedData, {
+					'x-user-token': $auth?.userToken as string
+				});
+
+				if (response.error) {
+					error = ErrorMessages.CreateProductFailed;
+					return;
+				}
+			}
 		}
 	};
 
