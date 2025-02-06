@@ -12,9 +12,10 @@
 	import type { ClientInformationFormType } from '../ClientInformationForm';
 	import ProductForm, { type ProductFormType } from '../ProductForm';
 	import initialFormValues from '$constants/initialFormValues';
+	import getOverallStatus from '$utils/getOverallStatus';
+	import { toEditClientPayload } from '$mapper/ClientMapper';
 
-	const { createStep, updateStep } = APIGateway();
-
+	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
 		back,
 		next,
@@ -57,14 +58,14 @@
 				? await handleEditProduct(values)
 				: await handleCreateProduct(values);
 
-		isLoading = false;
-
 		if (response.some((res: any) => res.error)) {
 			error = ErrorMessages.CreateProductFailed;
 			return;
 		}
 
 		const [stagingResponse, productionResponse] = response;
+
+		const previousStatus = getOverallStatus($steps);
 
 		if (stagingResponse.data && productionResponse.data) {
 			$steps[step].formData = {
@@ -77,7 +78,28 @@
 					...values[Environment.PRODUCTION]
 				}
 			};
+
+			const currentStatus = getOverallStatus($steps);
+			const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
+			
+			const formattedData = {
+				...toEditClientPayload($selectedIntegration, formData),
+				taskStatus: currentStatus
+			}
+			if (previousStatus !== currentStatus) {
+				const response = await updateClient(formattedData, {
+					'x-user-token': $auth?.userToken as string
+				});
+
+				if (response.error) {
+					error = ErrorMessages.CreateProductFailed;
+					return;
+				}
+			}
 		}
+
+		isLoading = false;
+
 		next();
 	};
 

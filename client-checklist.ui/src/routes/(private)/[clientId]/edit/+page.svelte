@@ -28,6 +28,7 @@
 	import IntegrationType from '$enums/integrationType';
 	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
+	import getOverallStatus from '$utils/getOverallStatus';
 
 	const { getClient } = APIGateway();
 
@@ -133,7 +134,7 @@
 					<BackOfficeForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 2}
 					<OddsFeedIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
-				{:else if step === 3 }
+				{:else if step === 3}
 					<MTSForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 4}
 					<OperationsForm isEdit {isSuperAdmin} {back} {next} {step} />
@@ -153,13 +154,13 @@
 					<BackOfficeForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 2}
 					<WalletIntegrationForm isEdit {isSuperAdmin} {back} {next} {step} />
-				{:else if step === 3 }
+				{:else if step === 3}
 					<SportsbookPlayerSiteUiuxForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 4}
 					<MTSForm isEdit {isSuperAdmin} {back} {next} {step} />
-				{:else if step === 5 }
+				{:else if step === 5}
 					<OperationsForm isEdit {isSuperAdmin} {back} {next} {step} />
-				{:else if step === 6 }
+				{:else if step === 6}
 					<EndToEndTestForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 7}
 					<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />

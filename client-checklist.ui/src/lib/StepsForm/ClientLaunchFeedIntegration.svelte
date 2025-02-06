@@ -20,9 +20,11 @@
 	import IntegrationType from '$enums/integrationType';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
 	import environment from '$enums/Environment';
+	import getOverallStatus from '$utils/getOverallStatus';
+	import { toEditClientPayload } from '$mapper/ClientMapper';
 
 
-	const { createStep, updateStep } = APIGateway();
+	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
 		back,
 		step,
@@ -129,6 +131,8 @@
 			goto('/');
 		}, 3000);
 
+		const previousStatus = getOverallStatus($steps);
+
 		if ($hasBetValidation) {
 			const [stagingResponse, productionResponse] = response;
 
@@ -153,6 +157,24 @@
 						...values[Environment.PRODUCTION]
 					}
 				};
+			}
+		}
+
+		const currentStatus = getOverallStatus($steps);
+		const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
+			
+		const formattedData = {
+			...toEditClientPayload($selectedIntegration, formData),
+			taskStatus: currentStatus
+		}
+		if (previousStatus !== currentStatus) {
+			const response = await updateClient(formattedData, {
+				'x-user-token': $auth?.userToken as string
+			});
+
+			if (response.error) {
+				error = ErrorMessages.CreateProductFailed;
+				return;
 			}
 		}
 	};
