@@ -14,6 +14,7 @@
 	import { AccessType } from '$enums/role';
 	import { PageGuard } from '$services/PageGuard';
 	import { toCreateClientPayload, toEditClientPayload } from '$mapper/ClientMapper';
+	import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 	const { createClient, updateClient } = APIGateway();
 	let { next, isEdit = false } = $props();
@@ -47,7 +48,7 @@
 		customerServiceManagerName: '',
 		customerServiceManagerNumber: '',
 		socialAccount: '',
-		taskStatus: 1,
+		taskStatus: ClientRowStatus.NotStarted,
 	};
 
 	const serviceSteps = Step[$selectedIntegration];
