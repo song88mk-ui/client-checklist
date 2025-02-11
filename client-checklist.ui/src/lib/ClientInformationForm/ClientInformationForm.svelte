@@ -47,7 +47,7 @@
 		customerServiceManagerName: '',
 		customerServiceManagerNumber: '',
 		socialAccount: '',
-		taskStatus: 0,
+		taskStatus: 1,
 	};
 
 	const serviceSteps = Step[$selectedIntegration];
