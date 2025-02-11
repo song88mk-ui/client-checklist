@@ -19,6 +19,10 @@
 	import { AccessType } from '$enums/role';
 	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
+	import { beforeNavigate, goto } from '$app/navigation';
+	import { openModal } from '$stores/modal';
+	import LeavePageModal from '$lib/LeavePageModal.svelte';
+	import isConfirm from '$stores/confirm-modal';
 
 	// TODO: Reset special cases; Need to refactor
 	$hasBetValidation = false;
@@ -40,6 +44,23 @@
 		$steps = INTEGRATION_STEPS[$selectedIntegration];
 	});
 
+	let url = '';
+
+	beforeNavigate(({ to, cancel }) => {
+		if (!$isConfirm) {
+			url = to?.url.pathname || '';
+			openModal(LeavePageModal);
+			cancel();
+		} else {
+			$isConfirm = false;
+		}
+	});
+
+	$effect(() => {
+		if ($isConfirm) {
+			goto(url);
+		}
+	})
 </script>
 
 <div class="mb-10">
