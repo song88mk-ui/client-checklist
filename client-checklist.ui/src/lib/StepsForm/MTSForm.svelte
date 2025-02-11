@@ -73,8 +73,6 @@
 
 		const [stagingResponse, productionResponse] = response;
 
-		const previousStatus = getOverallStatus($steps);
-
 		if (stagingResponse.data && productionResponse.data) {
 			$steps[step].formData = {
 				[Environment.STAGING]: {
@@ -94,10 +92,15 @@
 				...toEditClientPayload($selectedIntegration, formData),
 				taskStatus: currentStatus
 			}
-			if (previousStatus !== currentStatus) {
+			if (formData.taskStatus !== currentStatus) {
 				const response = await updateClient(formattedData, {
 					'x-user-token': $auth?.userToken as string
 				});
+
+				$steps[serviceStep.ClientInformation].formData = {
+					...formData,
+					taskStatus: currentStatus
+				};
 
 				if (response.error) {
 					error = ErrorMessages.CreateProductFailed;

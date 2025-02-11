@@ -48,7 +48,8 @@ export type CreateClientPayload = {
     technicalManager: Manager,
     technicalManagerName: string,
     technicalManagerNumber: string,
-    socialAccount: string
+    socialAccount: string,
+    taskStatus: number
 };
 
 export type EditClientPayload = {
