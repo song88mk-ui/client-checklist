@@ -87,7 +87,8 @@
 				technicalManagerNumber: client.technicalManager.number,
 				customerServiceManagerName: client.customerServiceManager.name,
 				customerServiceManagerNumber: client.customerServiceManager.number,
-				socialAccount: client.socialAccount
+				socialAccount: client.socialAccount,
+				taskStatus: client.taskStatus
 			} as ClientInformationFormType;
 		}
 		if (clientSteps.length) {

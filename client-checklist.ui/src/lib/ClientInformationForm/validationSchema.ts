@@ -24,6 +24,7 @@ export type ClientInformationFormType = {
 	customerServiceManagerName: string;
 	customerServiceManagerNumber: string;
 	socialAccount: string;
+	taskStatus: number;
 };
 
 export default yup.object().shape({
