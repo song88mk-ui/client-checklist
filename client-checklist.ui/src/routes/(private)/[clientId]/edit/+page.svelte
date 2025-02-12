@@ -28,7 +28,10 @@
 	import IntegrationType from '$enums/integrationType';
 	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
-	import getOverallStatus from '$utils/getOverallStatus';
+	import { beforeNavigate, goto } from '$app/navigation';
+	import isConfirm from '$stores/confirm-modal';
+	import { openModal } from '$stores/modal';
+	import ConfirmModal from '$lib/ConfirmModal.svelte';
 
 	const { getClient } = APIGateway();
 
@@ -109,6 +112,22 @@
 			});
 		}
 	});
+
+	let url = "";
+	beforeNavigate(({ to, cancel }) => {
+		if (!$isConfirm) {
+			url = to?.url.pathname || '';
+			openModal(ConfirmModal);
+			cancel();
+		}
+		$isConfirm = false;
+	});
+
+	$effect(() => {
+		if ($isConfirm) {
+			goto(url);
+		}
+	})
 </script>
 
 <div class="cc-edit-client-page">

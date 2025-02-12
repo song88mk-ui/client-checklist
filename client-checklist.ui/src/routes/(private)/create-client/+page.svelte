@@ -21,7 +21,7 @@
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
 	import { beforeNavigate, goto } from '$app/navigation';
 	import { openModal } from '$stores/modal';
-	import LeavePageModal from '$lib/LeavePageModal.svelte';
+	import ConfirmModal from '$lib/ConfirmModal.svelte';
 	import isConfirm from '$stores/confirm-modal';
 
 	// TODO: Reset special cases; Need to refactor
@@ -44,16 +44,14 @@
 		$steps = INTEGRATION_STEPS[$selectedIntegration];
 	});
 
-	let url = '';
-
+	let url = "";
 	beforeNavigate(({ to, cancel }) => {
 		if (!$isConfirm) {
 			url = to?.url.pathname || '';
-			openModal(LeavePageModal);
+			openModal(ConfirmModal);
 			cancel();
-		} else {
-			$isConfirm = false;
 		}
+		$isConfirm = false;
 	});
 
 	$effect(() => {
