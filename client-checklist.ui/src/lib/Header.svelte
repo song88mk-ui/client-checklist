@@ -13,7 +13,7 @@
 	let error = '';
 
 	const { logout } = AuthService;
-	
+
 	const handleLogout = async () => {
 		if (AccessType.READWRITE === $auth?.accessType) {
 			openModal(LogoutModal);
@@ -28,7 +28,7 @@
 	};
 </script>
 
-<header class="flex items-center bg-white p-5 shadow-md">
+<header data-testid="admin-header" class="cc-header flex items-center bg-white p-5 shadow-md">
 	<h1 class="mr-3">
 		<a href="/">
 			<CompanyLogo size={136} />
