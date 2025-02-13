@@ -20,6 +20,7 @@
 		marketOption,
 		sportsOption
 	} from '$constants/ClientInformation';
+	import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 	const { createClient, updateClient } = APIGateway();
 	let { next, isEdit = false } = $props();
@@ -52,7 +53,8 @@
 		technicalManagerNumber: '',
 		customerServiceManagerName: '',
 		customerServiceManagerNumber: '',
-		socialAccount: ''
+		socialAccount: '',
+		taskStatus: ClientRowStatus.NotStarted
 	};
 
 	const serviceSteps = Step[$selectedIntegration];

@@ -79,8 +79,6 @@
 			goto('/');
 		}, 3000);
 
-		const previousStatus = getOverallStatus($steps);
-
 		if (response.data) {
 			$steps[step].formData = {
 				[Environment.PRODUCTION]: {
@@ -96,10 +94,15 @@
 				...toEditClientPayload($selectedIntegration, formData),
 				taskStatus: currentStatus
 			}
-			if (previousStatus !== currentStatus) {
+			if (formData.taskStatus !== currentStatus) {
 				const response = await updateClient(formattedData, {
 					'x-user-token': $auth?.userToken as string
 				});
+
+				$steps[serviceStep.ClientInformation].formData = {
+					...formData,
+					taskStatus: currentStatus
+				};
 
 				if (response.error) {
 					error = ErrorMessages.CreateProductFailed;
