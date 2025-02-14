@@ -45,9 +45,9 @@
 	});
 
 	let url = "";
-	beforeNavigate(({ to, cancel }) => {
-		if (!$isConfirm) {
-			url = to?.url.pathname || '';
+	beforeNavigate(({ from, to, cancel }) => {
+		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname) {
+			url = to?.url.pathname || "";
 			openModal(ConfirmModal);
 			cancel();
 		}
