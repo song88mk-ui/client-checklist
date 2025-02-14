@@ -9,11 +9,17 @@
 	import steps from '$stores/steps';
 	import { sportsFeed } from '$stores/client-launch-feed';
 	import Step from '$enums/Step';
-	import { servicesTypeId } from '$constants/services';
 	import validationSchema, { type ClientInformationFormType } from './validationSchema';
 	import { AccessType } from '$enums/role';
 	import { PageGuard } from '$services/PageGuard';
 	import { toCreateClientPayload, toEditClientPayload } from '$mapper/ClientMapper';
+	import EnhanceDropdown from '$lib/EnhanceDropdown.svelte';
+	import {
+		currencyOption,
+		languageOption,
+		marketOption,
+		sportsOption
+	} from '$constants/ClientInformation';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 	const { createClient, updateClient } = APIGateway();
@@ -48,14 +54,15 @@
 		customerServiceManagerName: '',
 		customerServiceManagerNumber: '',
 		socialAccount: '',
-		taskStatus: ClientRowStatus.NotStarted,
+		taskStatus: ClientRowStatus.NotStarted
 	};
 
 	const serviceSteps = Step[$selectedIntegration];
 
 	$effect(() => {
 		if ($steps[serviceSteps.ClientInformation]?.formData) {
-			const formData = $steps[serviceSteps.ClientInformation]?.formData as ClientInformationFormType;
+			const formData = $steps[serviceSteps.ClientInformation]
+				?.formData as ClientInformationFormType;
 			updateInitialValues({
 				...formData,
 				clientId: formData?.clientId || ''
@@ -63,7 +70,6 @@
 		} else {
 			updateInitialValues(initialValues);
 		}
-
 	});
 
 	const { form, handleSubmit, errors, updateField, updateInitialValues } = createForm({
@@ -91,8 +97,11 @@
 
 			if (response.statusCode === StatusCode.Success) {
 				const { sports } = values;
-				$sportsFeed = sports.split(',').map(item => item.trim()).filter(item => item !== '');
-				
+				$sportsFeed = sports
+					.split(',')
+					.map((item) => item.trim())
+					.filter((item) => item !== '');
+
 				$steps[serviceSteps.ClientInformation].formData = {
 					...values,
 					clientId: response.data
@@ -111,6 +120,36 @@
 		updateField('launchDate', selectedDate.toISOString());
 	};
 
+	const handleSelectedLanguage = (selectedItem: string) => {
+		updateField('languages', selectedItem);
+	};
+	const handleSelectedCurrency = (selectedItem: string) => {
+		updateField('currencies', selectedItem);
+	};
+	const handleSelectedSport = (selectedItem: string) => {
+		updateField('sports', selectedItem);
+	};
+	const handleSelectedMarket = (selectedItem: string) => {
+		updateField('markets', selectedItem);
+	};
+
+	let showLanguageOption = $state(false);
+	let showCurrencyOption = $state(false);
+	let showSportsOption = $state(false);
+	let showMarketOption = $state(false);
+	const handleEnhanceDropdown = (dropdown: string, toggle: boolean) => {
+		showCurrencyOption = false;
+		showSportsOption = false;
+		showLanguageOption = false;
+		showMarketOption = false;
+
+		if (toggle) {
+			if (dropdown === 'language') showLanguageOption = true;
+			if (dropdown === 'currency') showCurrencyOption = true;
+			if (dropdown === 'sports') showSportsOption = true;
+			if (dropdown === 'market') showMarketOption = true;
+		}
+	};
 </script>
 
 <form onsubmit={handleSubmit} class="flex flex-col gap-7">
@@ -189,13 +228,17 @@
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="languagesSupported">
 						Languages Supported <span class="font-bold text-red-500">*</span>
 					</label>
-					<input
-						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="languagesSupported"
-						type="text"
-						placeholder="Enter Languages Supported"
-						bind:value={$form.languages}
+					<input type="hidden" bind:value={$form.languages} />
+					<EnhanceDropdown
+						onSelectedOption={(selectedItem: string) => handleSelectedLanguage(selectedItem)}
+						options={languageOption}
+						selected={($steps[serviceSteps.ClientInformation]?.formData?.languages as string).split(
+							','
+						)}
 						{disabled}
+						placeholder="Enter Languages Supported"
+						showOption={showLanguageOption}
+						onShow={(toggle: boolean) => handleEnhanceDropdown('language', toggle)}
 					/>
 					{#if $errors.languages}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.languages}</small>
@@ -205,13 +248,17 @@
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="currencySupported">
 						Currencies Supported <span class="font-bold text-red-500">*</span>
 					</label>
-					<input
-						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="currencySupported"
-						type="text"
-						placeholder="Enter Currencies Supported"
-						bind:value={$form.currencies}
+					<input type="hidden" bind:value={$form.currencies} />
+					<EnhanceDropdown
+						onSelectedOption={(selectedItem: string) => handleSelectedCurrency(selectedItem)}
+						options={currencyOption}
+						selected={(
+							$steps[serviceSteps.ClientInformation]?.formData?.currencies as string
+						).split(',')}
 						{disabled}
+						placeholder="Enter Currencies Supported"
+						showOption={showCurrencyOption}
+						onShow={(toggle: boolean) => handleEnhanceDropdown('currency', toggle)}
 					/>
 					{#if $errors.currencies}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.currencies}</small>
@@ -223,13 +270,17 @@
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="sports">
 						Sports <span class="font-bold text-red-500">*</span>
 					</label>
-					<input
-						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="sports"
-						type="text"
-						placeholder="Enter Sports"
-						bind:value={$form.sports}
+					<input type="hidden" bind:value={$form.sports} />
+					<EnhanceDropdown
+						onSelectedOption={(selectedItem: string) => handleSelectedSport(selectedItem)}
+						options={sportsOption}
+						selected={($steps[serviceSteps.ClientInformation]?.formData?.sports as string).split(
+							','
+						)}
 						{disabled}
+						placeholder="Enter Sports"
+						showOption={showSportsOption}
+						onShow={(toggle: boolean) => handleEnhanceDropdown('sports', toggle)}
 					/>
 					{#if $errors.sports}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.sports}</small>
@@ -239,13 +290,17 @@
 					<label class="mb-2 block text-xs font-semibold text-gray-700" for="targetMarket">
 						Target Market <span class="font-bold text-red-500">*</span>
 					</label>
-					<input
-						class="w-full rounded border px-3 py-2 text-sm text-gray-700"
-						id="targetMarket"
-						type="text"
-						placeholder="Enter Target Market"
-						bind:value={$form.markets}
+					<input type="hidden" bind:value={$form.markets} />
+					<EnhanceDropdown
+						onSelectedOption={(selectedItem: string) => handleSelectedMarket(selectedItem)}
+						options={marketOption}
+						selected={($steps[serviceSteps.ClientInformation]?.formData?.markets as string).split(
+							','
+						)}
 						{disabled}
+						placeholder="Enter Target Market"
+						showOption={showMarketOption}
+						onShow={(toggle: boolean) => handleEnhanceDropdown('market', toggle)}
 					/>
 					{#if $errors.markets}
 						<small class="text-xs font-bold font-bold text-red-500">{$errors.markets}</small>
@@ -420,9 +475,9 @@
 			<button
 				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
 				type="submit"
-				disabled={isLoading}>Next
-			</button
-			>
+				disabled={isLoading}
+				>Next
+			</button>
 		</div>
 	</div>
 </form>

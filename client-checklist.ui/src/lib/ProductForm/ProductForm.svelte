@@ -31,7 +31,8 @@
 	}>();
 
 	let errorMsg = $state('');
-	const keys = isLaunch && serviceType == IntegrationType.WALLET_INTEGRATION ? ['production'] : dataKeys;
+	const keys =
+		isLaunch && serviceType == IntegrationType.WALLET_INTEGRATION ? ['production'] : dataKeys;
 	const schema = createValidationSchema(keys);
 
 	// TODO: Need to make the initial values pair with validation schema
@@ -51,8 +52,10 @@
 
 	// TODO: Need to refactor to make it clean and reusable
 	const getStepTitle = (key: string) => {
-		return key === 'staging' && isLaunch && serviceType === IntegrationType.FEED_INTEGRATION ? "Bet Validation" : `${title} (${key})`
-	}
+		return key === 'staging' && isLaunch && serviceType === IntegrationType.FEED_INTEGRATION
+			? 'Bet Validation'
+			: `${title} (${key})`;
+	};
 </script>
 
 <form onsubmit={handleSubmit} class="cc-product-form flex flex-col gap-7">
@@ -79,9 +82,9 @@
 				type="button"
 				class="h-[40px] w-24 rounded-md border-2 border-slate-800 bg-white px-5 py-2 leading-none"
 				disabled={isLoading}
-				onclick={back}>Back
-			</button
-			>
+				onclick={back}
+				>Back
+			</button>
 			<button
 				onclick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
 				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
