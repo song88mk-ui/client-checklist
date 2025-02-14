@@ -23,16 +23,16 @@
 	import getOverallStatus from '$utils/getOverallStatus';
 	import { toEditClientPayload } from '$mapper/ClientMapper';
 
-
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
 		back,
+		onFinishedSubmit,
 		step,
 		isEdit = false,
 		isSuperAdmin
 	} = $props<{
 		back: () => void;
-		next: () => void;
+		onFinishedSubmit: () => void;
 		step: number;
 		isSuperAdmin?: boolean;
 		isEdit?: boolean;
@@ -127,10 +127,6 @@
 			return;
 		}
 
-		setTimeout(() => {
-			goto('/');
-		}, 3000);
-
 		if ($hasBetValidation) {
 			const [stagingResponse, productionResponse] = response;
 
@@ -180,6 +176,12 @@
 				return;
 			}
 		}
+
+		onFinishedSubmit();
+
+		setTimeout(() => {
+			goto('/');
+		}, 3000);
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {

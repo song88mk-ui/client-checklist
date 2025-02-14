@@ -21,12 +21,13 @@
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
 		back,
+		onFinishedSubmit,
 		step,
 		isEdit = false,
 		isSuperAdmin
 	} = $props<{
 		back: () => void;
-		next: () => void;
+		onFinishedSubmit: () => void;
 		step: number;
 		isSuperAdmin?: boolean;
 		isEdit?: boolean;
@@ -75,10 +76,6 @@
 			return;
 		}
 
-		setTimeout(() => {
-			goto('/');
-		}, 3000);
-
 		if (response.data) {
 			$steps[step].formData = {
 				[Environment.PRODUCTION]: {
@@ -110,6 +107,12 @@
 				}
 			}
 		}
+
+		onFinishedSubmit();
+
+		setTimeout(() => {
+			goto('/');
+		}, 3000);
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {
