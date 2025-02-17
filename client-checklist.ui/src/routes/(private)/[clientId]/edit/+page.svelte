@@ -29,9 +29,9 @@
 	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
 	import { beforeNavigate, goto } from '$app/navigation';
-	import isConfirm from '$stores/confirm-modal';
 	import { openModal } from '$stores/modal';
 	import ConfirmModal from '$lib/ConfirmModal.svelte';
+	import { isModalOpen } from '$stores/modal';
 
 	const { getClient } = APIGateway();
 
@@ -118,21 +118,16 @@
 		isDoneSubmit = true;
 	}
 
-	let url = "";
-	beforeNavigate(({ from ,to, cancel }) => {
-		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
-			url = to?.url.pathname || "";
-			openModal(ConfirmModal);
+	beforeNavigate(({ from, to, cancel }) => {
+		if (!$isModalOpen && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
+			const url = to?.url.pathname || "";
+			const onConfirm = async () => {
+				goto(url);
+			};
+			openModal(ConfirmModal, { onConfirm });
 			cancel();
 		}
-		$isConfirm = false;
 	});
-
-	$effect(() => {
-		if ($isConfirm) {
-			goto(url);
-		}
-	})
 </script>
 
 <div class="cc-edit-client-page">
