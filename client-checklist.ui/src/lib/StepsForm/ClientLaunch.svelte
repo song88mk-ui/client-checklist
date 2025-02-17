@@ -21,11 +21,12 @@
 	const {
 		back,
 		step,
+		onFinishedSubmit,
 		isSuperAdmin,
 		isEdit = false
 	} = $props<{
 		back: () => void;
-		next: () => void;
+		onFinishedSubmit: () => void;
 		step: number;
 		isSuperAdmin?: boolean;
 		isEdit?: boolean;
@@ -71,10 +72,6 @@
 			return;
 		}
 
-		setTimeout(() => {
-			goto('/');
-		}, 3000);
-
 		const [stagingResponse, productionResponse] = response;
 
 		if (stagingResponse.data && productionResponse.data) {
@@ -112,6 +109,12 @@
 				}
 			}
 		}
+
+		onFinishedSubmit();
+		
+		setTimeout(() => {
+			goto('/');
+		}, 3000);
 	};
 
 	const handleCreateProduct = async (values: ProductFormType) => {

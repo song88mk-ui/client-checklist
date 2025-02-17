@@ -39,6 +39,7 @@
 	let error = $state('');
 	let isLoading = $state(true);
 	let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
+	let isDoneSubmit = $state(false);
 
 	const back = () => {
 		if (step > 0) {
@@ -113,9 +114,13 @@
 		}
 	});
 
+	const onFinishedSubmit = () => {
+		isDoneSubmit = true;
+	}
+
 	let url = "";
-	beforeNavigate(({ from, to, cancel }) => {
-		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname) {
+	beforeNavigate(({ from ,to, cancel }) => {
+		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
 			url = to?.url.pathname || "";
 			openModal(ConfirmModal);
 			cancel();
@@ -163,7 +168,7 @@
 				{:else if step === 6}
 					<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 7}
-					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} {back} {next} {step} />
+					<ClientLaunchFeedIntegration isEdit {isSuperAdmin} {back} {onFinishedSubmit} {step} />
 				{/if}
 			{/if}
 
@@ -185,7 +190,7 @@
 				{:else if step === 7}
 					<BusinessAcceptanceForm isEdit {isSuperAdmin} {back} {next} {step} />
 				{:else if step === 8}
-					<ClientLaunchWalletIntegration isEdit {isSuperAdmin} {back} {next} {step} />
+					<ClientLaunchWalletIntegration isEdit {isSuperAdmin} {back} {onFinishedSubmit} {step} />
 				{/if}
 			{/if}
 		</div>

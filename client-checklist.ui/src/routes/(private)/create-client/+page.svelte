@@ -29,6 +29,7 @@
 
 	let step = $state(0);
 	let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
+	let isDoneSubmit = $state(false);
 
 	const back = () => {
 		if (step > 0) {
@@ -44,9 +45,13 @@
 		$steps = INTEGRATION_STEPS[$selectedIntegration];
 	});
 
+	const onFinishedSubmit = () => {
+		isDoneSubmit = true;
+	}
+
 	let url = "";
 	beforeNavigate(({ from, to, cancel }) => {
-		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname) {
+		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
 			url = to?.url.pathname || "";
 			openModal(ConfirmModal);
 			cancel();
@@ -86,7 +91,7 @@
 		{:else if step === 6}
 			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 7}
-			<ClientLaunchFeedIntegration {isSuperAdmin} {back} {next} {step} />
+			<ClientLaunchFeedIntegration {isSuperAdmin} {back} {onFinishedSubmit} {step} />
 		{/if}
 	{/if}
 
@@ -108,7 +113,7 @@
 		{:else if step === 7}
 			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 8}
-			<ClientLaunchWalletIntegration {isSuperAdmin} {back} {next} {step} />
+			<ClientLaunchWalletIntegration {isSuperAdmin} {back} {onFinishedSubmit} {step} />
 		{/if}
 	{/if}
 </div>
