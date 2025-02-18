@@ -64,7 +64,7 @@
 		<div class="flex">
 			<span
 				class="mr-[10px] self-center text-[24px] font-bold font-normal leading-none text-[#0071BC]"
-			>{STEP_NAME_BY_INTEGRATION[serviceTypeId][clientStep.step]}</span
+				>{STEP_NAME_BY_INTEGRATION[serviceTypeId][clientStep.step]}</span
 			>
 			<div
 				class="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-[#0071BC] text-[12px] font-bold font-normal leading-none text-white"
@@ -75,32 +75,36 @@
 		<div class="flex">
 			<div class="mx-[10px]">
 				<span class="text-[11px] font-light font-normal leading-none text-[#7A7A7A]"
-				>Target Date To Complete</span
+					>Target Date To Complete</span
 				>
 				<br />
 				<span class="text-[14px] font-bold font-normal leading-none text-[#0071BC]">
-					{clientStep.targetDateCompleted ? new Date(clientStep.targetDateCompleted).toLocaleDateString('en-US', {
-											year: 'numeric',
-											month: 'long',
-											day: 'numeric'
-										}) : ''}</span
+					{clientStep.targetDateCompleted
+						? new Date(clientStep.targetDateCompleted).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric'
+							})
+						: ''}</span
 				>
 			</div>
 
 			<div class="mx-[10px]">
 				<span class="text-[11px] font-light font-normal leading-none text-[#7A7A7A]"
-				>Actual Date Completed</span
+					>Actual Date Completed</span
 				>
 				<br />
 				<span class="text-[14px] font-bold font-normal leading-none text-[#0071BC]">
-					{clientStep.actualDateCompleted ? new Date(clientStep.actualDateCompleted).toLocaleDateString('en-US', {
-											year: 'numeric',
-											month: 'long',
-											day: 'numeric'
-										}) : ''}</span
+					{clientStep.actualDateCompleted
+						? new Date(clientStep.actualDateCompleted).toLocaleDateString('en-US', {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric'
+							})
+						: ''}</span
 				>
 			</div>
-			<ClientTaskStatus status={status}></ClientTaskStatus>
+			<ClientTaskStatus {status}></ClientTaskStatus>
 			<img src={`/${clientStep.isExpanded ? 'arrow-up' : 'arrow-down'}.svg`} alt="logo" />
 		</div>
 	</div>
@@ -108,35 +112,32 @@
 		<div class="mx-[20px]" transition:fly={{ y: -10, duration: 300 }}>
 			<table class="mb-[10px] min-w-full">
 				<thead class="h-[36px]">
-				<tr>
-					<th
-						class="w-2/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
-					>Description
-					</th
-					>
-					<th
-						class="w-2/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
-					>Comments
-					</th
-					>
-					<th
-						class="w-1/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
-					>Assigned To
-					</th
-					>
-					<th
-						class="w-1/6 text-center bg-[#F6F6F6] px-4 py-2 text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
-					>Status
-					</th
-					>
-				</tr>
+					<tr>
+						<th
+							class="w-2/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
+							>Description
+						</th>
+						<th
+							class="w-2/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
+							>Comments
+						</th>
+						<th
+							class="w-1/6 bg-[#F6F6F6] px-4 py-2 text-start text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
+							>Assigned To
+						</th>
+						<th
+							class="w-1/6 bg-[#F6F6F6] px-4 py-2 text-center text-[14px] font-normal font-semibold leading-normal text-[#1A1A1A]"
+							>Status
+						</th>
+					</tr>
 				</thead>
 				<tbody>
-				{#each clientStep.clientSubtasks as clientSubtask}
-					{#if clientSubtask.taskStatus !== ClientRowStatus.NotApplicable}
-						<ClientSubtaskComponent clientSubtask={clientSubtask}></ClientSubtaskComponent>
-					{/if}
-				{/each}
+					{#each clientStep.clientSubtasks as clientSubtask}
+						{#if clientSubtask.taskStatus !== ClientRowStatus.NotApplicable}
+							<ClientSubtaskComponent {clientSubtask} assignedTo={clientStep.assignedTo}
+							></ClientSubtaskComponent>
+						{/if}
+					{/each}
 				</tbody>
 			</table>
 		</div>
