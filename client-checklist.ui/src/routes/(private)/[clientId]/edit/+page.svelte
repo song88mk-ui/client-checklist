@@ -32,6 +32,7 @@
 	import { openModal } from '$stores/modal';
 	import ConfirmModal from '$lib/ConfirmModal.svelte';
 	import { isModalOpen } from '$stores/modal';
+	import { isFormModified } from '$stores/form';
 
 	const { getClient } = APIGateway();
 
@@ -118,8 +119,12 @@
 		isDoneSubmit = true;
 	}
 
-	beforeNavigate(({ from, to, cancel }) => {
-		if (!$isModalOpen && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
+	beforeNavigate(({ to, cancel }) => {
+		if (
+			$isFormModified &&
+			!$isModalOpen &&
+			!isDoneSubmit
+		) {
 			const url = to?.url.pathname || "";
 			const onConfirm = async () => {
 				goto(url);

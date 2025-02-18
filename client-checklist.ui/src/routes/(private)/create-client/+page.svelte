@@ -23,6 +23,7 @@
 	import ConfirmModal from '$lib/ConfirmModal.svelte';
 	import { isModalOpen } from '$stores/modal';
 	import { beforeNavigate, goto } from '$app/navigation';
+	import { isFormModified } from '$stores/form';
 
 	// TODO: Reset special cases; Need to refactor
 	$hasBetValidation = false;
@@ -49,8 +50,12 @@
 		isDoneSubmit = true;
 	}
 
-	beforeNavigate(({ from, to, cancel }) => {
-		if (!$isModalOpen && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
+	beforeNavigate(({ to, cancel }) => {
+		if (
+			$isFormModified &&
+			!$isModalOpen &&
+			!isDoneSubmit
+		) {
 			const url = to?.url.pathname || "";
 			const onConfirm = async () => {
 				goto(url);
