@@ -1,15 +1,14 @@
 <script lang="ts">
-	import isConfirm from '$stores/confirm-modal';
-	import { closeModal } from '$stores/modal';
+	import { closeModal, modalProps } from '$stores/modal';
 	import Button from './Button.svelte';
 
+	const { onConfirm } = $modalProps;
 	const handleCancel = () => {
-		$isConfirm = false;
 		closeModal();
 	};
 
 	const handleConfirm = async () => {
-		$isConfirm = true;
+		onConfirm();
 		closeModal();
 	};
 </script>

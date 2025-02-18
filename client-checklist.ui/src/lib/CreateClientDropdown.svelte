@@ -3,6 +3,7 @@
     import selectedIntegration from '$stores/integration';
 	import IntegrationType from '$enums/integrationType';
 	import Product from '../utils/client';
+	import { isFormModified } from '$stores/form';
 
 	const integrationTypes = Object.values(IntegrationType);
 
@@ -13,8 +14,10 @@
 	};
 
     const selectedIntegrationType = (integration: IntegrationType) => {
-        $selectedIntegration = integration
-        isShow = false
+			if (!$isFormModified) {
+				$selectedIntegration = integration
+			}
+			isShow = false;
     }
 
 </script>

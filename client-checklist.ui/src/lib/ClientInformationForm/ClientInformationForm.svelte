@@ -21,6 +21,7 @@
 		sportsOption
 	} from '$constants/ClientInformation';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
+	import { isFormModified } from '$stores/form';
 
 	const { createClient, updateClient } = APIGateway();
 	let { next, isEdit = false } = $props();
@@ -72,7 +73,7 @@
 		}
 	});
 
-	const { form, handleSubmit, errors, updateField, updateInitialValues } = createForm({
+	const { form, isModified, handleSubmit, errors, updateField, updateInitialValues } = createForm({
 		initialValues,
 		validationSchema,
 		onSubmit: async (values) => {
@@ -115,6 +116,10 @@
 			await PageGuard(response.error?.statusCode);
 		}
 	});
+
+	$effect(() => {
+		$isFormModified = $isModified;
+	})
 
 	const handleSelectDate = (selectedDate: Date) => {
 		updateField('launchDate', selectedDate.toISOString());
