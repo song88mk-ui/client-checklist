@@ -44,32 +44,33 @@
 		currEnvironment = Environment.PRODUCTION;
 	}
 
-	function calculatePercentage(items: any, itemToCheck: any): number {
-		if (!Array.isArray(items) || items.length === 0) {
-			return 0;
-		}
-		const totalItems = items.length;
-		const itemCount = items.reduce((count, item) => {
-			return item === itemToCheck ? count + 1 : count;
-		}, 0);
+	function calculatePercentage(items: any) {
+		const totalElements = items.length;
+		const countOfNotStarted = items.filter((num: any) => num === 1).length;
+		const countOfInProgress = items.filter((num: any) => num === 2).length;
+		const countOfCompleted = items.filter((num: any) => num === 3).length;
 
-		return (itemCount / totalItems) * 100;
+		const percentageNotStarted = (countOfNotStarted / totalElements) * 100;
+		const percentageInProgress = (countOfInProgress / totalElements) * 100;
+		const percentageCompleted = (countOfCompleted / totalElements) * 100;
+
+
+		clientProgress = {
+			notStarted: percentageNotStarted,
+			inProgress: percentageInProgress,
+			completed: percentageCompleted
+		};
 	}
 
 	function calcClientStepProgress(clientSteps: ClientStep[]) {
-		const clientProgressStatus = clientSteps.map((item) => {
+		const statusNotApplicable = 0
+		let allTask: any = [];
+		clientSteps.map((item) => {
 			const taskProgress = item.clientSubtasks.map((clientSubtask) => clientSubtask.taskStatus);
-			const totalPercentage = calculatePercentage(taskProgress, 2);
-			if (totalPercentage === 0) return 0;
-			if (totalPercentage > 0 && totalPercentage < 100) return 1;
-			if (totalPercentage === 100) return 2;
+			allTask.push(...taskProgress);
 		});
-
-		clientProgress = {
-			notStarted: calculatePercentage(clientProgressStatus, 0),
-			inProgress: calculatePercentage(clientProgressStatus, 1),
-			completed: calculatePercentage(clientProgressStatus, 2)
-		};
+		let result = allTask.filter((num:any) => num !== statusNotApplicable);
+		calculatePercentage(result);
 	}
 
 	function getClientTask(env: number, clientSteps: ClientStep[]): ClientStepTemplate[] {
@@ -135,10 +136,10 @@
 
 			targetDate = client?.targetLaunchDate
 				? new Date(client?.targetLaunchDate).toLocaleDateString('en-US', {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric'
-				})
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					})
 				: '';
 
 			if (client && client.clientSteps.length > 0) {
@@ -165,7 +166,7 @@
 			<div class="w-full bg-[#FCF8E3] py-[18px] text-center">
 				<span class="mb-[12px] block text-[32px] font-[600] text-[#A68F64]">Site Disabled</span>
 				<span class="block text-[23px] font-[600] text-[#A68F64]"
-				>This site has been disabled by the site administrator. Please contact your Administrator.
+					>This site has been disabled by the site administrator. Please contact your Administrator.
 				</span>
 			</div>
 		</div>
@@ -189,7 +190,7 @@
 				HandleChangeEnvironment={changeCurrEnvironment}
 			/>
 			{#if currEnvironment === Environment.STAGING}
-				{#each getClientTask(0, client.clientSteps.filter((clientStep) => clientStep.environment === 0)) as clientStep}
+				{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
 					<ClientTaskComponent
 						serviceTypeId={client.serviceTypeId}
 						clientStep={clientStep as ClientStep}
@@ -197,7 +198,7 @@
 				{/each}
 			{/if}
 			{#if currEnvironment === Environment.PRODUCTION}
-				{#each getClientTask(1, client.clientSteps.filter((clientStep) => clientStep.environment === 1)) as clientStep}
+				{#each getClientTask( 1, client.clientSteps.filter((clientStep) => clientStep.environment === 1) ) as clientStep}
 					<ClientTaskComponent
 						serviceTypeId={client.serviceTypeId}
 						clientStep={clientStep as ClientStep}
