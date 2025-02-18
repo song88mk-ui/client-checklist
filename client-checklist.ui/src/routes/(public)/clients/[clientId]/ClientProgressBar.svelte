@@ -20,6 +20,7 @@
 		HandleChangeEnvironment
 	}: Props = $props();
 
+
 	// @ts-ignore
 	function createKeyframes(name, fromWidth, toWidth) {
 		const styleSheet = document.styleSheets[0];
@@ -47,7 +48,7 @@
 		>
 			<span
 				class="pointer-events-none absolute z-[1] whitespace-nowrap text-[12px] font-bold text-white"
-				>{`${NotStarted.toFixed(0)}%`}</span
+				>{`${NotStarted.toFixed(2)}%`}</span
 			>
 		</div>
 	{/if}
@@ -57,7 +58,7 @@
 		>
 			<span
 				class="pointer-events-none absolute z-[1] whitespace-nowrap text-[12px] font-bold text-white"
-				>{`${InProgress.toFixed(0)}%`}</span
+				>{`${InProgress.toFixed(2)}%`}</span
 			>
 		</div>
 	{/if}
@@ -68,7 +69,7 @@
 		>
 			<span
 				class="pointer-events-none absolute z-[1] whitespace-nowrap text-[12px] font-bold text-white"
-				>{`${Completed.toFixed(0)}%`}</span
+				>{`${Completed.toFixed(2)}%`}</span
 			>
 		</div>
 	{/if}
