@@ -48,15 +48,11 @@
 
 	const onFinishedSubmit = () => {
 		isDoneSubmit = true;
-	}
+	};
 
 	beforeNavigate(({ to, cancel }) => {
-		if (
-			$isFormModified &&
-			!$isModalOpen &&
-			!isDoneSubmit
-		) {
-			const url = to?.url.pathname || "";
+		if ($isFormModified && !$isModalOpen && !isDoneSubmit) {
+			const url = to?.url.pathname || '';
 			const onConfirm = async () => {
 				goto(url);
 			};
@@ -73,7 +69,6 @@
 	<ProgressStep bind:step />
 </div>
 <div class="mb-10">
-
 	<!-- refactor to separate component per service type -->
 	{#if $selectedIntegration === IntegrationType.FEED_INTEGRATION}
 		{#if step === 0}
@@ -82,7 +77,7 @@
 			<BackOfficeForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 2}
 			<OddsFeedIntegrationForm {isSuperAdmin} {back} {next} {step} />
-		{:else if step === 3 }
+		{:else if step === 3}
 			<MTSForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 4}
 			<OperationsForm {isSuperAdmin} {back} {next} {step} />
@@ -102,13 +97,13 @@
 			<BackOfficeForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 2}
 			<WalletIntegrationForm {isSuperAdmin} {back} {next} {step} />
-		{:else if step === 3 }
+		{:else if step === 3}
 			<SportsbookPlayerSiteUiuxForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 4}
 			<MTSForm {isSuperAdmin} {back} {next} {step} />
-		{:else if step === 5 }
+		{:else if step === 5}
 			<OperationsForm {isSuperAdmin} {back} {next} {step} />
-		{:else if step === 6 }
+		{:else if step === 6}
 			<EndToEndTestForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 7}
 			<BusinessAcceptanceForm {isSuperAdmin} {back} {next} {step} />

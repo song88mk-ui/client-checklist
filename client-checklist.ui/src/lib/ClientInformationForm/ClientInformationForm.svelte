@@ -61,7 +61,7 @@
 	const serviceSteps = Step[$selectedIntegration];
 
 	$effect(() => {
-		if ($steps[serviceSteps.ClientInformation]?.formData) {
+		if ($steps[serviceSteps.ClientInformation]?.formData && !isEdit) {
 			const formData = $steps[serviceSteps.ClientInformation]
 				?.formData as ClientInformationFormType;
 			updateInitialValues({
@@ -119,12 +119,6 @@
 
 	$effect(() => {
 		$isFormModified = $isModified;
-	});
-
-	$effect(() => {
-		if (!isEdit) {
-			$form = initialValues;
-		}
 	});
 
 	const handleSelectDate = (selectedDate: Date) => {
