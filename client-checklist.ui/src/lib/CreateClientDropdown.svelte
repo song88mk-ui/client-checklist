@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
-    import selectedIntegration from '$stores/integration';
+	import selectedIntegration from '$stores/integration';
 	import IntegrationType from '$enums/integrationType';
 	import Product from '../utils/client';
 	import { isFormModified } from '$stores/form';
@@ -13,19 +13,19 @@
 		isShow = !isShow;
 	};
 
-    const selectedIntegrationType = (integration: IntegrationType) => {
-			if (!$isFormModified) {
-				$selectedIntegration = integration
-			}
-			isShow = false;
-    }
-
+	const selectedIntegrationType = (integration: IntegrationType) => {
+		if (!$isFormModified) {
+			console.log('IS FORM MODIFIED');
+			$selectedIntegration = integration;
+		}
+		isShow = false;
+	};
 </script>
 
 <div class="relative inline-block">
 	<button
 		class="inline-block flex flex-1 items-center items-center justify-center gap-2 rounded bg-blue-600 py-3 pl-4 pr-3 text-center text-sm font-semibold text-white hover:bg-blue-800 disabled:bg-blue-400"
-		on:click={toggle}
+		onclick={toggle}
 	>
 		Create Client Account
 		<Icon icon={`mdi:${isShow ? 'chevron-up' : 'chevron-down'}`} height={24} />
@@ -44,7 +44,7 @@
 						href={`/create-client`}
 						class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 						role="menuitem"
-						on:click={() => selectedIntegrationType(type)}
+						onclick={() => selectedIntegrationType(type)}
 						id="menu-item-0">{Product[type]}</a
 					>
 				{/each}

@@ -52,8 +52,6 @@
 		step++;
 	};
 
-	const serviceStep = Step[$selectedIntegration];
-
 	onMount(async () => {
 		const response = await getClient($page.params.clientId, {
 			'x-user-token': $auth?.userToken || ''
@@ -71,6 +69,7 @@
 		if (client) {
 			$selectedIntegration = servicesType[client.serviceTypeId];
 			$steps = INTEGRATION_STEPS[$selectedIntegration];
+			const serviceStep = Step[$selectedIntegration];
 			$steps[serviceStep.ClientInformation].formData = {
 				clientId: client.clientId,
 				clientName: client.clientName,
@@ -117,15 +116,11 @@
 
 	const onFinishedSubmit = () => {
 		isDoneSubmit = true;
-	}
+	};
 
 	beforeNavigate(({ to, cancel }) => {
-		if (
-			$isFormModified &&
-			!$isModalOpen &&
-			!isDoneSubmit
-		) {
-			const url = to?.url.pathname || "";
+		if ($isFormModified && !$isModalOpen && !isDoneSubmit) {
+			const url = to?.url.pathname || '';
 			const onConfirm = async () => {
 				goto(url);
 			};
