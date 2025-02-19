@@ -121,6 +121,12 @@
 		$isFormModified = $isModified;
 	});
 
+	$effect(() => {
+		if (!isEdit) {
+			$form = initialValues;
+		}
+	});
+
 	const handleSelectDate = (selectedDate: Date) => {
 		updateField('launchDate', selectedDate.toISOString());
 	};
