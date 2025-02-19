@@ -3,7 +3,7 @@
 	import ModalContainer from '$lib/ModalContainer.svelte';
 	let { children } = $props();
 
-	console.log(`App Version: 1.5.1`);
+	console.log(`App Version: 1.5.2`);
 </script>
 
 {@render children()}

@@ -61,7 +61,7 @@
 	const serviceSteps = Step[$selectedIntegration];
 
 	$effect(() => {
-		if ($steps[serviceSteps.ClientInformation]?.formData && !isEdit) {
+		if ($steps[serviceSteps.ClientInformation]?.formData && isEdit) {
 			const formData = $steps[serviceSteps.ClientInformation]
 				?.formData as ClientInformationFormType;
 			updateInitialValues({
