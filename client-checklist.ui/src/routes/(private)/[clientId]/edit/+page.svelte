@@ -58,8 +58,6 @@
 			'x-user-token': $auth?.userToken || ''
 		});
 
-		isLoading = false;
-
 		if (response.error) {
 			error = ErrorMessages.FetchClientFailed;
 		}
@@ -112,6 +110,8 @@
 				}
 			});
 		}
+
+        isLoading = false;
 	});
 
 	const onFinishedSubmit = () => {
