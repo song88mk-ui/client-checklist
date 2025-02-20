@@ -6,7 +6,7 @@
         "dev": "vite dev",
         "build": "vite build",
         "preview": "vite preview",
-        "build:preprod": "vite build --mode preprod",
+        "build:preprod": "NODE_ENV=preprod vite build --mode preprod",
         "build:production": "NODE_ENV=production vite build --mode production",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
