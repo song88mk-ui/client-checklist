@@ -32,6 +32,7 @@
 	import isConfirm from '$stores/confirm-modal';
 	import { openModal } from '$stores/modal';
 	import ConfirmModal from '$lib/ConfirmModal.svelte';
+    import type {default as StepType} from '$types/step';
 
 	const { getClient } = APIGateway();
 
@@ -58,17 +59,17 @@
 			'x-user-token': $auth?.userToken || ''
 		});
 
+        let tempSteps: StepType[] = [];
+
 		if (response.error) {
 			error = ErrorMessages.FetchClientFailed;
 		}
 
-		$steps = INTEGRATION_STEPS[$selectedIntegration];
-
 		const { client, clientSteps } = response.data as GetClientTaskStatusResponse;
 		if (client) {
 			$selectedIntegration = servicesType[client.serviceTypeId];
-			$steps = INTEGRATION_STEPS[$selectedIntegration];
-			$steps[serviceStep.ClientInformation].formData = {
+			tempSteps = INTEGRATION_STEPS[$selectedIntegration];
+			tempSteps[serviceStep.ClientInformation].formData = {
 				clientId: client.clientId,
 				clientName: client.clientName,
 				domain: client.domain,
@@ -104,12 +105,19 @@
 
 			const stepData = groupedByStepId(formattedClientSteps);
 
-			$steps.map((step) => {
-				if (stepData[step.stepId]) {
-					step.formData = stepData[step.stepId] as ProductFormType;
-				}
-			});
+            tempSteps = tempSteps.map((step: StepType) => {
+                if (stepData[step.stepId]) {
+                    return {
+                        ...step,
+                        formData: stepData[step.stepId] as ProductFormType
+                    }
+                }
+
+                return step
+            })
 		}
+
+        $steps = tempSteps;
 
         isLoading = false;
 	});
