@@ -5,6 +5,7 @@
 	import steps from '$stores/steps';
 	import selectedIntegration from '$stores/integration';
 	import Step from '$enums/Step';
+	console.log('STEPS 1', $steps);
 
 	let { step = $bindable() } = $props<{ step: number }>();
 	let serviceSteps = Step[$selectedIntegration];
@@ -24,11 +25,14 @@
 					s.status = StepStatus.Active;
 				}
 			});
+
+			console.log('STEPS 2', $steps);
 		}
 	});
 </script>
 
 <div class="flex">
+	{console.log('STEPS 3', $steps)}
 	{#each $steps as { title, status }, index}
 		<div class="relative flex flex-1 flex-col items-center">
 			<button
@@ -49,7 +53,8 @@
 			{#if index < $steps.length - 1}
 				{#if $steps[index + 1].status === StepStatus.Completed}
 					<div
-						class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[StepStatus.Completed].line}`}></div>
+						class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[StepStatus.Completed].line}`}
+					></div>
 				{:else}
 					<div class={`absolute -right-1/2 top-5 h-0.5 w-full ${STATUS_COLORS[status].line}`}></div>
 				{/if}

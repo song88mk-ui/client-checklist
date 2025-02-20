@@ -1,26 +1,28 @@
 <script lang="ts">
 	import { createForm } from 'svelte-forms-lib';
-	import APIGateway from '$api/APIGateway';
+
 	import auth from '$stores/auth';
-	import DateInput from '../DateInput.svelte';
-	import selectedIntegration from '$stores/integration';
-	import Product from '../../utils/client';
-	import { StatusCode } from '$api/models';
 	import steps from '$stores/steps';
+	import selectedIntegration from '$stores/integration';
 	import { sportsFeed } from '$stores/client-launch-feed';
-	import Step from '$enums/Step';
-	import validationSchema, { type ClientInformationFormType } from './validationSchema';
-	import { AccessType } from '$enums/role';
+
+	import EnhanceDropdown from '$lib/EnhanceDropdown.svelte';
+	import APIGateway from '$api/APIGateway';
+	import { StatusCode } from '$api/models';
 	import { PageGuard } from '$services/PageGuard';
 	import { toCreateClientPayload, toEditClientPayload } from '$mapper/ClientMapper';
-	import EnhanceDropdown from '$lib/EnhanceDropdown.svelte';
+	import { ClientRowStatus } from '$enums/ClientRowStatus';
+	import { AccessType } from '$enums/role';
+	import Step from '$enums/Step';
+	import validationSchema, { type ClientInformationFormType } from './validationSchema';
+	import Product from '../../utils/client';
 	import {
 		currencyOption,
 		languageOption,
 		marketOption,
 		sportsOption
 	} from '$constants/ClientInformation';
-	import { ClientRowStatus } from '$enums/ClientRowStatus';
+	import DateInput from '../DateInput.svelte';
 
 	const { createClient, updateClient } = APIGateway();
 	let { next, isEdit = false } = $props();
