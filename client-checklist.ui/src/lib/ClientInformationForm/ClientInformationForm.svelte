@@ -60,7 +60,7 @@
 	const serviceSteps = Step[$selectedIntegration];
 
 	$effect(() => {
-		if ($steps[serviceSteps.ClientInformation]?.formData && isEdit) {
+		if ($steps[serviceSteps.ClientInformation]?.formData) {
 			const formData = $steps[serviceSteps.ClientInformation]
 				?.formData as ClientInformationFormType;
 			updateInitialValues({
@@ -230,7 +230,6 @@
 					</label>
 					<input type="hidden" bind:value={$form.languages} />
 					<EnhanceDropdown
-						{isEdit}
 						onSelectedOption={(selectedItem: string) => handleSelectedLanguage(selectedItem)}
 						options={languageOption}
 						selected={($steps[serviceSteps.ClientInformation]?.formData?.languages as string).split(
@@ -251,7 +250,6 @@
 					</label>
 					<input type="hidden" bind:value={$form.currencies} />
 					<EnhanceDropdown
-						{isEdit}
 						onSelectedOption={(selectedItem: string) => handleSelectedCurrency(selectedItem)}
 						options={currencyOption}
 						selected={(
@@ -274,7 +272,6 @@
 					</label>
 					<input type="hidden" bind:value={$form.sports} />
 					<EnhanceDropdown
-						{isEdit}
 						onSelectedOption={(selectedItem: string) => handleSelectedSport(selectedItem)}
 						options={sportsOption}
 						selected={($steps[serviceSteps.ClientInformation]?.formData?.sports as string).split(
@@ -295,7 +292,6 @@
 					</label>
 					<input type="hidden" bind:value={$form.markets} />
 					<EnhanceDropdown
-						{isEdit}
 						onSelectedOption={(selectedItem: string) => handleSelectedMarket(selectedItem)}
 						options={marketOption}
 						selected={($steps[serviceSteps.ClientInformation]?.formData?.markets as string).split(

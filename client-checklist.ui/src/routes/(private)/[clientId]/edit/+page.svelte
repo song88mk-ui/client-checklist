@@ -51,6 +51,8 @@
 		step++;
 	};
 
+	const serviceStep = Step[$selectedIntegration];
+
 	onMount(async () => {
 		const response = await getClient($page.params.clientId, {
 			'x-user-token': $auth?.userToken || ''
@@ -68,7 +70,6 @@
 		if (client) {
 			$selectedIntegration = servicesType[client.serviceTypeId];
 			$steps = INTEGRATION_STEPS[$selectedIntegration];
-			const serviceStep = Step[$selectedIntegration];
 			$steps[serviceStep.ClientInformation].formData = {
 				clientId: client.clientId,
 				clientName: client.clientName,
@@ -117,10 +118,10 @@
 		isDoneSubmit = true;
 	};
 
-	let url = "";
-	beforeNavigate(({ from ,to, cancel }) => {
+	let url = '';
+	beforeNavigate(({ from, to, cancel }) => {
 		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
-			url = to?.url.pathname || "";
+			url = to?.url.pathname || '';
 			openModal(ConfirmModal);
 			cancel();
 		}
@@ -131,7 +132,7 @@
 		if ($isConfirm) {
 			goto(url);
 		}
-	})
+	});
 </script>
 
 <div class="cc-edit-client-page">
