@@ -19,11 +19,10 @@
 	import { AccessType } from '$enums/role';
 	import ClientLaunchWalletIntegration from '$lib/StepsForm/ClientLaunchWalletIntegration.svelte';
 	import ClientLaunchFeedIntegration from '$lib/StepsForm/ClientLaunchFeedIntegration.svelte';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import { openModal } from '$stores/modal';
 	import ConfirmModal from '$lib/ConfirmModal.svelte';
-	import { isModalOpen } from '$stores/modal';
-	import { beforeNavigate, goto } from '$app/navigation';
-	import { isFormModified } from '$stores/form';
+	import isConfirm from '$stores/confirm-modal';
 
 	// TODO: Reset special cases; Need to refactor
 	$hasBetValidation = false;
@@ -50,16 +49,21 @@
 		isDoneSubmit = true;
 	};
 
-	beforeNavigate(({ to, cancel }) => {
-		if ($isFormModified && !$isModalOpen && !isDoneSubmit) {
-			const url = to?.url.pathname || '';
-			const onConfirm = async () => {
-				goto(url);
-			};
-			openModal(ConfirmModal, { onConfirm });
+	let url = "";
+	beforeNavigate(({ from, to, cancel }) => {
+		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
+			url = to?.url.pathname || "";
+			openModal(ConfirmModal);
 			cancel();
 		}
+		$isConfirm = false;
 	});
+
+	$effect(() => {
+		if ($isConfirm) {
+			goto(url);
+		}
+	})
 </script>
 
 <div class="mb-10">
