@@ -33,6 +33,7 @@
 	import { openModal } from '$stores/modal';
 	import ConfirmModal from '$lib/ConfirmModal.svelte';
     import type {default as StepType} from '$types/step';
+	import StepStatus from '$enums/StepStatus';
 
 	const { getClient } = APIGateway();
 
@@ -109,6 +110,7 @@
                 if (stepData[step.stepId]) {
                     return {
                         ...step,
+                        status: StepStatus.Completed,
                         formData: stepData[step.stepId] as ProductFormType
                     }
                 }

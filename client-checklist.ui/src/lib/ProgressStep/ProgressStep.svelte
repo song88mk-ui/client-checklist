@@ -5,6 +5,9 @@
 	import steps from '$stores/steps';
 	import selectedIntegration from '$stores/integration';
 	import Step from '$enums/Step';
+	import type { default as StepType } from '$types/step';
+	import { onMount } from 'svelte';
+
 	console.log('STEPS 1', $steps);
 
 	let { step = $bindable() } = $props<{ step: number }>();
@@ -16,15 +19,31 @@
 		}
 	};
 
-	$effect(() => {
-		if ($steps.length > 0) {
-			$steps.forEach((s, i) => {
-				s.status = s.formData ? StepStatus.Completed : StepStatus.Inactive;
+    const setStepStatus = (): void => {
+        let tempSteps: StepType[] = $steps;
 
-				if (i === step) {
-					s.status = StepStatus.Active;
-				}
-			});
+        tempSteps = tempSteps.map((item: StepType, index: number) => {
+            return {
+                ...item,
+                status:
+                    step === index
+                        ? StepStatus.Active
+                        : item.formData
+                            ? StepStatus.Completed
+                            : StepStatus.Inactive
+            };
+        });
+
+        $steps = tempSteps;
+    }
+
+    onMount(() => {
+        setStepStatus();
+    })
+
+	$effect(() => {
+		if ($steps.length > 0 && $steps[step].status !== StepStatus.Active) {
+            setStepStatus();
 
 			console.log('STEPS 2', $steps);
 		}
