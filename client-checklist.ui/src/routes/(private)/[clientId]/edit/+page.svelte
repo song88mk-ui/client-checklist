@@ -104,11 +104,11 @@
 
 			const stepData = groupedByStepId(formattedClientSteps);
 
-			$steps.map((step) => {
-				if (stepData[step.stepId]) {
+			$steps.forEach(step => {
+                if (stepData[step.stepId]) {
 					step.formData = stepData[step.stepId] as ProductFormType;
 				}
-			});
+            })            
 		}
 
         isLoading = false;
