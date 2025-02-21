@@ -19,7 +19,6 @@
 	import type { GetClientTaskStatusResponse } from '$api/response.DTO.model';
 	import services, { servicesType, servicesTypeId } from '$constants/services';
 	import selectedIntegration from '$stores/integration';
-	import { INTEGRATION_STEPS } from '$lib/ProgressStep/const';
 	import steps from '$stores/steps';
 	import Step from '$enums/Step';
 	import groupedByStepId from '$utils/groupedByStepId';
@@ -54,6 +53,34 @@
 	};
 
 	const serviceStep = Step[$selectedIntegration];
+
+	const WALLET_INTEGRATION_STEPS: StepType[] = [
+		{ title: 'Contact Information', status: StepStatus.Active, stepId: 0 },
+		{ title: 'Back Office', status: StepStatus.Inactive, stepId: 1 },
+		{ title: 'Wallet Integration', status: StepStatus.Inactive, stepId: 2 },
+		{ title: 'Sportsbook Player Site UI/UX', status: StepStatus.Inactive, stepId: 3 },
+		{ title: 'Manage Trading Services', status: StepStatus.Inactive, stepId: 4 },
+		{ title: 'Operations', status: StepStatus.Inactive, stepId: 5 },
+		{ title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 6 },
+		{ title: 'Business Acceptance Test', status: StepStatus.Inactive, stepId: 7 },
+		{ title: 'Client Launch', status: StepStatus.Inactive, stepId: 8 }
+	]
+
+	const FEED_INTEGRATION_STEPS: StepType[] = [
+		{ title: 'Contact Information', status: StepStatus.Active, stepId: 0 },
+		{ title: 'Back Office', status: StepStatus.Inactive, stepId: 1 },
+		{ title: 'Odds Feed Integration', status: StepStatus.Inactive, stepId: 2 },
+		{ title: 'Manage Trading Services', status: StepStatus.Inactive, stepId: 3 },
+		{ title: 'Operations', status: StepStatus.Inactive, stepId: 4 },
+		{ title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 5 },
+		{ title: 'Business Acceptance Test', status: StepStatus.Inactive, stepId: 6 },
+		{ title: 'Client Launch', status: StepStatus.Inactive, stepId: 7 }
+	]
+
+	const INTEGRATION_STEPS = {
+		[IntegrationType.WALLET_INTEGRATION]: WALLET_INTEGRATION_STEPS,
+		[IntegrationType.FEED_INTEGRATION]: FEED_INTEGRATION_STEPS
+	}
 
 	onMount(async () => {
 		const response = await getClient($page.params.clientId, {
