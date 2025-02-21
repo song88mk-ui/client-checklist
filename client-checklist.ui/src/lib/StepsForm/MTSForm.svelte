@@ -133,8 +133,6 @@
 			}
 		);
 
-		console.log("VALUES", values[Environment.STAGING])
-
 		const productionProduct = createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',

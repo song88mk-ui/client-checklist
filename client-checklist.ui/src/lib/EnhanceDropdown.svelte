@@ -1,6 +1,6 @@
 <script lang="ts">
-	let { onSelectedOption, disabled, options, selected, placeholder, showOption, onShow } = $props();
-	let selectedItems: string[] = $state(selected || []);
+	let { onSelectedOption, disabled, options, selected, placeholder, showOption, onShow, isEdit } = $props();
+	let selectedItems: string[] = $state(isEdit ? selected : []);
 
 	$effect(() => {
 		onSelectedOption(selectedItems.join());
