@@ -8,8 +8,6 @@
 	import type { default as StepType } from '$types/step';
 	import { onMount } from 'svelte';
 
-	console.log('STEPS 1', $steps);
-
 	let { step = $bindable() } = $props<{ step: number }>();
 	let serviceSteps = Step[$selectedIntegration];
 
@@ -44,14 +42,11 @@
 	$effect(() => {
 		if ($steps.length > 0 && $steps[step].status !== StepStatus.Active) {
             setStepStatus();
-
-			console.log('STEPS 2', $steps);
 		}
 	});
 </script>
 
 <div class="flex">
-	{console.log('STEPS 3', $steps)}
 	{#each $steps as { title, status }, index}
 		<div class="relative flex flex-1 flex-col items-center">
 			<button

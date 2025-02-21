@@ -41,18 +41,16 @@
 		step++;
 	};
 
-	$effect(() => {
-		$steps = INTEGRATION_STEPS[$selectedIntegration];
-	});
+	$steps = INTEGRATION_STEPS[$selectedIntegration];
 
 	const onFinishedSubmit = () => {
 		isDoneSubmit = true;
 	};
 
-	let url = "";
+	let url = '';
 	beforeNavigate(({ from, to, cancel }) => {
 		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
-			url = to?.url.pathname || "";
+			url = to?.url.pathname || '';
 			openModal(ConfirmModal);
 			cancel();
 		}
@@ -63,7 +61,7 @@
 		if ($isConfirm) {
 			goto(url);
 		}
-	})
+	});
 </script>
 
 <div class="mb-10">

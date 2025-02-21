@@ -3,7 +3,6 @@
 	import { browser } from '$app/environment';
 	import auth from '$stores/auth';
 	import { LocalStorage } from './storage';
-	import Role from '$enums/role';
 
 	$: if (browser && (!$auth?.userToken && !LocalStorage.getValue('userToken'))) {
 		goto('/login');
@@ -13,7 +12,6 @@
                 username: LocalStorage.getValue('username'),
                 userToken: LocalStorage.getValue('userToken'),
                 accessType: LocalStorage.getValue('accessType'),
-                roleName: Role.ADMIN
             };
         }
     }

@@ -64,7 +64,6 @@
 	const clientInfoFormData = $steps[serviceStep.ClientInformation].formData;
 	const sportsListFormData = (clientInfoFormData as ClientInformationFormType).sports.split(',').map(i => i.trim()).filter(x => x !== null);
 
-	console.log('SPORTS', sportsListFormData);
 	// TODO: Need to refactor; Sports list from Client Information form for odds feed integration; Create list of sports
 	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && sportsListFormData.length > 0) {
 		defaultValues[Environment.PRODUCTION] = {
@@ -84,8 +83,6 @@
 		let listOfSports = (clientLaunchFormData as ProductFormType)[Environment.PRODUCTION].clientSubTasks;
 		sportsListFormData.forEach((s, i) => {
 			const clientInfoSport = listOfSports.find(ls => ls.subtaskName == s);
-			console.log('CLIENT INFO SPORTS', clientInfoSport);
-
 			const confirmSports = clientInfoSport || generateSubTask(i + 1, s);
 			newSubTasksSports.push(confirmSports);
 		});

@@ -6,20 +6,21 @@
 		placeholder,
 		value,
 		onSelectDate,
-        elementId,
+		elementId,
 		disabled = false
 	} = $props<{
 		placeholder: string;
 		value: any;
 		onSelectDate?: (selectedDate: Date) => void;
-        elementId: string;
+		elementId: string;
 		disabled?: boolean;
 	}>();
 
 	let prevValue = value;
 	let isShowDatePicker = $state(false);
-	let valueAsDate = $state(value ? new Date(value) : new Date());
-	let formattedValue = $state(value ? format(valueAsDate, 'MMMM d, yyyy') : '');
+	const dateValue = value ? new Date(value) : new Date();
+	let valueAsDate = $state(dateValue);
+	let formattedValue = $state(value ? format(dateValue, 'MMMM d, yyyy') : '');
 	let max = endOfYear(addYears(new Date(), 1));
 
 	$effect(() => {
@@ -32,7 +33,7 @@
 	});
 
 	const handleFocusOut = (e: FocusEvent) => {
-        const parentElement = document.getElementById(elementId)
+		const parentElement = document.getElementById(elementId);
 		const relatedTarget = e.relatedTarget as Node;
 
 		if (e.relatedTarget === null || (parentElement !== null && !parentElement.contains(relatedTarget))) {
@@ -41,9 +42,9 @@
 	};
 
 	const handleShowDatePicker = (e: any) => {
-        if (disabled) return;
+		if (disabled) return;
 
-        e.target.focus();
+		e.target.focus();
 		isShowDatePicker = true;
 	};
 
@@ -55,14 +56,14 @@
 </script>
 
 <div
-    id={elementId}
+	id={elementId}
 	class="relative w-full rounded border bg-[url('/icon-calendar.svg')] bg-[center_right_12px] bg-no-repeat px-3 py-2"
 	role="presentation"
-    tabindex="-1"
-    onfocusout={handleFocusOut}
-    onclick={(e: any) => handleShowDatePicker(e)}
+	tabindex="-1"
+	onfocusout={handleFocusOut}
+	onclick={(e: any) => handleShowDatePicker(e)}
 >
-    <span class="text-sm text-gray-700">{value ? formattedValue : placeholder}</span>
+	<span class="text-sm text-gray-700">{value ? formattedValue : placeholder}</span>
 	{#if isShowDatePicker && !disabled}
 		<div class="absolute z-10 left-[0px] top-[45px]">
 			<DatePicker {max} value={valueAsDate} on:select={handleSelectDate} />
