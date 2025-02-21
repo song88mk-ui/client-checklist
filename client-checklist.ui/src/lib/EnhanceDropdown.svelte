@@ -1,6 +1,26 @@
 <script lang="ts">
-	let { onSelectedOption, disabled, options, selected, placeholder, showOption, onShow, isEdit } = $props();
-	let selectedItems: string[] = $state(isEdit ? selected : []);
+	import steps from '$stores/steps';
+
+	let { onSelectedOption, disabled, options, selectedType, placeholder, showOption, onShow } = $props();
+
+	let formData = $steps[0]?.formData;
+
+	let initialOptions = []
+	switch (selectedType) {
+		case 'languages':
+			initialOptions = formData?.languages ? (formData.languages as string).split(',').filter(x => x !== '') : [];
+			break;
+		case 'currencies':
+			initialOptions = formData?.currencies ? (formData.currencies as string).split(',').filter(x => x !== '') : [];
+			break;
+		case 'sports':
+			initialOptions = formData?.sports ? (formData.sports as string).split(',').filter(x => x !== '') : [];
+			break;
+		default:
+			initialOptions = formData?.markets ? (formData.markets as string).split(',').filter(x => x !== '') : [];
+	}
+
+	let selectedItems: string[] = $state(initialOptions);
 
 	$effect(() => {
 		onSelectedOption(selectedItems.join());
