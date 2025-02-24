@@ -130,7 +130,7 @@ describe('getOverallStatus', () => {
 								subtaskId: 2,
 								subtaskName: 'Bet Placement',
 								comment: '',
-								taskStatusId: 1
+								taskStatusId: 0
 							}
 						]
 					}

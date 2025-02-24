@@ -28,7 +28,7 @@ const getOverallStatus = (steps: Step[]): ClientRowStatus => {
     return ClientRowStatus.Completed;
   }
 
-  if (allStatuses.every(status => status === ClientRowStatus.NotStarted)) {
+  if (allStatuses.every(status => status === ClientRowStatus.NotStarted || status === ClientRowStatus.NotApplicable)) {
     return ClientRowStatus.NotStarted;
   }
 
