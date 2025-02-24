@@ -49,7 +49,7 @@
 		const countOfNotStarted = items.filter((num: any) => num === 1).length;
 		const countOfInProgress = items.filter((num: any) => num === 2).length;
 		const countOfCompleted = items.filter((num: any) => num === 3).length;
-
+		
 		const percentageNotStarted = (countOfNotStarted / totalElements) * 100;
 		const percentageInProgress = (countOfInProgress / totalElements) * 100;
 		const percentageCompleted = (countOfCompleted / totalElements) * 100;
@@ -66,10 +66,18 @@
 		const statusNotApplicable = 0
 		let allTask: any = [];
 		clientSteps.map((item) => {
+			if(item.environment === 1 && item.clientSubtasks.length > 0 && item.step === 7 && item.serviceType === 2){ // remove prod bet validation
+				const filteredTaskProgress = item.clientSubtasks.filter((clientSubtask) => clientSubtask.subtaskName !== 'Bet Validation');
+				const taskProgress = filteredTaskProgress.map((clientSubtask) => clientSubtask.taskStatus);
+				allTask.push(...taskProgress);
+				return			
+			}
 			const taskProgress = item.clientSubtasks.map((clientSubtask) => clientSubtask.taskStatus);
 			allTask.push(...taskProgress);
 		});
+
 		let result = allTask.filter((num:any) => num !== statusNotApplicable);
+
 		calculatePercentage(result);
 	}
 
