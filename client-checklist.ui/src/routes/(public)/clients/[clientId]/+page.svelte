@@ -38,7 +38,7 @@
 	let loading = $state(true);
 	let targetDate = $state('');
 
-	let device: Number = $state(Device.Desktop)
+	let device: Device = $state(Device.Desktop)
 	
 	function changeCurrEnvironment(selectedEnvironment: Environment) {
 		if (selectedEnvironment === Environment.STAGING) {
@@ -110,7 +110,6 @@
 			return templateClientStep;
 		});
 	}
-
 	onMount(async () => {
 		if(window.innerWidth <= 768){
 			device = Device.Mobile
@@ -195,8 +194,7 @@
 	{/if}
 
 	{#if client !== null && !loading}
-		<div class="flex-1 p-6">
-			{#if device !== Device.Mobile }
+		<div class={`flex-1 ${device === Device.Desktop ? 'p-6':''}`}>
 				<ClientDetails
 					CompanyName={client.clientName}
 					Domain={client?.domain}
@@ -204,32 +202,10 @@
 					CurrencySupported={client?.currencies}
 					LaunchDate={targetDate}
 					ServiceToProvide={services[client.serviceTypeId]}
+					CurrDevice={device}
 				/>
 
-				<ClientProgressBar
-					InProgress={clientProgress.inProgress}
-					NotStarted={clientProgress.notStarted}
-					Completed={clientProgress.completed}
-					CurrEnvironment={currEnvironment}
-					HandleChangeEnvironment={changeCurrEnvironment}
-				/>
-				{#if currEnvironment === Environment.STAGING}
-					{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
-						<ClientTaskComponent
-							serviceTypeId={client.serviceTypeId}
-							clientStep={clientStep as ClientStep}
-						/>
-					{/each}
-				{/if}
-				{#if currEnvironment === Environment.PRODUCTION}
-					{#each getClientTask( 1, client.clientSteps.filter((clientStep) => clientStep.environment === 1) ) as clientStep}
-						<ClientTaskComponent
-							serviceTypeId={client.serviceTypeId}
-							clientStep={clientStep as ClientStep}
-						/>
-					{/each}
-				{/if}
-			{/if}
+				
 		</div>
 	{/if}
 </div>
