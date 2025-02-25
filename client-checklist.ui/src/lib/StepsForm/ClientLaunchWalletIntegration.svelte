@@ -17,6 +17,9 @@
 	import { goto } from '$app/navigation';
 	import getOverallStatus from '$utils/getOverallStatus';
 	import { toEditClientPayload } from '$mapper/ClientMapper';
+	import hasIncompleteSubtask from '$utils/hasIncompleteSubtask';
+	import isErrorValidation from '$stores/validation';
+	import { ClientRowStatus } from '$enums/ClientRowStatus';
 
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
@@ -58,6 +61,12 @@
 			setTimeout(() => {
 				goto('/');
 			}, 3000);
+			return;
+		}
+
+		const hasOneCompletedTask = !hasIncompleteSubtask(values);
+		if (hasOneCompletedTask && $steps.some(step => step.isIncomplete)) {
+			$isErrorValidation = true;
 			return;
 		}
 

@@ -22,6 +22,8 @@
 	import environment from '$enums/Environment';
 	import getOverallStatus from '$utils/getOverallStatus';
 	import { toEditClientPayload } from '$mapper/ClientMapper';
+	import hasIncompleteSubtask from '$utils/hasIncompleteSubtask';
+	import isErrorValidation from '$stores/validation';
 
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
@@ -50,7 +52,7 @@
 
 	const mtsFormData = $steps[serviceStep.ManagedTradingServices].formData;
 	// TODO: Need to refactor to make it clean; Bet validation from MTS form for odds feed integration
-	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && (mtsFormData as ProductFormType)[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable) {
+	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && mtsFormData && (mtsFormData as ProductFormType)[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable) {
 		defaultValues[Environment.STAGING] = {
 			assignedTo: '',
 			targetDateCompleted: null,
@@ -106,6 +108,12 @@
 			setTimeout(() => {
 				goto('/');
 			}, 3000);
+			return;
+		}
+
+		const hasOneCompletedTask = !hasIncompleteSubtask(values);
+		if (hasOneCompletedTask && $steps.some(step => step.isIncomplete)) {
+			$isErrorValidation = true;
 			return;
 		}
 
@@ -228,7 +236,7 @@
 
 	const handleEditProduct = async (values: ProductFormType) => {
 		const promiseList: any = [];
-		if (values[Environment.STAGING]) {
+		if (values[Environment.STAGING] && values[Environment.STAGING].id) {
 			const stagingProduct = updateStep(
 				{
 					...values[Environment.STAGING],

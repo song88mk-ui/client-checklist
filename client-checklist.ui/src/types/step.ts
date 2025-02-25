@@ -7,6 +7,7 @@ type Step = {
 	title: string;
 	status: StepStatus;
 	formData?: ClientInformationFormType | ProductFormType;
+	isIncomplete?: boolean;
 };
 
 export type { Step as default };

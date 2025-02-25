@@ -33,9 +33,15 @@
 	import ConfirmModal from '$lib/ConfirmModal.svelte';
     import type {default as StepType} from '$types/step';
 	import StepStatus from '$enums/StepStatus';
+	import isErrorValidation from '$stores/validation';
+	import hasIncompleteSubtask from '$utils/hasIncompleteSubtask';
+	import initialFormValues from '$constants/initialFormValues';
 
 	const { getClient } = APIGateway();
 
+	// TODO: Reset special cases; Need to refactor
+	$isErrorValidation = false;
+	
 	let step = $state(0);
 	let error = $state('');
 	let isLoading = $state(true);
@@ -56,24 +62,24 @@
 
 	const WALLET_INTEGRATION_STEPS: StepType[] = [
 		{ title: 'Contact Information', status: StepStatus.Active, stepId: 0 },
-		{ title: 'Back Office', status: StepStatus.Inactive, stepId: 1 },
-		{ title: 'Wallet Integration', status: StepStatus.Inactive, stepId: 2 },
-		{ title: 'Sportsbook Player Site UI/UX', status: StepStatus.Inactive, stepId: 3 },
-		{ title: 'Manage Trading Services', status: StepStatus.Inactive, stepId: 4 },
-		{ title: 'Operations', status: StepStatus.Inactive, stepId: 5 },
-		{ title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 6 },
-		{ title: 'Business Acceptance Test', status: StepStatus.Inactive, stepId: 7 },
+		{ title: 'Back Office', status: StepStatus.Inactive, stepId: 1, isIncomplete: true },
+		{ title: 'Wallet Integration', status: StepStatus.Inactive, stepId: 2, isIncomplete: true },
+		{ title: 'Sportsbook Player Site UI/UX', status: StepStatus.Inactive, stepId: 3, isIncomplete: true },
+		{ title: 'Manage Trading Services', status: StepStatus.Inactive, stepId: 4, isIncomplete: true },
+		{ title: 'Operations', status: StepStatus.Inactive, stepId: 5, isIncomplete: true },
+		{ title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 6, isIncomplete: true },
+		{ title: 'Business Acceptance Test', status: StepStatus.Inactive, stepId: 7, isIncomplete: true },
 		{ title: 'Client Launch', status: StepStatus.Inactive, stepId: 8 }
 	]
 
 	const FEED_INTEGRATION_STEPS: StepType[] = [
 		{ title: 'Contact Information', status: StepStatus.Active, stepId: 0 },
-		{ title: 'Back Office', status: StepStatus.Inactive, stepId: 1 },
-		{ title: 'Odds Feed Integration', status: StepStatus.Inactive, stepId: 2 },
-		{ title: 'Manage Trading Services', status: StepStatus.Inactive, stepId: 3 },
-		{ title: 'Operations', status: StepStatus.Inactive, stepId: 4 },
-		{ title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 5 },
-		{ title: 'Business Acceptance Test', status: StepStatus.Inactive, stepId: 6 },
+		{ title: 'Back Office', status: StepStatus.Inactive, stepId: 1, isIncomplete: true },
+		{ title: 'Odds Feed Integration', status: StepStatus.Inactive, stepId: 2, isIncomplete: true },
+		{ title: 'Manage Trading Services', status: StepStatus.Inactive, stepId: 3, isIncomplete: true },
+		{ title: 'Operations', status: StepStatus.Inactive, stepId: 4, isIncomplete: true },
+		{ title: 'End-to-End Functional & Performance Test', status: StepStatus.Inactive, stepId: 5, isIncomplete: true },
+		{ title: 'Business Acceptance Test', status: StepStatus.Inactive, stepId: 6, isIncomplete: true },
 		{ title: 'Client Launch', status: StepStatus.Inactive, stepId: 7 }
 	]
 
@@ -133,22 +139,27 @@
 
 			const stepData = groupedByStepId(formattedClientSteps);
 
-            tempSteps = tempSteps.map((step: StepType) => {
-                if (stepData[step.stepId]) {
-                    return {
-                        ...step,
-                        status: StepStatus.Completed,
-                        formData: stepData[step.stepId] as ProductFormType
-                    }
-                }
+			tempSteps = tempSteps.map((step: StepType) => {
+				if (stepData[step.stepId]) {
+					const formData = stepData[step.stepId] as ProductFormType;
+					const stepValue = {
+						...step,
+						status: StepStatus.Completed,
+						formData,
+					}
+					if (step.stepId !== serviceStep.ClientLaunch) {
+						stepValue.isIncomplete = hasIncompleteSubtask(formData);
+					}
+					return stepValue;
+				}
 
-                return step
-            })
+				return step;
+			})
 		}
 
-        $steps = tempSteps;
+		$steps = tempSteps;
 
-        isLoading = false;
+		isLoading = false;
 	});
 
 	const onFinishedSubmit = () => {
@@ -182,6 +193,20 @@
 	{/if}
 
 	{#if !error && !isLoading}
+		{#if $isErrorValidation && $steps.filter(formStep => formStep.isIncomplete).length > 0}
+			<div
+				class="mb-8 rounded-md border border-[#FFB97D] bg-[#FEF0C7] p-3 text-xs leading-[1.5] text-[#EF7E1D]"
+			>
+				<p>
+					Some required fields are incomplete. The following sections still need to be completed:
+				</p>
+				<ul class="ml-5 list-disc font-semibold">
+					{#each $steps.filter(formStep => formStep.isIncomplete) as formStep}
+						<li>{formStep.title}</li>
+					{/each}
+				</ul>
+			</div>
+		{/if}
 		<div class="mb-10">
 			<h1 class="text-3xl font-bold">{services[servicesTypeId[$selectedIntegration]]}</h1>
 		</div>

@@ -15,6 +15,7 @@
 	import initialFormValues from '$constants/initialFormValues';
 	import getOverallStatus from '$utils/getOverallStatus';
 	import { toEditClientPayload } from '$mapper/ClientMapper';
+	import hasIncompleteSubtask from '$utils/hasIncompleteSubtask';
 
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
@@ -79,6 +80,8 @@
 					...values[Environment.PRODUCTION]
 				}
 			};
+
+			$steps[step].isIncomplete = hasIncompleteSubtask($steps[step].formData);
 
 			const currentStatus = getOverallStatus($steps);
 			const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
