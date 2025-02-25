@@ -16,6 +16,8 @@
 		type ClientStepTemplate
 	} from './types';
 	import Environment from '$enums/Environment';
+	import Device from '$enums/Device';
+
 	import { LocalStorage } from '$lib/storage';
 	import { DEFAULT_SERVICE_TEMPLATE } from './constant';
 
@@ -36,6 +38,8 @@
 	let loading = $state(true);
 	let targetDate = $state('');
 
+	let device: Number = $state(Device.Desktop)
+	
 	function changeCurrEnvironment(selectedEnvironment: Environment) {
 		if (selectedEnvironment === Environment.STAGING) {
 			currEnvironment = Environment.STAGING;
@@ -49,11 +53,10 @@
 		const countOfNotStarted = items.filter((num: any) => num === 1).length;
 		const countOfInProgress = items.filter((num: any) => num === 2).length;
 		const countOfCompleted = items.filter((num: any) => num === 3).length;
-		
+
 		const percentageNotStarted = (countOfNotStarted / totalElements) * 100;
 		const percentageInProgress = (countOfInProgress / totalElements) * 100;
 		const percentageCompleted = (countOfCompleted / totalElements) * 100;
-
 
 		clientProgress = {
 			notStarted: percentageNotStarted,
@@ -63,20 +66,28 @@
 	}
 
 	function calcClientStepProgress(clientSteps: ClientStep[]) {
-		const statusNotApplicable = 0
+		const statusNotApplicable = 0;
 		let allTask: any = [];
 		clientSteps.map((item) => {
-			if(item.environment === 1 && item.clientSubtasks.length > 0 && item.step === 7 && item.serviceType === 2){ // remove prod bet validation
-				const filteredTaskProgress = item.clientSubtasks.filter((clientSubtask) => clientSubtask.subtaskName !== 'Bet Validation');
+			if (
+				item.environment === 1 &&
+				item.clientSubtasks.length > 0 &&
+				item.step === 7 &&
+				item.serviceType === 2
+			) {
+				// remove prod bet validation
+				const filteredTaskProgress = item.clientSubtasks.filter(
+					(clientSubtask) => clientSubtask.subtaskName !== 'Bet Validation'
+				);
 				const taskProgress = filteredTaskProgress.map((clientSubtask) => clientSubtask.taskStatus);
 				allTask.push(...taskProgress);
-				return			
+				return;
 			}
 			const taskProgress = item.clientSubtasks.map((clientSubtask) => clientSubtask.taskStatus);
 			allTask.push(...taskProgress);
 		});
 
-		let result = allTask.filter((num:any) => num !== statusNotApplicable);
+		let result = allTask.filter((num: any) => num !== statusNotApplicable);
 
 		calculatePercentage(result);
 	}
@@ -101,6 +112,9 @@
 	}
 
 	onMount(async () => {
+		if(window.innerWidth <= 768){
+			device = Device.Mobile
+		}
 		try {
 			if (!LocalStorage.getValue('firstView')) {
 				openModal(ClientOnBoarding);
@@ -182,36 +196,39 @@
 
 	{#if client !== null && !loading}
 		<div class="flex-1 p-6">
-			<ClientDetails
-				CompanyName={client.clientName}
-				Domain={client?.domain}
-				LangSupported={client?.languages}
-				CurrencySupported={client?.currencies}
-				LaunchDate={targetDate}
-				ServiceToProvide={services[client.serviceTypeId]}
-			/>
-			<ClientProgressBar
-				InProgress={clientProgress.inProgress}
-				NotStarted={clientProgress.notStarted}
-				Completed={clientProgress.completed}
-				CurrEnvironment={currEnvironment}
-				HandleChangeEnvironment={changeCurrEnvironment}
-			/>
-			{#if currEnvironment === Environment.STAGING}
-				{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
-					<ClientTaskComponent
-						serviceTypeId={client.serviceTypeId}
-						clientStep={clientStep as ClientStep}
-					/>
-				{/each}
-			{/if}
-			{#if currEnvironment === Environment.PRODUCTION}
-				{#each getClientTask( 1, client.clientSteps.filter((clientStep) => clientStep.environment === 1) ) as clientStep}
-					<ClientTaskComponent
-						serviceTypeId={client.serviceTypeId}
-						clientStep={clientStep as ClientStep}
-					/>
-				{/each}
+			{#if device !== Device.Mobile }
+				<ClientDetails
+					CompanyName={client.clientName}
+					Domain={client?.domain}
+					LangSupported={client?.languages}
+					CurrencySupported={client?.currencies}
+					LaunchDate={targetDate}
+					ServiceToProvide={services[client.serviceTypeId]}
+				/>
+
+				<ClientProgressBar
+					InProgress={clientProgress.inProgress}
+					NotStarted={clientProgress.notStarted}
+					Completed={clientProgress.completed}
+					CurrEnvironment={currEnvironment}
+					HandleChangeEnvironment={changeCurrEnvironment}
+				/>
+				{#if currEnvironment === Environment.STAGING}
+					{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
+						<ClientTaskComponent
+							serviceTypeId={client.serviceTypeId}
+							clientStep={clientStep as ClientStep}
+						/>
+					{/each}
+				{/if}
+				{#if currEnvironment === Environment.PRODUCTION}
+					{#each getClientTask( 1, client.clientSteps.filter((clientStep) => clientStep.environment === 1) ) as clientStep}
+						<ClientTaskComponent
+							serviceTypeId={client.serviceTypeId}
+							clientStep={clientStep as ClientStep}
+						/>
+					{/each}
+				{/if}
 			{/if}
 		</div>
 	{/if}
