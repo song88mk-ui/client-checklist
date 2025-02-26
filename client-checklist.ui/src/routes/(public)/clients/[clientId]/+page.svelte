@@ -16,6 +16,8 @@
 		type ClientStepTemplate
 	} from './types';
 	import Environment from '$enums/Environment';
+	import Device from '$enums/Device';
+
 	import { LocalStorage } from '$lib/storage';
 	import { DEFAULT_SERVICE_TEMPLATE } from './constant';
 
@@ -36,6 +38,8 @@
 	let loading = $state(true);
 	let targetDate = $state('');
 
+	let device: Device = $state(Device.Desktop);
+
 	function changeCurrEnvironment(selectedEnvironment: Environment) {
 		if (selectedEnvironment === Environment.STAGING) {
 			currEnvironment = Environment.STAGING;
@@ -49,11 +53,10 @@
 		const countOfNotStarted = items.filter((num: any) => num === 1).length;
 		const countOfInProgress = items.filter((num: any) => num === 2).length;
 		const countOfCompleted = items.filter((num: any) => num === 3).length;
-		
+
 		const percentageNotStarted = (countOfNotStarted / totalElements) * 100;
 		const percentageInProgress = (countOfInProgress / totalElements) * 100;
 		const percentageCompleted = (countOfCompleted / totalElements) * 100;
-
 
 		clientProgress = {
 			notStarted: percentageNotStarted,
@@ -63,20 +66,28 @@
 	}
 
 	function calcClientStepProgress(clientSteps: ClientStep[]) {
-		const statusNotApplicable = 0
+		const statusNotApplicable = 0;
 		let allTask: any = [];
 		clientSteps.map((item) => {
-			if(item.environment === 1 && item.clientSubtasks.length > 0 && item.step === 7 && item.serviceType === 2){ // remove prod bet validation
-				const filteredTaskProgress = item.clientSubtasks.filter((clientSubtask) => clientSubtask.subtaskName !== 'Bet Validation');
+			if (
+				item.environment === 1 &&
+				item.clientSubtasks.length > 0 &&
+				item.step === 7 &&
+				item.serviceType === 2
+			) {
+				// remove prod bet validation
+				const filteredTaskProgress = item.clientSubtasks.filter(
+					(clientSubtask) => clientSubtask.subtaskName !== 'Bet Validation'
+				);
 				const taskProgress = filteredTaskProgress.map((clientSubtask) => clientSubtask.taskStatus);
 				allTask.push(...taskProgress);
-				return			
+				return;
 			}
 			const taskProgress = item.clientSubtasks.map((clientSubtask) => clientSubtask.taskStatus);
 			allTask.push(...taskProgress);
 		});
 
-		let result = allTask.filter((num:any) => num !== statusNotApplicable);
+		let result = allTask.filter((num: any) => num !== statusNotApplicable);
 
 		calculatePercentage(result);
 	}
@@ -99,8 +110,10 @@
 			return templateClientStep;
 		});
 	}
-
 	onMount(async () => {
+		if (window.innerWidth <= 768) {
+			device = Device.Mobile;
+		}
 		try {
 			if (!LocalStorage.getValue('firstView')) {
 				openModal(ClientOnBoarding);
@@ -167,7 +180,7 @@
 	</h1>
 </header>
 
-<div class="cc-client-view-page">
+<div class="cc-client-view-page pb-[10px]">
 	{#if error && !loading}
 		<div class="mx-auto mt-[60px] flex w-[95vw] flex-col items-center justify-center">
 			<img src="/icon-warning.svg" alt="icon-warning" class={'mb-[25px] h-[76px] w-[76px]'} />
@@ -181,7 +194,7 @@
 	{/if}
 
 	{#if client !== null && !loading}
-		<div class="flex-1 p-6">
+		<div class={`flex-1 ${device === Device.Desktop ? 'p-6' : ''}`}>
 			<ClientDetails
 				CompanyName={client.clientName}
 				Domain={client?.domain}
@@ -189,19 +202,23 @@
 				CurrencySupported={client?.currencies}
 				LaunchDate={targetDate}
 				ServiceToProvide={services[client.serviceTypeId]}
+				CurrDevice={device}
 			/>
+
 			<ClientProgressBar
 				InProgress={clientProgress.inProgress}
 				NotStarted={clientProgress.notStarted}
 				Completed={clientProgress.completed}
 				CurrEnvironment={currEnvironment}
 				HandleChangeEnvironment={changeCurrEnvironment}
+				CurrDevice={device}
 			/>
 			{#if currEnvironment === Environment.STAGING}
 				{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
 					<ClientTaskComponent
 						serviceTypeId={client.serviceTypeId}
 						clientStep={clientStep as ClientStep}
+						CurrDevice={device}
 					/>
 				{/each}
 			{/if}
@@ -210,6 +227,7 @@
 					<ClientTaskComponent
 						serviceTypeId={client.serviceTypeId}
 						clientStep={clientStep as ClientStep}
+						CurrDevice={device}
 					/>
 				{/each}
 			{/if}
