@@ -16,7 +16,7 @@
 	});
 </script>
 
-<div class="mt-[50px] h-[635px] w-[811px] flex-shrink-0 self-start bg-white">
+<div class="mt-[50px] h-[635px] w-[80%] flex-shrink-0 self-start bg-white">
 	<div class="m-[24px] h-[500px] overflow-y-scroll agreement"
   bind:this={agreementText} 
   class:scrolled={isScrolledToBottom} 
