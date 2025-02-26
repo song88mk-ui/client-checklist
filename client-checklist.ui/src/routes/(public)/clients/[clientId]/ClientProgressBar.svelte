@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Environment from '$enums/Environment';
+	import Device from '$enums/Device';
 
 	const ENVIRONMENT_ACTIVE: string = 'bg-[#09387B] text-[#FFFFFF]';
 	const ENVIRONMENT_INACTIVE: string = 'bg-[#ECECEC] text-[#949090]';
@@ -11,13 +12,16 @@
 		Completed: number;
 		CurrEnvironment: Environment;
 		HandleChangeEnvironment: Function;
+		CurrDevice: Device;
 	};
 	let {
 		NotStarted = 0,
 		InProgress = 0,
 		Completed = 0,
 		CurrEnvironment = Environment.STAGING,
-		HandleChangeEnvironment
+		HandleChangeEnvironment,
+		CurrDevice = Device.Desktop
+		
 	}: Props = $props();
 
 
@@ -33,6 +37,29 @@
 
 		styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
 	}
+
+	function getStyleStatus(){
+		const STATUS_TEXT_SIZE_MOBILE = '9px'
+		const STATUS_TEXT_SIZE_DESKTOP = '14px'
+		let value = STATUS_TEXT_SIZE_MOBILE
+		if(CurrDevice === Device.Desktop){
+			value = STATUS_TEXT_SIZE_DESKTOP
+		}
+		return `text-center text-[${value}] font-semibold italic leading-none text-[#524F4F]`
+
+	}
+	function getStyleSelectionEnvironment(currEnv:Environment){
+		const MOBILE = 'flex-grow'
+		const DESKTOP = 'w-[88px]'
+		const ADDED_SYTLE = currEnv === Environment.PRODUCTION ? 'rounded-r-lg' : 'rounded-l-lg'
+		let value = DESKTOP
+		if(CurrDevice === Device.Desktop){
+		  value = DESKTOP
+		}else{
+			value = MOBILE
+		}
+		return `${CurrEnvironment === currEnv ? ENVIRONMENT_ACTIVE : ENVIRONMENT_INACTIVE} flex h-[44px] ${value} cursor-pointer items-center justify-center border border-solid text-center ${ADDED_SYTLE}` 
+	}
 	onMount(() => {
 		// Create the keyframes
 		createKeyframes('fillAnimation1', '0%', `${NotStarted}%`);
@@ -41,7 +68,7 @@
 	});
 </script>
 
-<div class="mt-6 flex h-5 w-full overflow-hidden rounded-[10px] border border-[#ccc] bg-[#e0e0e0]">
+<div class={`${CurrDevice !== Device.Desktop ? 'm-[10px]':''} mt-6 flex h-5 overflow-hidden rounded-[10px] border border-[#ccc] bg-[#e0e0e0]`}>
 	{#if NotStarted !== 0}
 		<div
 			class="fill-1 relative flex h-full w-0 items-center justify-center transition-[width] duration-1000 ease-in-out"
@@ -75,14 +102,14 @@
 	{/if}
 </div>
 
-<div class="mt-[10px] flex flex-row justify-between">
+<div class={`mt-[10px] flex flex-${CurrDevice !== Device.Desktop ? 'col':'row'} justify-between`}>
 	<div class="flex flex-row">
 		<div class="flex flex-row items-center justify-center">
 			<div
 				class="mx-[10px] my-0 h-[12px] w-[12px] self-center rounded-[10px]"
 				style="background-color: #BDBBBB;"
 			></div>
-			<span class="text-center text-[14px] font-semibold italic leading-none text-[#524F4F]"
+			<span class={getStyleStatus()}
 				>Not Started</span
 			>
 		</div>
@@ -91,7 +118,7 @@
 				class="mx-[10px] my-0 h-[12px] w-[12px] self-center rounded-[10px]"
 				style="background-color: #EF7E1D;"
 			></div>
-			<span class="text-center text-[14px] font-semibold italic leading-none text-[#524F4F]"
+			<span class={getStyleStatus()}
 				>In Progress</span
 			>
 		</div>
@@ -100,19 +127,19 @@
 				class="mx-[10px] my-0 h-[12px] w-[12px] self-center rounded-[10px]"
 				style="background-color: #2DBE22;"
 			></div>
-			<span class="text-center text-[14px] font-semibold italic leading-none text-[#524F4F]"
+			<span class={getStyleStatus()}
 				>Completed</span
 			>
 		</div>
 	</div>
-	<div class="flex">
+	<div class={`flex ${CurrDevice !== Device.Desktop ? 'w-fill mx-[12px] my-[24px]':''}`}>
 		<div
 			role="presentation"
 			onclick={() => {
 				HandleChangeEnvironment(Environment.STAGING);
 			}}
-			class={`${CurrEnvironment === Environment.STAGING ? ENVIRONMENT_ACTIVE : ENVIRONMENT_INACTIVE} flex h-[44px] w-[88px] cursor-pointer items-center justify-center rounded-l-lg border border-solid text-center`}
-		>
+			class={getStyleSelectionEnvironment(Environment.STAGING)}
+			>
 			Staging
 		</div>
 		<div
@@ -120,7 +147,7 @@
 			onclick={() => {
 				HandleChangeEnvironment(Environment.PRODUCTION);
 			}}
-			class={`${CurrEnvironment === Environment.PRODUCTION ? ENVIRONMENT_ACTIVE : ENVIRONMENT_INACTIVE} flex h-[44px] w-[88px] cursor-pointer items-center justify-center rounded-r-lg border border-solid text-center`}
+			class={getStyleSelectionEnvironment(Environment.PRODUCTION)}
 		>
 			Production
 		</div>

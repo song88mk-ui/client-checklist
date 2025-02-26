@@ -34,26 +34,26 @@
 			<div>
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Company Name</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{CompanyName}</span
 				>
 			</div>
 			<div>
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Domain(s)</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]"> {Domain}</span>
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]"> {Domain}</span>
 			</div>
 			<div>
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Service to Provide</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{ServiceToProvide}</span
 				>
 			</div>
 			<div>
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Languages Supported</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{LangSupported.join()}</span
 				>
 			</div>
@@ -61,14 +61,14 @@
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span
 				>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{CurrencySupported.join()}</span
 				>
 			</div>
 			<div>
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Target Launch Date</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{LaunchDate}</span
 				>
 			</div>
@@ -84,14 +84,14 @@
 			<div class="w-[45%] pl-[10px] overflow-hidden text-ellipsis whitespace-nowrap">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Company Name</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{CompanyName}</span
 				>
 			</div>
 			<div class="w-[45%]">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Target Launch Date</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{LaunchDate}</span
 				>
 			</div>
@@ -104,12 +104,12 @@
 			<div class="w-[45%] pl-[10px]">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Domain(s)</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]"> {Domain}</span>
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]"> {Domain}</span>
 			</div>
 			<div class="w-[45%] overflow-hidden text-ellipsis whitespace-nowrap">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Service to Provide</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{ServiceToProvide}</span
 				>
 			</div>
@@ -118,7 +118,7 @@
 			<div class="w-[45%] pl-[10px]">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Languages Supported</span>
 				<br />
-				<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 					{LangSupported.join()}</span
 				>
 			</div>
@@ -126,7 +126,7 @@
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span
 					>
 					<br />
-					<span class="text-[16px] font-bold font-normal leading-none text-[#0071BC]">
+					<span class="text-[16px] font-bold leading-none text-[#0071BC]">
 						{CurrencySupported.join()}</span
 					>
 			</div>

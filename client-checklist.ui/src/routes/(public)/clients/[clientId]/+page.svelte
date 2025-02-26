@@ -38,8 +38,8 @@
 	let loading = $state(true);
 	let targetDate = $state('');
 
-	let device: Device = $state(Device.Desktop)
-	
+	let device: Device = $state(Device.Desktop);
+
 	function changeCurrEnvironment(selectedEnvironment: Environment) {
 		if (selectedEnvironment === Environment.STAGING) {
 			currEnvironment = Environment.STAGING;
@@ -111,8 +111,8 @@
 		});
 	}
 	onMount(async () => {
-		if(window.innerWidth <= 768){
-			device = Device.Mobile
+		if (window.innerWidth <= 768) {
+			device = Device.Mobile;
 		}
 		try {
 			if (!LocalStorage.getValue('firstView')) {
@@ -180,7 +180,7 @@
 	</h1>
 </header>
 
-<div class="cc-client-view-page">
+<div class="cc-client-view-page pb-[10px]">
 	{#if error && !loading}
 		<div class="mx-auto mt-[60px] flex w-[95vw] flex-col items-center justify-center">
 			<img src="/icon-warning.svg" alt="icon-warning" class={'mb-[25px] h-[76px] w-[76px]'} />
@@ -194,18 +194,43 @@
 	{/if}
 
 	{#if client !== null && !loading}
-		<div class={`flex-1 ${device === Device.Desktop ? 'p-6':''}`}>
-				<ClientDetails
-					CompanyName={client.clientName}
-					Domain={client?.domain}
-					LangSupported={client?.languages}
-					CurrencySupported={client?.currencies}
-					LaunchDate={targetDate}
-					ServiceToProvide={services[client.serviceTypeId]}
-					CurrDevice={device}
-				/>
+		<div class={`flex-1 ${device === Device.Desktop ? 'p-6' : ''}`}>
+			<ClientDetails
+				CompanyName={client.clientName}
+				Domain={client?.domain}
+				LangSupported={client?.languages}
+				CurrencySupported={client?.currencies}
+				LaunchDate={targetDate}
+				ServiceToProvide={services[client.serviceTypeId]}
+				CurrDevice={device}
+			/>
 
-				
+			<ClientProgressBar
+				InProgress={clientProgress.inProgress}
+				NotStarted={clientProgress.notStarted}
+				Completed={clientProgress.completed}
+				CurrEnvironment={currEnvironment}
+				HandleChangeEnvironment={changeCurrEnvironment}
+				CurrDevice={device}
+			/>
+			{#if currEnvironment === Environment.STAGING}
+				{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
+					<ClientTaskComponent
+						serviceTypeId={client.serviceTypeId}
+						clientStep={clientStep as ClientStep}
+						CurrDevice={device}
+					/>
+				{/each}
+			{/if}
+			{#if currEnvironment === Environment.PRODUCTION}
+				{#each getClientTask( 1, client.clientSteps.filter((clientStep) => clientStep.environment === 1) ) as clientStep}
+					<ClientTaskComponent
+						serviceTypeId={client.serviceTypeId}
+						clientStep={clientStep as ClientStep}
+						CurrDevice={device}
+					/>
+				{/each}
+			{/if}
 		</div>
 	{/if}
 </div>
