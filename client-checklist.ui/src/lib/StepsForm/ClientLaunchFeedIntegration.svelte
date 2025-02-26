@@ -22,6 +22,8 @@
 	import environment from '$enums/Environment';
 	import getOverallStatus from '$utils/getOverallStatus';
 	import { toEditClientPayload } from '$mapper/ClientMapper';
+	import isErrorValidation from '$stores/validation';
+	import type { ClientSubTaskFormType } from '$lib/ProductForm/validationSchema';
 
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
@@ -50,7 +52,7 @@
 
 	const mtsFormData = $steps[serviceStep.ManagedTradingServices].formData;
 	// TODO: Need to refactor to make it clean; Bet validation from MTS form for odds feed integration
-	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && (mtsFormData as ProductFormType)[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable) {
+	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && mtsFormData && (mtsFormData as ProductFormType)[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable) {
 		defaultValues[Environment.STAGING] = {
 			assignedTo: '',
 			targetDateCompleted: null,
@@ -101,12 +103,24 @@
 		disabled = isEdit && !isSuperAdmin;
 	});
 
+	function hasOneCompletedTask(values: ProductFormType) {
+    const checkStatus = (subTasks: ClientSubTaskFormType[]) => subTasks && subTasks.some(task => task.taskStatusId === ClientRowStatus.Completed);  
+    return Object.values(values).some(value => value.clientSubTasks && checkStatus(value.clientSubTasks));
+	}
+
 	const handleSubmit = async (values: ProductFormType) => {
 		if (disabled) {
 			setTimeout(() => {
 				goto('/');
 			}, 3000);
 			return;
+		}
+
+		if (hasOneCompletedTask(values) && $steps.some(step => step.isIncomplete)) {
+			$isErrorValidation = true;
+			return;
+		} else {
+			$isErrorValidation = false;
 		}
 
 		isLoading = true;
@@ -228,7 +242,7 @@
 
 	const handleEditProduct = async (values: ProductFormType) => {
 		const promiseList: any = [];
-		if (values[Environment.STAGING]) {
+		if (values[Environment.STAGING] && values[Environment.STAGING].id) {
 			const stagingProduct = updateStep(
 				{
 					...values[Environment.STAGING],
