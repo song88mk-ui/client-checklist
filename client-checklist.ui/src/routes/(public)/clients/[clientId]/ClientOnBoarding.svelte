@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount,onDestroy } from 'svelte';
 	import { closeModal } from '$stores/modal';
+	import Device from '$enums/Device';
 
 	let agreementText: any;
 	let isScrolledToBottom = false;
+	let device: Device = Device.Desktop;
 
 	function handleScroll() {
 		const scrollTop = agreementText.scrollTop;
@@ -13,6 +15,9 @@
 	}
 	onMount(() => {
 		document.body.style.overflow = "hidden"
+		if (window.innerWidth <= 768) {
+			device = Device.Mobile;
+		}
 		handleScroll();
 	});
 	onDestroy(() => {
@@ -20,7 +25,7 @@
   });
 </script>
 
-<div class="mt-[50px] h-[635px] w-[80%] flex-shrink-0 self-start bg-white">
+<div class={`mt-[50px] h-[635px] ${device === Device.Mobile ? 'w-[80%]' : 'w-[811px]'}  flex-shrink-0 self-start bg-white`}>
 	<div class="m-[24px] h-[500px] overflow-y-scroll agreement"
   bind:this={agreementText} 
   class:scrolled={isScrolledToBottom} 
