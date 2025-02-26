@@ -58,8 +58,6 @@
 		step++;
 	};
 
-	const serviceStep = Step[$selectedIntegration];
-
 	const WALLET_INTEGRATION_STEPS: StepType[] = [
 		{ title: 'Contact Information', status: StepStatus.Active, stepId: 0 },
 		{ title: 'Back Office', status: StepStatus.Inactive, stepId: 1, isIncomplete: true },
@@ -101,6 +99,7 @@
 
 		const { client, clientSteps } = response.data as GetClientTaskStatusResponse;
 		if (client) {
+			const serviceStep = Step[$selectedIntegration];
 			$selectedIntegration = servicesType[client.serviceTypeId];
 			tempSteps = INTEGRATION_STEPS[$selectedIntegration];
 			tempSteps[serviceStep.ClientInformation].formData = {
@@ -138,7 +137,7 @@
 			}));
 
 			const stepData = groupedByStepId(formattedClientSteps);
-
+			const serviceStep = Step[$selectedIntegration];
 			tempSteps = tempSteps.map((step: StepType) => {
 				if (stepData[step.stepId]) {
 					const formData = stepData[step.stepId] as ProductFormType;

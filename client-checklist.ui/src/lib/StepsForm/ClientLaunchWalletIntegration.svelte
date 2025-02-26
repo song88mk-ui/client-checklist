@@ -17,9 +17,9 @@
 	import { goto } from '$app/navigation';
 	import getOverallStatus from '$utils/getOverallStatus';
 	import { toEditClientPayload } from '$mapper/ClientMapper';
-	import hasIncompleteSubtask from '$utils/hasIncompleteSubtask';
 	import isErrorValidation from '$stores/validation';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
+	import type { ClientSubTaskFormType } from '$lib/ProductForm/validationSchema';
 
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
@@ -56,6 +56,11 @@
 		disabled = isEdit && !isSuperAdmin;
 	});
 
+	function hasOneCompletedTask(values: ProductFormType) {
+    const checkStatus = (subTasks: ClientSubTaskFormType[]) => subTasks && subTasks.some(task => task.taskStatusId === ClientRowStatus.Completed);  
+    return Object.values(values).some(value => value.clientSubTasks && checkStatus(value.clientSubTasks));
+	}
+
 	const handleSubmit = async (values: ProductFormType) => {
 		if (disabled) {
 			setTimeout(() => {
@@ -64,10 +69,11 @@
 			return;
 		}
 
-		const hasOneCompletedTask = !hasIncompleteSubtask(values);
-		if (hasOneCompletedTask && $steps.some(step => step.isIncomplete)) {
+		if (hasOneCompletedTask(values) && $steps.some(step => step.isIncomplete)) {
 			$isErrorValidation = true;
 			return;
+		} else {
+			$isErrorValidation = false;
 		}
 
 		isLoading = true;
