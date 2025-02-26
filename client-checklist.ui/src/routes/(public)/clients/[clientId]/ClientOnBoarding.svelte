@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount,onDestroy } from 'svelte';
 	import { closeModal } from '$stores/modal';
 
 	let agreementText: any;
@@ -12,8 +12,12 @@
 		}
 	}
 	onMount(() => {
+		document.body.style.overflow = "hidden"
 		handleScroll();
 	});
+	onDestroy(() => {
+		document.body.style.overflow = "scroll"
+  });
 </script>
 
 <div class="mt-[50px] h-[635px] w-[80%] flex-shrink-0 self-start bg-white">
