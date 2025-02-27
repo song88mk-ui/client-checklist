@@ -35,12 +35,13 @@
 	import StepStatus from '$enums/StepStatus';
 	import isErrorValidation from '$stores/validation';
 	import hasIncompleteSubtask from '$utils/hasIncompleteSubtask';
-	import initialFormValues from '$constants/initialFormValues';
+	import { isFormModified } from '$stores/validation';
 
 	const { getClient } = APIGateway();
 
 	// TODO: Reset special cases; Need to refactor
 	$isErrorValidation = false;
+	$isFormModified = false;
 	
 	let step = $state(0);
 	let error = $state('');
@@ -167,7 +168,7 @@
 
 	let url = '';
 	beforeNavigate(({ from, to, cancel }) => {
-		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
+		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit && $isFormModified) {
 			url = to?.url.pathname || '';
 			openModal(ConfirmModal);
 			cancel();

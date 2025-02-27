@@ -25,10 +25,12 @@
 	import type Step from '$types/step';
 	import StepStatus from '$enums/StepStatus';
 	import isErrorValidation from '$stores/validation';
+	import { isFormModified } from '$stores/validation';
 
 	// TODO: Reset special cases; Need to refactor
 	$hasBetValidation = false;
 	$isErrorValidation = false;
+	$isFormModified = false;
 
 	let step = $state(0);
 	let isSuperAdmin = AccessType.READWRITE === $auth?.accessType;
@@ -80,7 +82,7 @@
 
 	let url = '';
 	beforeNavigate(({ from, to, cancel }) => {
-		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit) {
+		if (!$isConfirm && from && to && from?.url.pathname !== to?.url.pathname && !isDoneSubmit && $isFormModified) {
 			url = to?.url.pathname || '';
 			openModal(ConfirmModal);
 			cancel();

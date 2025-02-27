@@ -23,6 +23,7 @@
 		sportsOption
 	} from '$constants/ClientInformation';
 	import DateInput from '../DateInput.svelte';
+	import { isFormModified } from '$stores/validation';
 
 	const { createClient, updateClient } = APIGateway();
 	let { next, isEdit = false } = $props();
@@ -75,7 +76,7 @@
 		}
 	});
 
-	const { form, handleSubmit, errors, updateField, updateInitialValues } = createForm({
+	const { form, handleSubmit, errors, isModified, updateField, updateInitialValues } = createForm({
 		initialValues,
 		validationSchema,
 		onSubmit: async (values) => {
@@ -118,6 +119,10 @@
 			await PageGuard(response.error?.statusCode);
 		}
 	});
+
+	$effect(() => {
+		$isFormModified = $isModified;
+	})
 
 	const handleSelectDate = (selectedDate: Date) => {
 		updateField('launchDate', selectedDate.toISOString());
