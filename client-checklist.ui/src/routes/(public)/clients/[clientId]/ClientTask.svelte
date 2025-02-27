@@ -66,8 +66,7 @@
 	>
 		<div class="flex items-center justify-between p-6">
 			<div class="flex">
-				<span
-					class="mr-[10px] self-center text-[24px] font-bold leading-none text-[#0071BC]"
+				<span class="mr-[10px] self-center text-[24px] font-bold leading-none text-[#0071BC]"
 					>{STEP_NAME_BY_INTEGRATION[serviceTypeId][clientStep.step]}</span
 				>
 				<div
@@ -138,8 +137,7 @@
 					<tbody>
 						{#each clientStep.clientSubtasks as clientSubtask}
 							{#if clientSubtask.taskStatus !== ClientRowStatus.NotApplicable}
-								<ClientSubtaskComponent {clientSubtask} assignedTo={clientStep.assignedTo}
-								></ClientSubtaskComponent>
+								<ClientSubtaskComponent {clientSubtask} assignedTo={clientStep?.assignedTo} device={CurrDevice}/>
 							{/if}
 						{/each}
 					</tbody>
@@ -171,7 +169,11 @@
 			</div>
 			<div class="flex">
 				<ClientTaskStatus {status} currDevice={CurrDevice}></ClientTaskStatus>
-				<img class="ml-[5px]" src={`/${clientStep.isExpanded ? 'arrow-up' : 'arrow-down'}.svg`} alt="logo" />
+				<img
+					class="ml-[5px]"
+					src={`/${clientStep.isExpanded ? 'arrow-up' : 'arrow-down'}.svg`}
+					alt="logo"
+				/>
 			</div>
 		</div>
 
@@ -213,26 +215,9 @@
 		{#if clientStep.isExpanded && clientStep.clientSubtasks.length > 0}
 			{#each clientStep.clientSubtasks as clientSubtask}
 				{#if clientSubtask.taskStatus !== ClientRowStatus.NotApplicable}
-					<div
-						class="m-[10px] flex flex-row justify-between rounded-[4px] border border-[#F3F3F3] bg-[#FAFAFA] bg-white p-[10px]"
-					>
-						<div class="flex flex-col">
-							<span class="my-[6px] text-[12px] font-semibold text-[#1A1A1A]">Description</span>
-							<span class="my-[6px] text-[12px] font-semibold text-[#1A1A1A]">Comments</span>
-							<span class="my-[6px] text-[12px] font-semibold text-[#1A1A1A]">Assigned To</span>
-							<span class="my-[6px] text-[12px] font-semibold text-[#1A1A1A]">Status</span>
-						</div>
-						<div class="flex flex-col items-end">
-							<span class="my-[6px] h-[18px] text-[12px] text-[#2B2B2B]"
-								>{clientSubtask?.subtaskName}</span>
-							<span class="my-[6px] h-[18px] text-[12px] text-[#2B2B2B]"
-								>{clientSubtask?.comment}</span>
-							<span class="my-[6px] h-[18px] text-[12px] text-[#2B2B2B]"
-								>{clientStep?.assignedTo}</span
-							>
-							<ClientTaskStatus {status} currDevice={CurrDevice}></ClientTaskStatus>
-						</div>
-					</div>
+					{#if clientSubtask.taskStatus !== ClientRowStatus.NotApplicable}
+						<ClientSubtaskComponent {clientSubtask} assignedTo={clientStep?.assignedTo} device={CurrDevice}/>
+					{/if}
 				{/if}
 			{/each}
 		{/if}
