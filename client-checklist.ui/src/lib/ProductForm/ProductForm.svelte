@@ -5,6 +5,7 @@
 	import ClientTask from './ClientTask.svelte';
 	import { createValidationSchema, type ProductFormType } from './validationSchema';
 	import IntegrationType from '$enums/integrationType';
+	import { isFormModified } from '$stores/validation';
 
 	let {
 		title,
@@ -38,11 +39,15 @@
 	// TODO: Need to make the initial values pair with validation schema
 	// let { initialValues, validationSchema } = pageForm;
 
-	const { form, errors, updateField, handleSubmit } = createForm({
+	const { form, errors, isModified, updateField, handleSubmit } = createForm({
 		initialValues,
 		validationSchema: schema,
 		onSubmit
 	});
+
+	$effect(() => {
+		$isFormModified = $isModified;
+	})
 
 	$effect(() => {
 		if (hasValue($errors)) {
