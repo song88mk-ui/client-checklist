@@ -27,6 +27,8 @@
 	});
 
 	const toggleVisibility = () => {
+        if (disabled) return;
+
 		onShow(!showOption);
 	};
 	const addItem = (item: string) => {
@@ -40,7 +42,9 @@
 </script>
 
 <div
-	class="cc-enhance-dropdown relative flex min-h-[38px] items-center justify-between rounded border px-3"
+    role="presentation" 
+	class="cc-enhance-dropdown relative flex min-h-[38px] items-center justify-between rounded border px-3 cursor-pointer select-none"
+    onclick={toggleVisibility}
 >
 	<div class="flex flex-row text-[11px]">
 		{#if selectedItems.length < 1}
@@ -58,9 +62,8 @@
 			{/each}
 		{/if}
 	</div>
-	<button type="button" onclick={toggleVisibility} {disabled}>
-		<img class="" src={showOption ? '/arrow-up.svg' : '/arrow-down.svg'} alt="logo" />
-	</button>
+    <img class="" src={showOption ? '/arrow-up.svg' : '/arrow-down.svg'} alt="logo" />
+    
 	<div
 		class={`${showOption ? '' : 'hidden'} absolute left-0 top-[43px] z-10 max-h-[200px] w-full overflow-auto rounded border bg-white px-3 py-2 text-[12px]`}
 	>
