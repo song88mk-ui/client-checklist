@@ -20,6 +20,7 @@
 	import isErrorValidation from '$stores/validation';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
 	import type { ClientSubTaskFormType } from '$lib/ProductForm/validationSchema';
+	import { ErrorValidationType } from '$enums/ErrorValidationType';
 
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
@@ -43,8 +44,7 @@
 	};
 
 	const defaultValues = initialFormValues[$selectedIntegration][step];
-	let initialValues = $steps[step].formData as ProductFormType || defaultValues;
-
+	let initialValues = ($steps[step].formData as ProductFormType) || defaultValues;
 
 	let error = $state('');
 	let isLoading = $state(false);
@@ -57,8 +57,11 @@
 	});
 
 	function hasOneCompletedTask(values: ProductFormType) {
-    const checkStatus = (subTasks: ClientSubTaskFormType[]) => subTasks && subTasks.some(task => task.taskStatusId === ClientRowStatus.Completed);  
-    return Object.values(values).some(value => value.clientSubTasks && checkStatus(value.clientSubTasks));
+		const checkStatus = (subTasks: ClientSubTaskFormType[]) =>
+			subTasks && subTasks.some((task) => task.taskStatusId === ClientRowStatus.Completed);
+		return Object.values(values).some(
+			(value) => value.clientSubTasks && checkStatus(value.clientSubTasks)
+		);
 	}
 
 	const handleSubmit = async (values: ProductFormType) => {
@@ -69,11 +72,28 @@
 			return;
 		}
 
-		if (hasOneCompletedTask(values) && $steps.some(step => step.isIncomplete)) {
-			$isErrorValidation = true;
+        if (!isEdit && isSuperAdmin) {
+            $steps[step].formData = {
+				[Environment.PRODUCTION]: {
+					...values[Environment.PRODUCTION]
+				}
+			};
+        }
+
+        const isTaskCompletionErrorCheck: boolean = hasOneCompletedTask(values) && $steps.some((step) => step.isIncomplete);
+        const isTaskRequiredFieldsErrorCheck: boolean = $steps.some((step) => !step?.formData);
+
+		if (isTaskCompletionErrorCheck || isTaskRequiredFieldsErrorCheck) {
+			$isErrorValidation = {
+                [ErrorValidationType.MissingRequiredFields]: isTaskRequiredFieldsErrorCheck,
+                [ErrorValidationType.AllTasksCompletion]: isTaskCompletionErrorCheck
+            }
 			return;
 		} else {
-			$isErrorValidation = false;
+            $isErrorValidation = {
+                [ErrorValidationType.MissingRequiredFields]: false,
+                [ErrorValidationType.AllTasksCompletion]: false
+            }
 		}
 
 		isLoading = true;
@@ -101,11 +121,11 @@
 
 			const currentStatus = getOverallStatus($steps);
 			const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
-			
+
 			const formattedData = {
 				...toEditClientPayload($selectedIntegration, formData),
 				taskStatus: currentStatus
-			}
+			};
 			if (formData.taskStatus !== currentStatus) {
 				const response = await updateClient(formattedData, {
 					'x-user-token': $auth?.userToken as string
@@ -194,7 +214,14 @@
 {/if}
 
 <div class="cc-client-launch">
-	<ProductForm isLaunch={true} finishFormButtonLabel={finishFormButtonLabel()} {title} {initialValues} {back}
-							 {isLoading} {disabled} onSubmit={handleSubmit} />
-
+	<ProductForm
+		isLaunch={true}
+		finishFormButtonLabel={finishFormButtonLabel()}
+		{title}
+		{initialValues}
+		{back}
+		{isLoading}
+		{disabled}
+		onSubmit={handleSubmit}
+	/>
 </div>

@@ -26,7 +26,7 @@
 	import { isFormModified } from '$stores/validation';
 
 	const { createClient, updateClient } = APIGateway();
-	let { next, isEdit = false } = $props();
+	let { next, isEdit = false, isSuperAdmin = false } = $props();
 	let isLoading = $state(false);
 	let disabled = $state(false);
 
@@ -64,7 +64,6 @@
 
 	$effect(() => {
 		if ($steps[serviceSteps.ClientInformation]?.formData) {
-
 			const formData = $steps[serviceSteps.ClientInformation]
 				?.formData as ClientInformationFormType;
 			updateInitialValues({
@@ -84,20 +83,21 @@
 				next();
 				return;
 			}
+
+            if (!isEdit && isSuperAdmin) {
+                $steps[serviceSteps.ClientInformation].formData = {
+					...values
+				};
+
+                next();
+                return;
+            }
+            
 			isLoading = true;
 
-			let response;
-			if (values.clientId) {
-				response = await updateClient(toEditClientPayload($selectedIntegration, values), {
-					'x-user-token': $auth?.userToken as string
-				});
-			} else {
-				response = await createClient(toCreateClientPayload($selectedIntegration, values), {
-					'x-user-token': $auth?.userToken as string
-				});
-			}
-
-			isLoading = false;
+			let response = await updateClient(toEditClientPayload($selectedIntegration, values), {
+				'x-user-token': $auth?.userToken as string
+			});
 
 			if (response.statusCode === StatusCode.Success) {
 				const { sports } = values;
@@ -115,14 +115,20 @@
 
 				return;
 			}
-			// $sports = values.sports;
+
 			await PageGuard(response.error?.statusCode);
+
+			// response = await createClient(toCreateClientPayload($selectedIntegration, values), {
+			// 	'x-user-token': $auth?.userToken as string
+			// });
+
+			isLoading = false;
 		}
 	});
 
 	$effect(() => {
 		$isFormModified = $isModified;
-	})
+	});
 
 	const handleSelectDate = (selectedDate: Date) => {
 		updateField('launchDate', selectedDate.toISOString());
@@ -476,7 +482,7 @@
 				class="w-24 rounded-md border-slate-800 bg-slate-800 px-5 py-2 text-white"
 				type="submit"
 				disabled={isLoading}
-			>Next
+				>Next
 			</button>
 		</div>
 	</div>

@@ -24,6 +24,7 @@
 	import { toEditClientPayload } from '$mapper/ClientMapper';
 	import isErrorValidation from '$stores/validation';
 	import type { ClientSubTaskFormType } from '$lib/ProductForm/validationSchema';
+	import { ErrorValidationType } from '$enums/ErrorValidationType';
 
 	const { createStep, updateStep, updateClient } = APIGateway();
 	const {
@@ -116,11 +117,28 @@
 			return;
 		}
 
-		if (hasOneCompletedTask(values) && $steps.some(step => step.isIncomplete)) {
-			$isErrorValidation = true;
+        if (!isEdit && isSuperAdmin) {
+            $steps[step].formData = {
+				[Environment.PRODUCTION]: {
+					...values[Environment.PRODUCTION]
+				}
+			};
+        }
+
+        const isTaskCompletionErrorCheck: boolean = hasOneCompletedTask(values) && $steps.some((step) => step.isIncomplete);
+        const isTaskRequiredFieldsErrorCheck: boolean = !isEdit && isSuperAdmin && $steps.some((step) => step?.formData === undefined);
+
+		if (isTaskCompletionErrorCheck || isTaskRequiredFieldsErrorCheck) {
+			$isErrorValidation = {
+                [ErrorValidationType.MissingRequiredFields]: isTaskRequiredFieldsErrorCheck,
+                [ErrorValidationType.AllTasksCompletion]: isTaskCompletionErrorCheck
+            }
 			return;
 		} else {
-			$isErrorValidation = false;
+            $isErrorValidation = {
+                [ErrorValidationType.MissingRequiredFields]: false,
+                [ErrorValidationType.AllTasksCompletion]: false
+            }
 		}
 
 		isLoading = true;

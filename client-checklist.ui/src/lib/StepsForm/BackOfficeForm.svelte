@@ -52,6 +52,20 @@
 			return;
 		}
 
+        if (!isEdit && isSuperAdmin) {
+            $steps[step].formData = {
+				[Environment.STAGING]: {
+					...values[Environment.STAGING]
+				},
+				[Environment.PRODUCTION]: {
+					...values[Environment.PRODUCTION]
+				}
+			};
+
+            next();
+            return;
+        }
+
 		isLoading = true;
 
 		const response =
