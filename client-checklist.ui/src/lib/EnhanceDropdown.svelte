@@ -42,11 +42,9 @@
 </script>
 
 <div
-    role="presentation" 
 	class="cc-enhance-dropdown relative flex min-h-[38px] items-center justify-between rounded border px-3 cursor-pointer select-none"
-    onclick={toggleVisibility}
 >
-	<div class="flex flex-row text-[11px]">
+	<div role="presentation" class="flex flex-row text-[11px] w-full" onclick={toggleVisibility}>
 		{#if selectedItems.length < 1}
 			<div class="text-sm text-gray-700">{placeholder}</div>
 		{:else}
