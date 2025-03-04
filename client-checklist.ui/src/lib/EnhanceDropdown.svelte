@@ -50,8 +50,10 @@
 		{:else}
 			{#each selectedItems as item}
 				<div
+                    role="presentation"
 					class="mr-[10px] flex flex-row items-center rounded bg-gray-100 px-2 py-1 font-bold text-gray-600"
-				>
+                    onclick={(e: any) => e.stopPropagation()}
+                >
 					{item}
 					<button type="button" onclick={() => removeItem(item)} {disabled}>
 						<img class="h-[9px] pl-3" src="/icon-close.svg" alt="remove item" />
