@@ -10,7 +10,7 @@
 	import APIGateway from '$api/APIGateway';
 	import { StatusCode } from '$api/models';
 	import { PageGuard } from '$services/PageGuard';
-	import { toCreateClientPayload, toEditClientPayload } from '$mapper/ClientMapper';
+	import { toEditClientPayload } from '$mapper/ClientMapper';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
 	import { AccessType } from '$enums/role';
 	import Step from '$enums/Step';
@@ -25,7 +25,7 @@
 	import DateInput from '../DateInput.svelte';
 	import { isFormModified } from '$stores/validation';
 
-	const { createClient, updateClient } = APIGateway();
+	const { updateClient } = APIGateway();
 	let { next, isEdit = false, isSuperAdmin = false } = $props();
 	let isLoading = $state(false);
 	let disabled = $state(false);
