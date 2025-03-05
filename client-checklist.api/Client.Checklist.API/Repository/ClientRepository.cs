@@ -140,7 +140,7 @@ namespace Client.Checklist.API.Repository
             {
                 Guid.TryParse(clientId, out var clientGuid);
 
-                var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid && f.IsDeleted == false);
+                var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid);
 
                 if (client == null)
                 {
@@ -166,6 +166,10 @@ namespace Client.Checklist.API.Repository
                         SortOrder = s.SortOrder
                     }).ToList();
 
+                var taskStatus = TaskStatus.NotStarted;
+                var hasInprogress = false;
+                var hasNotStarted = false;
+
                 foreach (var task in clientSteps)
                 {
                     var clientSubtasks = _clientChecklistContext.ClientSubtask.AsNoTracking().Where(c => c.ClientStepId == task.ClientStepId)
@@ -178,7 +182,18 @@ namespace Client.Checklist.API.Repository
                         }).ToList();
 
                     task.ClientSubtasks.AddRange(clientSubtasks);
+
+                    if (hasInprogress == false)
+                        hasInprogress = clientSubtasks.Any(c => c.TaskStatus == TaskStatus.InProgress);
+
+                    if (hasNotStarted == false)
+                        hasNotStarted = clientSubtasks.Any(c => c.TaskStatus == TaskStatus.NotStarted);
                 }
+
+                if (hasInprogress == false && hasNotStarted == false)
+                    taskStatus = TaskStatus.Completed;
+                else if (hasInprogress)
+                    taskStatus = TaskStatus.InProgress;
 
                 var currencies = string.IsNullOrEmpty(client.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedCurrency);
                 var languages = string.IsNullOrEmpty(client.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(client.SupportedLanguage);
@@ -204,13 +219,14 @@ namespace Client.Checklist.API.Repository
                             AccountManager = new Manager { Name = client.AccountManager, Number = client.AccountManagerContact },
                             SocialAccount = client.SocialAccount,
                             ServiceTypeId = client.ServiceTypeId,
-                            TaskStatus = client.TaskStatus,
+                            TaskStatus = (int)taskStatus,
                             SSLCertificate = client.SSLCertificate,
                             Currencies = currencies,
                             Languages = languages,
                             Sports = sports,
                             Markets = markets,
-                            TargetLaunchDate = client.TargetLaunchDate
+                            TargetLaunchDate = client.TargetLaunchDate,
+                            IsActive = !client.IsDeleted
                         },
                         ClientSteps = clientSteps
                     }
@@ -653,6 +669,8 @@ namespace Client.Checklist.API.Repository
                         }
 
                         _clientChecklistContext.SaveChanges();
+
+                        var clientSubtasks = _clientChecklistContext.ClientSteps.Where(cs => cs.ClientId == clientTask.ClientId).Select(s => s.ClientId)
 
                         activity?.SetStatus(ActivityStatusCode.Ok);
 
