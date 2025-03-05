@@ -51,14 +51,25 @@
 			return;
 		}
 
+        const isClientCreation: boolean = !isEdit && isSuperAdmin && !values[Environment.STAGING]?.id && !values[Environment.PRODUCTION]?.id
+
+        if (isClientCreation) {
+            $steps[step].formData = {
+				[Environment.STAGING]: {
+					...values[Environment.STAGING]
+				},
+				[Environment.PRODUCTION]: {
+					...values[Environment.PRODUCTION]
+				}
+			};
+
+            next();
+            return;
+        }
+
 		isLoading = true;
 
-		let response;
-		if (values[Environment.STAGING].id && values[Environment.PRODUCTION].id) {
-			response = await handleEditProduct(values);
-		} else {
-			response = await handleCreateProduct(values);
-		}
+        const response = await handleEditProduct(values);
 
 		isLoading = false;
 
@@ -107,41 +118,6 @@
 			}
 		}
 		next();
-	};
-
-	const handleCreateProduct = async (values: ProductFormType) => {
-		const clientFormData = $steps[serviceStep.ClientInformation].formData;
-		const stagingProduct = createStep(
-			{
-				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: serviceStep.EndToEndFunctionalPerformanceTest,
-				stepName: '',
-				serviceTypeId: servicesTypeId[$selectedIntegration],
-				environment: 0,
-				...values[Environment.STAGING]
-			},
-			{
-				'x-user-token': $auth?.userToken as string
-			}
-		);
-
-		const productionProduct = createStep(
-			{
-				clientId: (clientFormData as ClientInformationFormType).clientId || '',
-				stepId: serviceStep.EndToEndFunctionalPerformanceTest,
-				stepName: '',
-				serviceTypeId: servicesTypeId[$selectedIntegration],
-				environment: 1,
-				...values[Environment.PRODUCTION]
-			},
-			{
-				'x-user-token': $auth?.userToken as string
-			}
-		);
-
-		const response = await Promise.all([stagingProduct, productionProduct]);
-
-		return response;
 	};
 
 	const handleEditProduct = async (values: ProductFormType) => {

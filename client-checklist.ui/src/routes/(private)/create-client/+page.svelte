@@ -26,10 +26,14 @@
 	import StepStatus from '$enums/StepStatus';
 	import isErrorValidation from '$stores/validation';
 	import { isFormModified } from '$stores/validation';
+	import { ErrorValidationType } from '$enums/ErrorValidationType';
 
 	// TODO: Reset special cases; Need to refactor
 	$hasBetValidation = false;
-	$isErrorValidation = false;
+	$isErrorValidation = {
+        [ErrorValidationType.MissingRequiredFields]: false,
+        [ErrorValidationType.AllTasksCompletion]: false,
+    };
 	$isFormModified = false;
 
 	let step = $state(0);
@@ -97,19 +101,35 @@
 	});
 </script>
 
-{#if $isErrorValidation && $steps.filter(formStep => formStep.isIncomplete).length > 0}
-	<div
-		class="mb-8 rounded-md border border-[#FFB97D] bg-[#FEF0C7] p-3 text-xs leading-[1.5] text-[#EF7E1D]"
-	>
-		<p>
-			Some required fields are incomplete. The following sections still need to be completed:
-		</p>
-		<ul class="ml-5 list-disc font-semibold">
-			{#each $steps.filter(formStep => formStep.isIncomplete) as formStep}
-				<li>{formStep.title}</li>
-			{/each}
-		</ul>
-	</div>
+{#if Object.values($isErrorValidation).some((val: boolean) => val === true)}
+    {#if $isErrorValidation[ErrorValidationType.MissingRequiredFields] && $steps.filter(formStep => !formStep.formData).length > 0}
+        <div
+        class="mb-8 rounded-md border border-[#FFB97D] bg-[#FEF0C7] p-3 text-xs leading-[1.5] text-[#EF7E1D]"
+        >
+            <p>
+                All required fields marked with an asterisk {'(*)'} must have a value. The following sections still have required fields with missing values:
+            </p>
+            <ul class="ml-5 list-disc font-semibold">
+                {#each $steps.filter(formStep => !formStep?.formData) as formStep}
+                    <li>{formStep.title}</li>
+                {/each}
+            </ul>
+        </div>
+    {/if}
+    {#if $isErrorValidation[ErrorValidationType.AllTasksCompletion] && $steps.filter(formStep => formStep.isIncomplete).length > 0}
+        <div
+        class="mb-8 rounded-md border border-[#FFB97D] bg-[#FEF0C7] p-3 text-xs leading-[1.5] text-[#EF7E1D]"
+        >
+            <p>
+                Some required fields are incomplete. The following sections still need to be completed:
+            </p>
+            <ul class="ml-5 list-disc font-semibold">
+                {#each $steps.filter(formStep => formStep.isIncomplete) as formStep}
+                    <li>{formStep.title}</li>
+                {/each}
+            </ul>
+        </div>
+    {/if}
 {/if}
 <div class="mb-10">
 	<h1 class="text-3xl font-bold">{services[servicesTypeId[$selectedIntegration]]}</h1>
@@ -121,7 +141,7 @@
 	<!-- refactor to separate component per service type -->
 	{#if $selectedIntegration === IntegrationType.FEED_INTEGRATION}
 		{#if step === 0}
-			<ClientInformationForm {next} />
+			<ClientInformationForm {isSuperAdmin} {next} />
 		{:else if step === 1}
 			<BackOfficeForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 2}
@@ -141,7 +161,7 @@
 
 	{#if $selectedIntegration === IntegrationType.WALLET_INTEGRATION}
 		{#if step === 0}
-			<ClientInformationForm {next} />
+			<ClientInformationForm {isSuperAdmin} {next} />
 		{:else if step === 1}
 			<BackOfficeForm {isSuperAdmin} {back} {next} {step} />
 		{:else if step === 2}

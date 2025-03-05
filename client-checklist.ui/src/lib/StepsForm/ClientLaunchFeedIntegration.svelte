@@ -21,11 +21,16 @@
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
 	import environment from '$enums/Environment';
 	import getOverallStatus from '$utils/getOverallStatus';
-	import { toEditClientPayload } from '$mapper/ClientMapper';
+	import { toCreateClientPayload, toEditClientPayload } from '$mapper/ClientMapper';
 	import isErrorValidation from '$stores/validation';
 	import type { ClientSubTaskFormType } from '$lib/ProductForm/validationSchema';
+	import { ErrorValidationType } from '$enums/ErrorValidationType';
+	import type { default as StepType } from '$types/Step';
+	import { StatusCode } from '$api/models';
+	import { PageGuard } from '$services/PageGuard';
+	import hasIncompleteSubtask from '$utils/hasIncompleteSubtask';
 
-	const { createStep, updateStep, updateClient } = APIGateway();
+	const { createClient, createStep, updateStep, updateClient } = APIGateway();
 	const {
 		back,
 		onFinishedSubmit,
@@ -52,7 +57,12 @@
 
 	const mtsFormData = $steps[serviceStep.ManagedTradingServices].formData;
 	// TODO: Need to refactor to make it clean; Bet validation from MTS form for odds feed integration
-	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && mtsFormData && (mtsFormData as ProductFormType)[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable) {
+	if (
+		$selectedIntegration == IntegrationType.FEED_INTEGRATION &&
+		mtsFormData &&
+		(mtsFormData as ProductFormType)[Environment.STAGING].clientSubTasks[6].taskStatusId !==
+			ClientRowStatus.NotApplicable
+	) {
 		defaultValues[Environment.STAGING] = {
 			assignedTo: '',
 			targetDateCompleted: null,
@@ -64,7 +74,10 @@
 	}
 
 	const clientInfoFormData = $steps[serviceStep.ClientInformation].formData;
-	const sportsListFormData = (clientInfoFormData as ClientInformationFormType).sports.split(',').map(i => i.trim()).filter(x => x !== null);
+	const sportsListFormData = (clientInfoFormData as ClientInformationFormType).sports
+		.split(',')
+		.map((i) => i.trim())
+		.filter((x) => x !== null);
 
 	// TODO: Need to refactor; Sports list from Client Information form for odds feed integration; Create list of sports
 	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && sportsListFormData.length > 0) {
@@ -74,7 +87,6 @@
 			actualDateCompleted: null,
 			clientSubTasks: sportsListFormData.map((s, i) => generateSubTask(i + 1, s))
 		};
-
 	}
 
 	// TODO: Need to refactor; Edit list of sports from client info page
@@ -82,18 +94,20 @@
 
 	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && clientLaunchFormData) {
 		const newSubTasksSports: any[] = [];
-		let listOfSports = (clientLaunchFormData as ProductFormType)[Environment.PRODUCTION].clientSubTasks;
+		let listOfSports = (clientLaunchFormData as ProductFormType)[Environment.PRODUCTION]
+			.clientSubTasks;
 		sportsListFormData.forEach((s, i) => {
-			const clientInfoSport = listOfSports.find(ls => ls.subtaskName == s);
+			const clientInfoSport = listOfSports.find((ls) => ls.subtaskName == s);
 			const confirmSports = clientInfoSport || generateSubTask(i + 1, s);
 			newSubTasksSports.push(confirmSports);
 		});
 
-		(clientLaunchFormData as ProductFormType)[Environment.PRODUCTION].clientSubTasks = newSubTasksSports;
+		(clientLaunchFormData as ProductFormType)[Environment.PRODUCTION].clientSubTasks =
+			newSubTasksSports;
 	}
 
 	dataKeys.push(Environment.PRODUCTION);
-	let initialValues = clientLaunchFormData as ProductFormType || defaultValues;
+	let initialValues = (clientLaunchFormData as ProductFormType) || defaultValues;
 	let error = $state('');
 	let isLoading = $state(false);
 	let message = $state('');
@@ -104,8 +118,11 @@
 	});
 
 	function hasOneCompletedTask(values: ProductFormType) {
-    const checkStatus = (subTasks: ClientSubTaskFormType[]) => subTasks && subTasks.some(task => task.taskStatusId === ClientRowStatus.Completed);  
-    return Object.values(values).some(value => value.clientSubTasks && checkStatus(value.clientSubTasks));
+		const checkStatus = (subTasks: ClientSubTaskFormType[]) =>
+			subTasks && subTasks.some((task) => task.taskStatusId === ClientRowStatus.Completed);
+		return Object.values(values).some(
+			(value) => value.clientSubTasks && checkStatus(value.clientSubTasks)
+		);
 	}
 
 	const handleSubmit = async (values: ProductFormType) => {
@@ -116,11 +133,36 @@
 			return;
 		}
 
-		if (hasOneCompletedTask(values) && $steps.some(step => step.isIncomplete)) {
-			$isErrorValidation = true;
+        const isClientCreation: boolean = !isEdit && isSuperAdmin && !values[Environment.STAGING]?.id && !values[Environment.PRODUCTION]?.id
+
+		if (isClientCreation) {
+            let newFormData: any = {
+                [Environment.PRODUCTION]: values[Environment.PRODUCTION]
+            }
+            if (values[Environment.STAGING]) {
+                newFormData = {
+                    ...newFormData,
+                    [Environment.STAGING]: values[Environment.STAGING]
+                }
+            }
+			$steps[step].formData = newFormData;
+		}
+
+		const isTaskCompletionErrorCheck: boolean =
+			hasOneCompletedTask(values) && $steps.some((step) => step.isIncomplete);
+		const isTaskRequiredFieldsErrorCheck: boolean = $steps.some((step) => !step?.formData);
+
+		if (isTaskCompletionErrorCheck || isTaskRequiredFieldsErrorCheck) {
+			$isErrorValidation = {
+				[ErrorValidationType.MissingRequiredFields]: isTaskRequiredFieldsErrorCheck,
+				[ErrorValidationType.AllTasksCompletion]: isTaskCompletionErrorCheck
+			};
 			return;
 		} else {
-			$isErrorValidation = false;
+			$isErrorValidation = {
+				[ErrorValidationType.MissingRequiredFields]: false,
+				[ErrorValidationType.AllTasksCompletion]: false
+			};
 		}
 
 		isLoading = true;
@@ -167,20 +209,20 @@
 
 		const currentStatus = getOverallStatus($steps);
 		const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
-			
+
 		const formattedData = {
 			...toEditClientPayload($selectedIntegration, formData),
 			taskStatus: currentStatus
-		}
+		};
 		if (formData.taskStatus !== currentStatus) {
-				const response = await updateClient(formattedData, {
-					'x-user-token': $auth?.userToken as string
-				});
+			const response = await updateClient(formattedData, {
+				'x-user-token': $auth?.userToken as string
+			});
 
-				$steps[serviceStep.ClientInformation].formData = {
-					...formData,
-					taskStatus: currentStatus
-				};
+			$steps[serviceStep.ClientInformation].formData = {
+				...formData,
+				taskStatus: currentStatus
+			};
 
 			if (response.error) {
 				error = ErrorMessages.CreateProductFailed;
@@ -195,7 +237,120 @@
 		}, 3000);
 	};
 
-	const handleCreateProduct = async (values: ProductFormType) => {
+	const handleCreateClient = async () => {
+		const response = await createClient(
+			toCreateClientPayload(
+				$selectedIntegration,
+				$steps[serviceStep.ClientInformation].formData as ClientInformationFormType
+			),
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		if (response.statusCode === StatusCode.Success && response.data) {
+			const sports: any = $steps[serviceStep.ClientInformation].formData?.sports;
+
+			if (sports !== undefined && sports !== null) {
+				$sportsFeed = sports
+					.split(',')
+					.map((item: string) => item.trim())
+					.filter((item: string) => item !== '');
+			}
+
+			const newFormData = {
+				...$steps[serviceStep.ClientInformation].formData,
+				clientId: response.data
+			};
+
+			$steps[serviceStep.ClientInformation].formData = newFormData as ClientInformationFormType;
+
+			return;
+		}
+
+		await PageGuard(response.error?.statusCode);
+	};
+
+    const handleCreateStep = async (stepIndex: number) => {
+		const clientFormData = $steps[serviceStep.ClientInformation].formData;
+        const stepItem: any = $steps[stepIndex];
+		const stagingProduct = createStep(
+			{
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
+				stepId: stepItem.stepId,
+				stepName: '',
+				serviceTypeId: servicesTypeId[$selectedIntegration],
+				environment: 0,
+				...stepItem.formData[Environment.STAGING]
+			},
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const productionProduct = createStep(
+			{
+				clientId: (clientFormData as ClientInformationFormType).clientId || '',
+				stepId: stepItem.stepId,
+				stepName: '',
+				serviceTypeId: servicesTypeId[$selectedIntegration],
+				environment: 1,
+				...stepItem.formData[Environment.PRODUCTION]
+			},
+			{
+				'x-user-token': $auth?.userToken as string
+			}
+		);
+
+		const response = await Promise.all([stagingProduct, productionProduct]);
+
+		// if (response.some((res: any) => res.error)) {
+		// 	error = ErrorMessages.CreateProductFailed;
+		// 	return;
+		// }
+
+		const [stagingResponse, productionResponse] = response;
+
+		if (stagingResponse.data && productionResponse.data) {
+			$steps[stepIndex].formData = {
+				[Environment.STAGING]: {
+					id: stagingResponse.data.id,
+					...stepItem[Environment.STAGING]
+				},
+				[Environment.PRODUCTION]: {
+					id: productionResponse.data.id,
+					...stepItem[Environment.PRODUCTION]
+				}
+			};
+
+			$steps[stepIndex].isIncomplete = hasIncompleteSubtask($steps[stepIndex].formData);
+
+			const currentStatus = getOverallStatus($steps);
+			const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
+			
+			const formattedData = {
+				...toEditClientPayload($selectedIntegration, formData),
+				taskStatus: currentStatus
+			}
+			if (formData.taskStatus !== currentStatus) {
+				const response = await updateClient(formattedData, {
+					'x-user-token': $auth?.userToken as string
+				});
+
+				$steps[serviceStep.ClientInformation].formData = {
+					...formData,
+					taskStatus: currentStatus
+				};
+
+				// if (response.error) {
+				// 	error = ErrorMessages.CreateProductFailed;
+				// 	return;
+				// }
+			}
+		}
+    }
+
+	const handleCreateClientLaunchProduct = async (values: ProductFormType) => {
 		const clientFormData = $steps[serviceStep.ClientInformation].formData;
 		const promiseList: any = [];
 
@@ -240,6 +395,26 @@
 		return response;
 	};
 
+	const handleCreateProduct = async (values: ProductFormType) => {
+        for (var stepIndex in $steps) {
+            if ($steps[Number(stepIndex)].stepId === Step[$selectedIntegration].ClientInformation) {
+                await handleCreateClient();
+
+                continue;
+            };
+
+            if ($steps[Number(stepIndex)].stepId === Step[$selectedIntegration].ClientLaunch) {
+                break;
+            }
+
+            await handleCreateStep(Number(stepIndex));
+        }
+
+        const response = await handleCreateClientLaunchProduct(values);
+
+        return response;
+	};
+
 	const handleEditProduct = async (values: ProductFormType) => {
 		const promiseList: any = [];
 		if (values[Environment.STAGING] && values[Environment.STAGING].id) {
@@ -255,7 +430,6 @@
 
 			promiseList.push(stagingProduct);
 		}
-
 
 		const productionProduct = updateStep(
 			{
@@ -300,8 +474,16 @@
 {/if}
 
 <div class="cc-client-launch">
-	<ProductForm isLaunch={true} finishFormButtonLabel={finishFormButtonLabel()} {title} {initialValues} {back}
-				 {isLoading} {disabled} onSubmit={handleSubmit} dataKeys={dataKeys}
-				 serviceType={IntegrationType.FEED_INTEGRATION} />
-
+	<ProductForm
+		isLaunch={true}
+		finishFormButtonLabel={finishFormButtonLabel()}
+		{title}
+		{initialValues}
+		{back}
+		{isLoading}
+		{disabled}
+		onSubmit={handleSubmit}
+		{dataKeys}
+		serviceType={IntegrationType.FEED_INTEGRATION}
+	/>
 </div>
