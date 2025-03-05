@@ -1,3 +1,4 @@
+import type { ErrorMessages } from '$enums/ErrorMessages';
 import type StepStatus from '$enums/StepStatus';
 import type { ClientInformationFormType } from '$lib/ClientInformationForm';
 import type { ProductFormType } from '$lib/ProductForm';
@@ -8,6 +9,7 @@ type Step = {
 	status: StepStatus;
 	formData?: ClientInformationFormType | ProductFormType;
 	isIncomplete?: boolean;
+    error?: ErrorMessages | null;
 };
 
 export type { Step as default };
