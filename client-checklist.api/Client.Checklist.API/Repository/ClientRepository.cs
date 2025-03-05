@@ -134,7 +134,7 @@ namespace Client.Checklist.API.Repository
             }
         }
 
-        public async Task<BaseResponseDTO<ClientInformationResponseDTO>> GetClientInformation(string clientId)
+        public async Task<BaseResponseDTO<ClientInformationResponseDTO>> GetClientInformation(string clientId, bool clientView)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace Client.Checklist.API.Repository
 
                 var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid);
 
-                if (client == null)
+                if (client == null || (client.IsDeleted && clientView))
                 {
                     return new BaseResponseDTO<ClientInformationResponseDTO>
                     {

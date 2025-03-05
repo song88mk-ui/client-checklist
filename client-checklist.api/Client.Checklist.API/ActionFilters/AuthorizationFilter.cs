@@ -1,4 +1,5 @@
-﻿using Client.Checklist.Shared.Enums;
+﻿using Client.Checklist.API.Controllers;
+using Client.Checklist.Shared.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -23,6 +24,12 @@ namespace Client.Checklist.API.ActionFilters
                     Message = StatusCode.Missing_Or_Unsupported_APIKey_In_Request_Headers.ToString().Replace('_', ' ')
                 });
             }
+
+            if (!string.IsNullOrEmpty(context.HttpContext.Request.Headers["x-client-token"].FirstOrDefault()))
+            {
+                ((BaseController)context.Controller).ClientView = true;
+            }
+
         }
     }
 }

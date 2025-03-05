@@ -1,7 +1,7 @@
-﻿using Client.Checklist.API.Repository;
+﻿using Client.Checklist.API.Controllers;
+using Client.Checklist.API.Repository;
 using Client.Checklist.API.Telemetry;
 using Client.Checklist.Shared.Enums;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics;
@@ -52,7 +52,6 @@ namespace Client.Checklist.API.ActionFilters
                 }
 
                 var authResponse = Task.Run(() => authRepository.Authenticate(token)).Result;
-
                 activity?.SetTag("auth response", JsonSerializer.Serialize(authResponse));
 
                 if (authResponse.StatusCode != StatusCode.Success)
