@@ -140,7 +140,7 @@ namespace Client.Checklist.API.Repository
             {
                 Guid.TryParse(clientId, out var clientGuid);
 
-                var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid && f.IsDeleted == false);
+                var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid);
 
                 if (client == null)
                 {
@@ -210,7 +210,8 @@ namespace Client.Checklist.API.Repository
                             Languages = languages,
                             Sports = sports,
                             Markets = markets,
-                            TargetLaunchDate = client.TargetLaunchDate
+                            TargetLaunchDate = client.TargetLaunchDate,
+                            IsActive = !client.IsDeleted
                         },
                         ClientSteps = clientSteps
                     }
