@@ -8,7 +8,7 @@ namespace Client.Checklist.API.Controllers
 {
     [Route("v1")]
     [ApiController, EnableCors("AllowAllOrigins"), ServiceFilter(typeof(AuthorizationFilter))]
-    public class IntegrationController : ControllerBase
+    public class IntegrationController : BaseController
     {
         #region Fields
 
@@ -59,7 +59,7 @@ namespace Client.Checklist.API.Controllers
         [HttpGet("clients/{clientId}")]
         public async Task<IActionResult> GetClientInformation([FromRoute] string clientId)
         {
-            var result = await _clientRepository.GetClientInformation(clientId);
+            var result = await _clientRepository.GetClientInformation(clientId, ClientView);
 
             return ReturnResult(result);
         }
