@@ -19,13 +19,11 @@
 	import { generateSubTask } from '$constants/commonValues';
 	import IntegrationType from '$enums/integrationType';
 	import { ClientRowStatus } from '$enums/ClientRowStatus';
-	import environment from '$enums/Environment';
 	import getOverallStatus from '$utils/getOverallStatus';
 	import { toCreateClientPayload, toEditClientPayload } from '$mapper/ClientMapper';
 	import isErrorValidation from '$stores/validation';
 	import type { ClientSubTaskFormType } from '$lib/ProductForm/validationSchema';
 	import { ErrorValidationType } from '$enums/ErrorValidationType';
-	import type { default as StepType } from '$types/Step';
 	import { StatusCode } from '$api/models';
 	import { PageGuard } from '$services/PageGuard';
 	import hasIncompleteSubtask from '$utils/hasIncompleteSubtask';
@@ -55,8 +53,8 @@
 
 	const defaultValues = initialFormValues[$selectedIntegration][step];
 
-	const mtsFormData = $steps[serviceStep.ManagedTradingServices].formData;
 	// TODO: Need to refactor to make it clean; Bet validation from MTS form for odds feed integration
+	const mtsFormData = $steps[serviceStep.ManagedTradingServices].formData;
 	if (
 		$selectedIntegration == IntegrationType.FEED_INTEGRATION &&
 		mtsFormData &&
@@ -90,11 +88,9 @@
 	}
 
 	// TODO: Need to refactor; Edit list of sports from client info page
-	const clientLaunchFormData = $steps[step].formData;
-
-	if ($selectedIntegration == IntegrationType.FEED_INTEGRATION && clientLaunchFormData) {
+	if ($steps[step]?.formData) {
 		const newSubTasksSports: any[] = [];
-		let listOfSports = (clientLaunchFormData as ProductFormType)[Environment.PRODUCTION]
+		let listOfSports = ($steps[step]?.formData as ProductFormType)[Environment.PRODUCTION]
 			.clientSubTasks;
 		sportsListFormData.forEach((s, i) => {
 			const clientInfoSport = listOfSports.find((ls) => ls.subtaskName == s);
@@ -102,13 +98,19 @@
 			newSubTasksSports.push(confirmSports);
 		});
 
-		(clientLaunchFormData as ProductFormType)[Environment.PRODUCTION].clientSubTasks =
+		($steps[step]?.formData as ProductFormType)[Environment.PRODUCTION].clientSubTasks =
 			newSubTasksSports;
 	}
 
+    if ($hasBetValidation && !($steps[step]?.formData as ProductFormType)[Environment.STAGING]) {
+        $steps[step].formData = {
+            ...$steps[step].formData,
+            [Environment.STAGING]: defaultValues[Environment.STAGING]
+        }
+    }
+
 	dataKeys.push(Environment.PRODUCTION);
-	let initialValues = (clientLaunchFormData as ProductFormType) || defaultValues;
-	let error = $state('');
+	let initialValues = ($steps[step]?.formData as ProductFormType) || defaultValues;
 	let isLoading = $state(false);
 	let message = $state('');
 	let disabled = $state(false);
@@ -175,7 +177,7 @@
 		}
 
 		if (response.some((res: any) => res.error)) {
-			error = ErrorMessages.CreateProductFailed;
+			$steps[step].error = ErrorMessages.CreateProductFailed;
 			isLoading = false;
 			return;
 		}
@@ -225,7 +227,7 @@
 			};
 
 			if (response.error) {
-				error = ErrorMessages.CreateProductFailed;
+				$steps[step].error = ErrorMessages.UpdateClientFailed;
 				return;
 			}
 		}
@@ -304,26 +306,28 @@
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
 
-		// if (response.some((res: any) => res.error)) {
-		// 	error = ErrorMessages.CreateProductFailed;
-		// 	return;
-		// }
+		if (response.some((res: any) => res.error)) {
+			stepItem.error = ErrorMessages.CreateProductFailed;
+            $steps[stepIndex] = stepItem;
+			return;
+		}
 
 		const [stagingResponse, productionResponse] = response;
 
 		if (stagingResponse.data && productionResponse.data) {
-			$steps[stepIndex].formData = {
+			stepItem.formData = {
 				[Environment.STAGING]: {
 					id: stagingResponse.data.id,
-					...stepItem[Environment.STAGING]
+					...stepItem.formData[Environment.STAGING]
 				},
 				[Environment.PRODUCTION]: {
 					id: productionResponse.data.id,
-					...stepItem[Environment.PRODUCTION]
+					...stepItem.formData[Environment.PRODUCTION]
 				}
 			};
 
-			$steps[stepIndex].isIncomplete = hasIncompleteSubtask($steps[stepIndex].formData);
+			stepItem.isIncomplete = hasIncompleteSubtask(stepItem.formData);
+            $steps[stepIndex] = stepItem;
 
 			const currentStatus = getOverallStatus($steps);
 			const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
@@ -342,10 +346,11 @@
 					taskStatus: currentStatus
 				};
 
-				// if (response.error) {
-				// 	error = ErrorMessages.CreateProductFailed;
-				// 	return;
-				// }
+				if (response.error) {
+					stepItem.error = ErrorMessages.UpdateClientFailed;
+                    $steps[stepIndex] = stepItem;
+					return;
+				}
 			}
 		}
     }
@@ -451,19 +456,11 @@
 
 		return response;
 	};
-
-	$effect(() => {
-		if (error) {
-			setTimeout(() => {
-				error = '';
-			}, 5000);
-		}
-	});
 </script>
 
-{#if error}
+{#if $steps[step].error}
 	<div class="mb-5">
-		<Alert variant="error" message={error} hasCloseButton={false} />
+		<Alert variant="error" message={$steps[step].error} hasCloseButton={false} />
 	</div>
 {/if}
 

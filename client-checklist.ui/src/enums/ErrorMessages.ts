@@ -6,5 +6,6 @@ export enum ErrorMessages {
 	LogoutFailed = 'Failed to logout.',
 	CreateProductFailed = 'Failed to create product.',
 	FetchClientFailed = 'Failed to fetch client.',
-    ClientStatusFailed = 'Failed to change client status.'
+    ClientStatusFailed = 'Failed to change client status.',
+    UpdateClientFailed = 'Failed to update client.'
 }

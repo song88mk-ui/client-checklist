@@ -11,7 +11,6 @@
 	import Environment from '$enums/Environment';
 	import { ErrorMessages } from '$enums/ErrorMessages';
 	import Step from '$enums/Step';
-    import type {default as StepType} from '$types/Step';
 	import auth from '$stores/auth';
 	import selectedIntegration from '$stores/integration';
 	import initialFormValues from '$constants/initialFormValues';
@@ -51,7 +50,6 @@
 	const defaultValues = initialFormValues[$selectedIntegration][step];
 	let initialValues = ($steps[step].formData as ProductFormType) || defaultValues;
 
-	let error = $state('');
 	let isLoading = $state(false);
 	let message = $state('');
 	let disabled = $state(false);
@@ -113,7 +111,7 @@
 		}
 
 		if (response.error) {
-			error = ErrorMessages.CreateProductFailed;
+			$steps[step].error = ErrorMessages.CreateProductFailed;
 			isLoading = false;
 			return;
 		}
@@ -144,7 +142,7 @@
 				};
 
 				if (response.error) {
-					error = ErrorMessages.CreateProductFailed;
+					$steps[step].error = ErrorMessages.UpdateClientFailed;
 					return;
 				}
 			}
@@ -220,26 +218,28 @@
 
 		const response = await Promise.all([stagingProduct, productionProduct]);
 
-		// if (response.some((res: any) => res.error)) {
-		// 	error = ErrorMessages.CreateProductFailed;
-		// 	return;
-		// }
+		if (response.some((res: any) => res.error)) {
+			stepItem.error = ErrorMessages.CreateProductFailed;
+            $steps[stepIndex] = stepItem;
+			return;
+		}
 
 		const [stagingResponse, productionResponse] = response;
 
 		if (stagingResponse.data && productionResponse.data) {
-			$steps[stepIndex].formData = {
+			stepItem.formData = {
 				[Environment.STAGING]: {
 					id: stagingResponse.data.id,
-					...stepItem[Environment.STAGING]
+					...stepItem.formData[Environment.STAGING]
 				},
 				[Environment.PRODUCTION]: {
 					id: productionResponse.data.id,
-					...stepItem[Environment.PRODUCTION]
+					...stepItem.formData[Environment.PRODUCTION]
 				}
 			};
 
-			$steps[stepIndex].isIncomplete = hasIncompleteSubtask($steps[stepIndex].formData);
+			stepItem.isIncomplete = hasIncompleteSubtask(stepItem.formData);
+            $steps[stepIndex] = stepItem;
 
 			const currentStatus = getOverallStatus($steps);
 			const formData = $steps[serviceStep.ClientInformation].formData as ClientInformationFormType;
@@ -258,17 +258,18 @@
 					taskStatus: currentStatus
 				};
 
-				// if (response.error) {
-				// 	error = ErrorMessages.CreateProductFailed;
-				// 	return;
-				// }
+				if (response.error) {
+					stepItem.error = ErrorMessages.UpdateClientFailed;
+                    $steps[stepIndex] = stepItem;
+					return;
+				}
 			}
 		}
     }
 
     const handleCreateClientLaunchProduct = async(values: ProductFormType) => {
 		const clientFormData = $steps[serviceStep.ClientInformation].formData;
-		const productionProduct = createStep(
+		const response = await createStep(
 			{
 				clientId: (clientFormData as ClientInformationFormType).clientId || '',
 				stepId: serviceStep.ClientLaunch,
@@ -282,10 +283,10 @@
 			}
 		);
 
-		const response = await productionProduct;
 		if (response.message === 'Success' && response.statusCode === 100) {
 			message = `${Product[$selectedIntegration]} has been successfully created`;
 		}
+
 		return response;
     }
 
@@ -327,19 +328,11 @@
 
 		return response;
 	};
-
-	$effect(() => {
-		if (error) {
-			setTimeout(() => {
-				error = '';
-			}, 5000);
-		}
-	});
 </script>
 
-{#if error}
+{#if $steps[step].error}
 	<div class="mb-5">
-		<Alert variant="error" message={error} hasCloseButton={false} />
+		<Alert variant="error" message={$steps[step].error} hasCloseButton={false} />
 	</div>
 {/if}
 

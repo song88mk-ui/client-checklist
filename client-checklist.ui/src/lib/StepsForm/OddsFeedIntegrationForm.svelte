@@ -37,7 +37,6 @@
 	const defaultValues = initialFormValues[$selectedIntegration][step]
 	let initialValues = ($steps[step].formData as ProductFormType) || defaultValues
 
-	let error = $state('');
 	let isLoading = $state(false);
 	let disabled = $state(false);
 	const serviceStep = Step[IntegrationType.FEED_INTEGRATION]
@@ -47,6 +46,8 @@
 	});
 
 	const handleSubmit = async (values: ProductFormType) => {
+        $steps[step].error = null;
+
 		if (disabled) {
 			next();
 			return;
@@ -75,7 +76,7 @@
 		isLoading = false;
 
 		if (response.some((res) => res.error)) {
-			error = ErrorMessages.CreateProductFailed;
+			$steps[step].error = ErrorMessages.CreateProductFailed;
 			return;
 		}
 
@@ -113,7 +114,7 @@
 				};
 
 				if (response.error) {
-					error = ErrorMessages.CreateProductFailed;
+					$steps[step].error = ErrorMessages.UpdateClientFailed;
 					return;
 				}
 			}
@@ -145,19 +146,11 @@
 
 		return response;
 	};
-
-	$effect(() => {
-		if (error) {
-			setTimeout(() => {
-				error = '';
-			}, 5000);
-		}
-	});
 </script>
 
-{#if error}
+{#if $steps[step].error}
 	<div class="mb-5">
-		<Alert variant="error" message={error} hasCloseButton={false} />
+		<Alert variant="error" message={$steps[step].error} hasCloseButton={false} />
 	</div>
 {/if}
 
