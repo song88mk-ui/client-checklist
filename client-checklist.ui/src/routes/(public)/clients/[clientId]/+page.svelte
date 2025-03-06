@@ -121,7 +121,7 @@
 			}
 
 			const response = await getClient(clientId, {
-				'x-user-token': queryToken ? queryToken : ''
+				'x-client-token': queryToken ? queryToken : ''
 			});
 
 			if (response?.error) {
