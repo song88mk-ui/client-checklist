@@ -159,6 +159,8 @@
             [ErrorValidationType.AllTasksCompletion]: isTaskCompletionErrorCheck
         }
 
+        if (isTaskCompletionErrorCheck || isTaskRequiredFieldsErrorCheck) return;
+
 		isLoading = true;
 
 		let response;
