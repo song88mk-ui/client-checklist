@@ -90,7 +90,7 @@
 	// TODO: Need to refactor; Edit list of sports from client info page
 	if ($steps[step]?.formData) {
 		const newSubTasksSports: any[] = [];
-		let listOfSports = ($steps[step]?.formData as ProductFormType)[Environment.PRODUCTION]
+		let listOfSports = ($steps[step].formData as ProductFormType)[Environment.PRODUCTION]
 			.clientSubTasks;
 		sportsListFormData.forEach((s, i) => {
 			const clientInfoSport = listOfSports.find((ls) => ls.subtaskName == s);
@@ -98,7 +98,7 @@
 			newSubTasksSports.push(confirmSports);
 		});
 
-		($steps[step]?.formData as ProductFormType)[Environment.PRODUCTION].clientSubTasks =
+		($steps[step].formData as ProductFormType)[Environment.PRODUCTION].clientSubTasks =
 			newSubTasksSports;
 	}
 
