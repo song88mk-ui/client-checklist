@@ -5,15 +5,24 @@
 	import ClientRow from '$lib/ClientRow.svelte';
 	import auth from '$stores/auth';
 	import { clients, deletedClient } from '$stores/client';
-	import type { Client } from '$types/client';
+	import type { Client, Clients } from '$types/client';
 	import { onMount } from 'svelte';
 	import ClientListHeader from '$lib/ClientListHeader.svelte';
 	import type { ClientDto, GetClientsResponseDto } from '$api/GetClients.DTO';
 	import { toClientViewModel } from '$mapper/ClientMapper';
 	import { PageGuard } from '$services/PageGuard';
+	import Step from '$enums/Step';
+	import { servicesType } from '$constants/services';
 
 	let isLoading = false;
 	let error = '';
+
+    const setClients = (responseClients: ClientDto[]): Clients => {
+        return responseClients
+            .filter((c: ClientDto) => c.registeredStepsCount === Object.values(Step[servicesType[c.serviceTypeId]]).length)
+			.map((client: ClientDto) => (toClientViewModel(client)))
+			.sort((a: Client, b: Client) => a.companyName.localeCompare(b.companyName));
+    }
 
 	onMount(async () => {
 		isLoading = true;
@@ -31,10 +40,7 @@
 			return;
 		}
 
-		$clients = (response.data as GetClientsResponseDto)
-			.clients
-			.map((client: ClientDto) => (toClientViewModel(client)))
-			.sort((a: Client, b: Client) => a.companyName.localeCompare(b.companyName));
+		$clients = setClients((response.data as GetClientsResponseDto).clients)
 	});
 
 	$: if ($deletedClient) {

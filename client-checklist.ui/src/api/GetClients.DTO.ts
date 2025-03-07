@@ -7,7 +7,8 @@ export type ClientDto = {
 	mainDecisionMaker: { name: string },
 	taskStatus: number,
 	clientToken: string,
-	isActive: boolean
+	isActive: boolean,
+    registeredStepsCount: number;
 }
 
 export type GetClientsResponseDto = {
