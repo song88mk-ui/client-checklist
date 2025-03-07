@@ -89,7 +89,10 @@
 				</li>
 				<li>
 					Account Manager to coordinate with the Development team to
-					verify the project scope and timelines based on available resources. The Account Manager
+					verify the project scope and timelines based on available resources. 
+				</li>
+				<li>
+					The Account Manager
 					will create the relevant communication channels between Song88 and Client.
 				</li>
 				<li>Kick-off of Integration Process. </li>
@@ -105,20 +108,20 @@
 				<li>
 					Once all tasks by Song88
 					has been completed including End-to-end test in Staging, Clients should conduct a User or
-					Business Acceptance Test. Clients are expected to provide a target launch or GO LIVE date
+					Business Acceptance Test.
+				</li>
+				<li>
+					Clients are expected to provide a target launch or GO LIVE date
 					once the User or Business Acceptance Test has started.
 				</li>
 				<li>
 					Issues or any other Change Requests
 					which may be accommodated still after the UAT will be addressed and the GO LIVE date will be
-					agreed upon by both Song88 and Client.
-				</li>
-				<li>
-					Clients should not launch without prior agreement
+					agreed upon by both Song88 and Client.Clients should not launch without prior agreement
 					with Song88.
 				</li>
-				<li>
-					GO LIVE!
+				<li >
+					<span class="font-bold">GO LIVE!</span>
 				</li>
 
 			</ul>
