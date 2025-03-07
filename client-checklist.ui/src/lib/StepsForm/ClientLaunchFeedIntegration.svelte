@@ -172,9 +172,12 @@
 
 		if (response.some((res: any) => res.error)) {
 			$steps[step].apiError = ErrorMessages.CreateProductFailed;
-			isLoading = false;
-			return;
 		}
+
+        if ($steps.filter(formStep => formStep.apiError).length > 0) {
+            isLoading = false;
+			return;
+        }
 
 		if ($hasBetValidation) {
 			const [stagingResponse, productionResponse] = response;
