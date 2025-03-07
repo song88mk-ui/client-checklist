@@ -265,7 +265,7 @@ namespace Client.Checklist.API.Repository
                             TaskStatus = s.TaskStatus,
                             ClientToken = clientTokens?.FirstOrDefault(f => f.UserId.ToUpper() == s.ClientId.ToString().ToUpper())?.OperatorToken ?? string.Empty,
                             IsActive = !s.IsDeleted,
-                            RegisteredStepsCount = clientSteps.Where(c => c.ClientId == s.ClientId).ToList().Count(),
+                            RegisteredStepsCount = clientSteps.Where(c => c.ClientId == s.ClientId).Select(x => x.StepId).Distinct().ToList().Count(),
                         }).ToList()
                     }
                 };
