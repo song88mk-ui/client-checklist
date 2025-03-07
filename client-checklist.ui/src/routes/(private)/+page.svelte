@@ -19,7 +19,7 @@
 
     const setClients = (responseClients: ClientDto[]): Clients => {
         return responseClients
-            .filter((c: ClientDto) => c.registeredStepsCount === Object.values(Step[servicesType[c.serviceTypeId]]).length)
+            .filter((c: ClientDto) => c.registeredStepsCount === Object.values(Step[servicesType[c.serviceTypeId]]).length - 1)
 			.map((client: ClientDto) => (toClientViewModel(client)))
 			.sort((a: Client, b: Client) => a.companyName.localeCompare(b.companyName));
     }
