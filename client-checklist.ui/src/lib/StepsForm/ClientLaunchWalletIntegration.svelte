@@ -106,9 +106,12 @@
 
 		if (response.error) {
 			$steps[step].apiError = ErrorMessages.CreateProductFailed;
-			isLoading = false;
-			return;
 		}
+
+        if ($steps.filter(formStep => formStep.apiError).length > 0) {
+            isLoading = false;
+			return;
+        }
 
 		if (response.data) {
 			$steps[step].formData = {

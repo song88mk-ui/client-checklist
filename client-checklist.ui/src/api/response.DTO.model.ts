@@ -35,6 +35,7 @@ export type ClientFetch = {
 	technicalManager: Manager;
 	accountManager: Manager;
 	socialAccount: string;
+    registeredStepsCount: number;
 };
 
 export type FetchClientsResponse = {
