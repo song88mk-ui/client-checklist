@@ -235,6 +235,8 @@ namespace Client.Checklist.API.Repository
 
                 var clients = _clientChecklistContext.ClientInformation.AsNoTracking().ToList();
 
+                var clientSteps = _clientChecklistContext.ClientSteps.AsNoTracking().ToList();
+
                 return new BaseResponseDTO<ClientInformationListDTO>
                 {
                     StatusCode = StatusCode.Success,
@@ -262,7 +264,8 @@ namespace Client.Checklist.API.Repository
                             TargetLaunchDate = s.TargetLaunchDate,
                             TaskStatus = s.TaskStatus,
                             ClientToken = clientTokens?.FirstOrDefault(f => f.UserId.ToUpper() == s.ClientId.ToString().ToUpper())?.OperatorToken ?? string.Empty,
-                            IsActive = !s.IsDeleted
+                            IsActive = !s.IsDeleted,
+                            RegisteredStepsCount = clientSteps.Where(c => c.ClientId == s.ClientId).ToList().Count(),
                         }).ToList()
                     }
                 };

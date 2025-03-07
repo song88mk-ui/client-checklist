@@ -22,5 +22,6 @@
         public Manager AccountManager { get; set; }
         public string SocialAccount { get; set; }
         public string ClientToken { get; set; }
+        public int? RegisteredStepsCount { get; set; }
     }
 }

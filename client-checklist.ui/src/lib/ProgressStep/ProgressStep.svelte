@@ -12,10 +12,16 @@
 	let serviceSteps = Step[$selectedIntegration];
 
 	const updateStep = (index: number) => {
-		if ($steps[serviceSteps.ClientInformation].formData) {
-			step = index;
-		}
+        if ($steps[serviceSteps.ClientInformation].formData) {
+            step = index;
+        }
 	};
+
+    const actualStepStatus = (item: StepType): StepStatus => {
+        if (item.apiError) return StepStatus.HasError;
+
+        return item.formData ? StepStatus.Completed : StepStatus.Inactive;
+    }
 
     const setStepStatus = (): void => {
         let tempSteps: StepType[] = $steps;
@@ -26,13 +32,25 @@
                 status:
                     step === index
                         ? StepStatus.Active
-                        : item.formData
-                            ? StepStatus.Completed
-                            : StepStatus.Inactive
+                        : actualStepStatus(item)
             };
         });
 
         $steps = tempSteps;
+    }
+
+    const shouldRender = (): boolean => {
+        if ($steps.length === 0) return false;
+
+        if ($steps[step].status !== StepStatus.Active) return true;
+
+        for (var stepIndex in $steps) {
+            if ($steps[Number(stepIndex)].status !== actualStepStatus($steps[stepIndex]) && Number(stepIndex) !== step) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     onMount(() => {
@@ -40,7 +58,7 @@
     })
 
 	$effect(() => {
-		if ($steps.length > 0 && $steps[step].status !== StepStatus.Active) {
+		if (shouldRender()) {
             setStepStatus();
 		}
 	});

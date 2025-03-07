@@ -154,18 +154,12 @@
 			hasOneCompletedTask(values) && $steps.some((step) => step.isIncomplete);
 		const isTaskRequiredFieldsErrorCheck: boolean = $steps.some((step) => !step?.formData);
 
-		if (isTaskCompletionErrorCheck || isTaskRequiredFieldsErrorCheck) {
-			$isErrorValidation = {
-				[ErrorValidationType.MissingRequiredFields]: isTaskRequiredFieldsErrorCheck,
-				[ErrorValidationType.AllTasksCompletion]: isTaskCompletionErrorCheck
-			};
-			return;
-		} else {
-			$isErrorValidation = {
-				[ErrorValidationType.MissingRequiredFields]: false,
-				[ErrorValidationType.AllTasksCompletion]: false
-			};
-		}
+        $isErrorValidation = {
+            [ErrorValidationType.MissingRequiredFields]: isTaskRequiredFieldsErrorCheck,
+            [ErrorValidationType.AllTasksCompletion]: isTaskCompletionErrorCheck
+        }
+
+        if (isTaskCompletionErrorCheck || isTaskRequiredFieldsErrorCheck) return;
 
 		isLoading = true;
 
@@ -177,7 +171,7 @@
 		}
 
 		if (response.some((res: any) => res.error)) {
-			$steps[step].error = ErrorMessages.CreateProductFailed;
+			$steps[step].apiError = ErrorMessages.CreateProductFailed;
 			isLoading = false;
 			return;
 		}
@@ -227,7 +221,7 @@
 			};
 
 			if (response.error) {
-				$steps[step].error = ErrorMessages.UpdateClientFailed;
+				$steps[step].apiError = ErrorMessages.UpdateClientFailed;
 				return;
 			}
 		}
@@ -307,7 +301,7 @@
 		const response = await Promise.all([stagingProduct, productionProduct]);
 
 		if (response.some((res: any) => res.error)) {
-			stepItem.error = ErrorMessages.CreateProductFailed;
+			stepItem.apiError = ErrorMessages.CreateProductFailed;
             $steps[stepIndex] = stepItem;
 			return;
 		}
@@ -347,7 +341,7 @@
 				};
 
 				if (response.error) {
-					stepItem.error = ErrorMessages.UpdateClientFailed;
+					stepItem.apiError = ErrorMessages.UpdateClientFailed;
                     $steps[stepIndex] = stepItem;
 					return;
 				}
@@ -458,9 +452,9 @@
 	};
 </script>
 
-{#if $steps[step].error}
+{#if $steps[step].apiError}
 	<div class="mb-5">
-		<Alert variant="error" message={$steps[step].error} hasCloseButton={false} />
+		<Alert variant="error" message={$steps[step].apiError} hasCloseButton={false} />
 	</div>
 {/if}
 

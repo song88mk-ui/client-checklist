@@ -46,7 +46,7 @@
 	});
 
 	const handleSubmit = async (values: ProductFormType) => {
-        $steps[step].error = null;
+        $steps[step].apiError = null;
 
 		if (disabled) {
 			next();
@@ -76,7 +76,7 @@
 		isLoading = false;
 
 		if (response.some((res) => res.error)) {
-			$steps[step].error = ErrorMessages.CreateProductFailed;
+			$steps[step].apiError = ErrorMessages.CreateProductFailed;
 			return;
 		}
 
@@ -114,7 +114,7 @@
 				};
 
 				if (response.error) {
-					$steps[step].error = ErrorMessages.UpdateClientFailed;
+					$steps[step].apiError = ErrorMessages.UpdateClientFailed;
 					return;
 				}
 			}
@@ -148,9 +148,9 @@
 	};
 </script>
 
-{#if $steps[step].error}
+{#if $steps[step].apiError}
 	<div class="mb-5">
-		<Alert variant="error" message={$steps[step].error} hasCloseButton={false} />
+		<Alert variant="error" message={$steps[step].apiError} hasCloseButton={false} />
 	</div>
 {/if}
 
