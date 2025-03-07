@@ -9,7 +9,7 @@ type Step = {
 	status: StepStatus;
 	formData?: ClientInformationFormType | ProductFormType;
 	isIncomplete?: boolean;
-    error?: ErrorMessages | null;
+    apiError?: ErrorMessages | null;
 };
 
 export type { Step as default };

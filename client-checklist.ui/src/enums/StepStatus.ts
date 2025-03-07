@@ -1,7 +1,8 @@
 enum StepStatus {
     Inactive,
     Active,
-    Completed
+    Completed,
+    HasError
 }
 
 export default StepStatus

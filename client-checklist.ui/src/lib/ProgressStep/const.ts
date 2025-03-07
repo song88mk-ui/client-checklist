@@ -1,7 +1,6 @@
 import IntegrationType from "$enums/integrationType";
 import StepStatus from "$enums/StepStatus";
 import type Step from "$types/step";
-import StepEnum from "$enums/Step";
 
 export const STATUS_COLORS = {
     [StepStatus.Active]: {
@@ -24,7 +23,14 @@ export const STATUS_COLORS = {
         border: 'border-gray-300',
         line: 'bg-gray-300',
         text: 'text-gray-300'
-    }
+    },
+    [StepStatus.HasError]: {
+        bg: 'bg-white',
+        icon: 'text-red-600',
+        border: 'border-red-600',
+        line: 'bg-gray-300',
+        text: 'text-red-600'
+    },
 }
 
 const WALLET_INTEGRATION_STEPS: Step[] = [

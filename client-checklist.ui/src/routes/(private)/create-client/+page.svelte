@@ -101,7 +101,7 @@
 	});
 </script>
 
-{#if Object.values($isErrorValidation).some((val: boolean) => val === true)}
+{#if Object.values($isErrorValidation).some((val: boolean) => val === true) || $steps.filter(formStep => formStep.apiError).length > 0}
     {#if $isErrorValidation[ErrorValidationType.MissingRequiredFields] && $steps.filter(formStep => !formStep.formData).length > 0}
         <div
         class="mb-8 rounded-md border border-[#FFB97D] bg-[#FEF0C7] p-3 text-xs leading-[1.5] text-[#EF7E1D]"
@@ -130,7 +130,22 @@
             </ul>
         </div>
     {/if}
+    {#if $steps.filter(formStep => formStep.apiError).length > 0}
+        <div
+        class="mb-8 rounded-md border border-[#FFB97D] bg-[#FEF0C7] p-3 text-xs leading-[1.5] text-[#EF7E1D]"
+        >
+            <p>
+                There were errors encountered in the following steps:
+            </p>
+            <ul class="ml-5 list-disc font-semibold">
+                {#each $steps.filter(formStep => formStep.apiError) as formStep}
+                    <li>{formStep.title}</li>
+                {/each}
+            </ul>
+        </div>
+    {/if}
 {/if}
+
 <div class="mb-10">
 	<h1 class="text-3xl font-bold">{services[servicesTypeId[$selectedIntegration]]}</h1>
 </div>
