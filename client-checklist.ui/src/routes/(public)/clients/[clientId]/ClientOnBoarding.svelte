@@ -78,7 +78,7 @@
 			<span class="text-[24px] font-bold leading-none text-[#262626]"
 				>Steps to Onboarding a Client:</span
 			>
-			<ul class="list-decimal pl-5 pt-[10px] text-[14px] font-medium font-normal leading-[19px] text-[#262626]">
+			<ul class="list-decimal ordered-list-fix pl-5 pt-[10px] text-[14px] font-medium font-normal leading-[19px] text-[#262626]">
 				<li>
 					Sales team to negotiate and get the contract signed with an estimated target date as
 					discussed with the Development team.
