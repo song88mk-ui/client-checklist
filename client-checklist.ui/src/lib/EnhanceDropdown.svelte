@@ -42,9 +42,9 @@
 </script>
 
 <div
-	class="cc-enhance-dropdown relative flex min-h-[38px] items-center justify-between rounded border px-3 cursor-pointer select-none"
+	class="cc-enhance-dropdown relative flex min-h-[38px] items-center justify-between rounded border cursor-pointer select-none"
 >
-	<div role="presentation" class="flex flex-row text-[11px] w-full" onclick={toggleVisibility}>
+	<div role="presentation" class="flex flex-row text-[11px] w-full pl-3" onclick={toggleVisibility}>
 		{#if selectedItems.length < 1}
 			<div class="text-sm text-gray-700">{placeholder}</div>
 		{:else}
@@ -62,7 +62,7 @@
 			{/each}
 		{/if}
 	</div>
-    <img class="" src={showOption ? '/arrow-up.svg' : '/arrow-down.svg'} alt="logo" />
+    <img role="presentation" class="pr-3" src={showOption ? '/arrow-up.svg' : '/arrow-down.svg'} alt="logo" onclick={toggleVisibility}/>
     
 	<div
 		class={`${showOption ? '' : 'hidden'} absolute left-0 top-[43px] z-10 max-h-[200px] w-full overflow-auto rounded border bg-white px-3 py-2 text-[12px]`}

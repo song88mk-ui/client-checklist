@@ -57,7 +57,7 @@
 
         // TODO: special handling for bet validation for client launch page; Need to refactor
 		if ($selectedIntegration == IntegrationType.FEED_INTEGRATION) {
-				$hasBetValidation = values[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable
+            $hasBetValidation = values[Environment.STAGING].clientSubTasks[6].taskStatusId !== ClientRowStatus.NotApplicable
 		}
 
         const isClientCreation: boolean = !isEdit && isSuperAdmin && !values[Environment.STAGING]?.id && !values[Environment.PRODUCTION]?.id
