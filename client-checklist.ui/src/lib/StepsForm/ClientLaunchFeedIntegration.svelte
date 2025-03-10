@@ -45,7 +45,7 @@
 
 	const serviceStep = Step[$selectedIntegration];
 	const title = $steps[step].title;
-	const dataKeys: string[] = [];
+	const dataKeys: string[] = [Environment.PRODUCTION];
 
 	const finishFormButtonLabel = (): string => {
 		return isSuperAdmin && isEdit ? 'Update' : isSuperAdmin && !isEdit ? 'Create' : 'Close';
@@ -54,13 +54,7 @@
 	const defaultValues = initialFormValues[$selectedIntegration][step];
 
 	// TODO: Need to refactor to make it clean; Bet validation from MTS form for odds feed integration
-	const mtsFormData = $steps[serviceStep.ManagedTradingServices].formData;
-	if (
-		$selectedIntegration == IntegrationType.FEED_INTEGRATION &&
-		mtsFormData &&
-		(mtsFormData as ProductFormType)[Environment.STAGING].clientSubTasks[6].taskStatusId !==
-			ClientRowStatus.NotApplicable
-	) {
+	if ($hasBetValidation) {
 		defaultValues[Environment.STAGING] = {
 			assignedTo: '',
 			targetDateCompleted: null,
@@ -102,14 +96,6 @@
 			newSubTasksSports;
 	}
 
-    if ($hasBetValidation && !($steps[step]?.formData as ProductFormType)[Environment.STAGING]) {
-        $steps[step].formData = {
-            ...$steps[step].formData,
-            [Environment.STAGING]: defaultValues[Environment.STAGING]
-        }
-    }
-
-	dataKeys.push(Environment.PRODUCTION);
 	let initialValues = ($steps[step]?.formData as ProductFormType) || defaultValues;
 	let isLoading = $state(false);
 	let message = $state('');
