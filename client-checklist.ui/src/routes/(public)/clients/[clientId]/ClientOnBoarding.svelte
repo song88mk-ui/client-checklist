@@ -25,6 +25,26 @@
   });
 </script>
 
+
+<style>
+	.ordered-list > div {
+	  display: flex;
+	  align-items: flex-start;
+	  margin-bottom: 10px; 
+	}
+  
+	.number {
+	  width: 40px;
+	  text-align: right; 
+	  margin-right: 10px;
+	  flex-shrink: 0; 
+	}
+  
+	.content {
+	  flex: 1;
+	}
+</style>
+
 <div class={`mt-[50px] h-[635px] ${device === Device.Mobile ? 'w-[80%]' : 'w-[811px]'}  flex-shrink-0 self-start bg-white`}>
 	<div class="m-[24px] h-[500px] overflow-y-scroll agreement"
   bind:this={agreementText} 
@@ -47,84 +67,143 @@
 		<div class="mt-[24px]">
 			<span class="text-[24px] font-bold leading-none text-[#262626]"
 				>Important to Note:</span>
-
-				<ul class="list-decimal pl-5 pt-[10px] text-[14px] font-medium font-normal leading-[19px] text-[#262626]">
-					<li>
-					The integration process will not start until the contract between Song88 and Client has been
-					finalized or signed by both parties. 
-				</li>
-				
-				<li>
-					Bespoke requests are not accommodated unless mentioned
-					in the contract. Any requests by Client outside of the contract during or after the
-					integration process should go through Song88’s Account Manager who will process the change
-					request internally and get approval from Song88 Management. 
-				</li>
-				
-				<li>
-					Once change or additional
-					requests are approved, an amendment to the original contract needs to be signed before the
-					actual Development work can resume. 
-				</li>
-				
-				<li>
-					All Client related communication and requirements will
-					be managed by the assigned Song88 Account Manager, with the exception of technical
-					discussions needed between the Client and Song88 Development or Technical teams.
-				</li>
-			</ul>
+				<div class="ordered-list pt-[10px] text-[14px] font-medium font-normal leading-[19px] text-[#262626]">
+					<div>
+					  <span class="number">1.</span>
+					  <span class="content">
+						The integration process will not start until the contract between Song88 and Client has been
+						finalized or signed by both parties. 
+	
+	
+					  </span>
+					</div>
+					<div>
+					  <span class="number">2.</span>
+					  <span class="content">
+						Bespoke requests are not accommodated unless mentioned
+						in the contract. Any requests by Client outside of the contract during or after the
+						integration process should go through Song88’s Account Manager who will process the change
+						request internally and get approval from Song88 Management. 
+					  </span>
+					</div>
+					<div>
+						<span class="number">3.</span>
+						<span class="content">
+							Once change or additional
+							requests are approved, an amendment to the original contract needs to be signed before the
+							actual Development work can resume. 
+	  
+	  
+						</span>
+					  </div>
+					  <div>
+						<span class="number">4.</span>
+						<span class="content">
+							All Client related communication and requirements will
+							be managed by the assigned Song88 Account Manager, with the exception of technical
+							discussions needed between the Client and Song88 Development or Technical teams.
+	  
+	  
+						</span>
+					  </div>
+				</div>
 		</div>
 		<div class="mt-[24px]">
 			<span class="text-[24px] font-bold leading-none text-[#262626]"
 				>Steps to Onboarding a Client:</span
 			>
-			<ul class="list-decimal ordered-list-fix pl-5 pt-[10px] text-[14px] font-medium font-normal leading-[19px] text-[#262626]">
-				<li>
+
+
+
+			<div class="ordered-list pt-[10px] text-[14px] font-medium font-normal leading-[19px] text-[#262626]">
+				<div>
+				  <span class="number">1.</span>
+				  <span class="content">
 					Sales team to negotiate and get the contract signed with an estimated target date as
 					discussed with the Development team.
-				</li>
-				<li>
+
+
+				  </span>
+				</div>
+				<div>
+				  <span class="number">2.</span>
+				  <span class="content">
 					Handover from Sales to Account Manager (Client details,
 					expectations and contract).
-				</li>
-				<li>
+				  </span>
+				</div>
+				<div>
+				  <span class="number">3.</span>
+				  <span class="content">
 					Account Manager to coordinate with the Development team to
 					verify the project scope and timelines based on available resources. 
-				</li>
-				<li>
-					The Account Manager
-					will create the relevant communication channels between Song88 and Client.
-				</li>
-				<li>Kick-off of Integration Process. </li>
-				<li>
-					The Integration and Launch Document will be updated from start to
-					finish by individual or team contributors assigned to the tasks.
-				</li>
-				<li> The Account Manager will be responsible for following up target timelines, requirements, etc.</li>
-				<li>
-					The Account Manager will be responsible for updating the Client regarding the integration tasks status aside from
-					ensuring that the Integration and Launch document is up to date.
-				</li>
-				<li>
-					Once all tasks by Song88
-					has been completed including End-to-end test in Staging, Clients should conduct a User or
-					Business Acceptance Test.
-				</li>
-				<li>
-					Clients are expected to provide a target launch or GO LIVE date
-					once the User or Business Acceptance Test has started.
-				</li>
-				<li>
-					Issues or any other Change Requests
-					which may be accommodated still after the UAT will be addressed and the GO LIVE date will be
-					agreed upon by both Song88 and Client.Clients should not launch without prior agreement
-					with Song88.
-				</li>
-				<li >
-					<span class="font-bold">GO LIVE!</span>
-				</li>
-
-			</ul>
+				  </span>
+				</div>
+				<div>
+					<span class="number">4.</span>
+					<span class="content">
+						The Account Manager
+						will create the relevant communication channels between Song88 and Client.
+					</span>
+				  </div>
+				  <div>
+					<span class="number">5.</span>
+					<span class="content">
+						The Integration and Launch Document will be updated from start to
+						finish by individual or team contributors assigned to the tasks.
+					</span>
+				  </div>
+				  <div>
+					<span class="number">6.</span>
+					<span class="content">
+						The Account Manager will be responsible for following up target timelines, requirements, etc.
+					</span>
+				  </div>
+				  <div>
+					<span class="number">7.</span>
+					<span class="content">
+						The Account Manager will be responsible for updating the Client regarding the integration tasks status aside from
+						ensuring that the Integration and Launch document is up to date.
+					</span>
+				  </div>
+				  <div>
+					<span class="number">8.</span>
+					<span class="content">
+						Once all tasks by Song88
+						has been completed including End-to-end test in Staging, Clients should conduct a User or
+						Business Acceptance Test.
+					</span>
+				  </div>
+				  <div>
+					<span class="number">9.</span>
+					<span class="content">
+						Clients are expected to provide a target launch or GO LIVE date
+						once the User or Business Acceptance Test has started.
+					</span>
+				  </div>
+				  <div>
+					<span class="number">10.</span>
+					<span class="content">
+					  Account Manager to coordinate with the Development team to
+					  verify the project scope and timelines based on available resources. 
+					</span>
+				  </div>
+				  <div>
+					<span class="number">11.</span>
+					<span class="content">
+						Issues or any other Change Requests
+						which may be accommodated still after the UAT will be addressed and the GO LIVE date will be
+						agreed upon by both Song88 and Client.
+					</span>
+				  </div>
+				  <div>
+					<span class="number">12.</span>
+					<span class="content">
+						<span class="font-bold">GO LIVE!</span>
+					</span>
+				  </div>
+			  </div>
+			  
 		</div>
 	</div>
 	<div class="mx-[24px] my-0">
