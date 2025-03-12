@@ -34,7 +34,7 @@
 	}
   
 	.number {
-	  width: 40px;
+	  width: 20px;
 	  text-align: right; 
 	  margin-right: 10px;
 	  flex-shrink: 0; 
