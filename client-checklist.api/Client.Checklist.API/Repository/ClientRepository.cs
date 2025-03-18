@@ -431,11 +431,12 @@ namespace Client.Checklist.API.Repository
 
                     _clientChecklistContext.SaveChanges();
 
-                    var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
-                    {
-                        ClientId = client.ClientId.ToString(),
-                        ClientName = request.ClientName
-                    }, userToken);
+                    //removed this to retain the existing token
+                    //var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
+                    //{
+                    //    ClientId = client.ClientId.ToString(),
+                    //    ClientName = request.ClientName
+                    //}, userToken);
 
                     activity?.SetStatus(ActivityStatusCode.Ok);
 
