@@ -37,10 +37,15 @@
 	let error: any = $state(null);
 	let loading = $state(true);
 	let targetDate = $state('');
+    let stagingSteps: ClientStep[] = $state([]);
+    let productionSteps: ClientStep[] = $state([]);
+    let isInitEnvironmentLoad: boolean = true;
 
 	let device: Device = $state(Device.Desktop);
 
 	function changeCurrEnvironment(selectedEnvironment: Environment) {
+        isInitEnvironmentLoad = true;
+
 		if (selectedEnvironment === Environment.STAGING) {
 			currEnvironment = Environment.STAGING;
 			return;
@@ -92,24 +97,83 @@
 		calculatePercentage(result);
 	}
 
-	function getClientTask(env: number, clientSteps: ClientStep[]): ClientStepTemplate[] {
-		if (!client) return [];
-		let newClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId];
+    const initializeEnvironmentTasks = (): void => {
+        if (!client) {
+            stagingSteps = [];
+            productionSteps = [];
 
-		if (env === 0) {
-			newClientSteps = newClientSteps.filter((x) => x.stepName !== 'Client Launch');
-		}
+            return;
+        };
 
-		return newClientSteps.map((templateClientStep: ClientStepTemplate) => {
-			const result = clientSteps.find((x) => x.step == templateClientStep.step);
+        let baseStagingClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId].filter((x) => x.stepName !== 'Client Launch');
+        let baseProductionClientSteps = DEFAULT_SERVICE_TEMPLATE[client.serviceTypeId];
 
-			if (result) {
-				return result;
+        const apiStagingSteps = client?.clientSteps.filter((clientStep) => clientStep.environment === 0);
+        const apiProductionSteps = client?.clientSteps.filter((clientStep) => clientStep.environment === 1);
+        
+        stagingSteps = baseStagingClientSteps.map((templateClientStep: ClientStepTemplate, index: number) => {
+            const existingValue = apiStagingSteps.find((x) => x.step == templateClientStep.step);
+
+            if (existingValue) {
+				return {
+                    ...existingValue,
+                    isExpanded: isInitEnvironmentLoad ? index === 0 : existingValue.isExpanded
+                } as ClientStep;
 			}
 
-			return templateClientStep;
-		});
-	}
+			return {
+                ...templateClientStep,
+                isExpanded: isInitEnvironmentLoad ? index === 0 : templateClientStep.isExpanded
+            } as ClientStep;
+        })
+
+        productionSteps = baseProductionClientSteps.map((templateClientStep: ClientStepTemplate, index: number) => {
+            const existingValue = apiProductionSteps.find((x) => x.step == templateClientStep.step);
+
+            if (existingValue) {
+				return {
+                    ...existingValue,
+                    isExpanded: isInitEnvironmentLoad ? index === 0 : existingValue.isExpanded
+                } as ClientStep;
+			}
+
+			return {
+                ...templateClientStep,
+                isExpanded: isInitEnvironmentLoad ? index === 0 : templateClientStep.isExpanded
+            } as ClientStep;
+        })
+
+        if (isInitEnvironmentLoad) {
+            isInitEnvironmentLoad = false;
+        }
+    }
+
+    const handleExpandTask = (clientStepId: number, environment: number): void => {
+        if (client && client?.clientSteps !== null) {
+            let baseValue: ClientStep[] = environment === 0 ? stagingSteps : productionSteps;
+            baseValue = baseValue.map(c => {
+                if (c.clientStepId === clientStepId && c.environment === environment) {
+                    return {
+                        ...c,
+                        isExpanded: !c.isExpanded
+                    }
+                }
+
+                return {
+                    ...c,
+                    isExpanded: false
+                }
+            })
+
+            if (environment === 0) {
+                stagingSteps = baseValue;
+                return;
+            }
+
+            productionSteps = baseValue;
+        }
+    }
+
 	onMount(async () => {
 		if (window.innerWidth <= 768) {
 			device = Device.Mobile;
@@ -131,17 +195,14 @@
 			}
 
 			let res: any = response?.data;
-			const clientSteps = response?.data?.clientSteps.map((step: any) => {
-				return {
-					...step,
-					isExpanded: true
-				};
-			});
+			const clientSteps = response?.data?.clientSteps;
 
 			client = {
 				...res?.client,
 				clientSteps
 			};
+
+            initializeEnvironmentTasks();
 
 			// Get client launch staging odds feed
 			const clientLaunchStagingOddsFeed = client?.clientSteps.find(
@@ -166,6 +227,7 @@
 			if (client && client.clientSteps.length > 0) {
 				calcClientStepProgress(client?.clientSteps);
 			}
+
 			loading = false;
 		} catch (err: any) {
 			error = err;
@@ -214,20 +276,22 @@
 				CurrDevice={device}
 			/>
 			{#if currEnvironment === Environment.STAGING}
-				{#each getClientTask( 0, client.clientSteps.filter((clientStep) => clientStep.environment === 0) ) as clientStep}
+				{#each stagingSteps as clientStep}
 					<ClientTaskComponent
 						serviceTypeId={client.serviceTypeId}
 						clientStep={clientStep as ClientStep}
 						CurrDevice={device}
+                        handleExpandTask={handleExpandTask}
 					/>
 				{/each}
 			{/if}
 			{#if currEnvironment === Environment.PRODUCTION}
-				{#each getClientTask( 1, client.clientSteps.filter((clientStep) => clientStep.environment === 1) ) as clientStep}
+				{#each productionSteps as clientStep}
 					<ClientTaskComponent
 						serviceTypeId={client.serviceTypeId}
 						clientStep={clientStep as ClientStep}
 						CurrDevice={device}
+                        handleExpandTask={handleExpandTask}
 					/>
 				{/each}
 			{/if}
