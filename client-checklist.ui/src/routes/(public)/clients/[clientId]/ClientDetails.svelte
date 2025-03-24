@@ -20,10 +20,20 @@
 	}: Props = $props();
 
 	let isCollapse:boolean = $state(true)
+    let showAllLanguages:boolean = $state(false);
+    let showAllCurrencies:boolean = $state(false);
 
-	function handleCollapse(){
+	const handleCollapse = () => {
 		isCollapse = !isCollapse;
 	}
+
+    const handleShowAllLanguages = (value: boolean): void => {
+        showAllLanguages = value;
+    }
+
+    const handleShowAllCurrencies = (value: boolean): void => {
+        showAllCurrencies = value;
+    }
 </script>
 
 {#if CurrDevice === Device.Desktop}
@@ -50,20 +60,26 @@
 					{ServiceToProvide}</span
 				>
 			</div>
-			<div>
+			<div class="max-w-[20%] min-w-[20%]">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Languages Supported</span>
 				<br />
-				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
-					{LangSupported.join()}</span
+				<div class="text-[16px] font-bold leading-none text-[#0071BC] text-wrap">
+					{showAllLanguages ? LangSupported.join(", ") : LangSupported.slice(0, 8).join(", ")}</div
 				>
+                <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllLanguages(!showAllLanguages)}>
+                    {showAllLanguages ? "[View Less]" : "[View More]"}
+                </span>
 			</div>
-			<div>
+			<div class="max-w-[20%] min-w-[20%]">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span
 				>
 				<br />
-				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
-					{CurrencySupported.join()}</span
+				<div class="text-[16px] font-bold leading-none text-[#0071BC] text-wrap">
+					{showAllCurrencies ? CurrencySupported.join(", ") : CurrencySupported.slice(0, 8).join(", ")}</div
 				>
+                <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllCurrencies(!showAllCurrencies)}>
+                    {showAllCurrencies ? "[View Less]" : "[View More]"}
+                </span>
 			</div>
 			<div>
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Target Launch Date</span>
