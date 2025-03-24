@@ -130,21 +130,26 @@
 				>
 			</div>
 		</div>
-		<div class="flex flex-row w-full h-[48px]">
-			<div class="w-[45%] pl-[10px]">
+		<div class="flex flex-row w-full h-[auto]">
+			<div class="max-w-[45%] min-w-[45%] pl-[10px]">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Languages Supported</span>
 				<br />
-				<span class="text-[16px] font-bold leading-none text-[#0071BC]">
-					{LangSupported.join()}</span
+				<div class="text-[16px] font-bold leading-none text-[#0071BC] text-wrap">
+					{showAllLanguages ? LangSupported.join(", ") : LangSupported.slice(0, 8).join(", ")}</div
 				>
+                <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllLanguages(!showAllLanguages)}>
+                    {showAllLanguages ? "[View Less]" : "[View More]"}
+                </span>
 			</div>
-			<div class="w-[45%]">
-				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span
-					>
-					<br />
-					<span class="text-[16px] font-bold leading-none text-[#0071BC]">
-						{CurrencySupported.join()}</span
-					>
+			<div class="max-w-[45%] min-w-[45%]">
+				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span>
+                <br />
+                <div class="text-[16px] font-bold leading-none text-[#0071BC] text-wrap">
+                    {showAllCurrencies ? CurrencySupported.join(", ") : CurrencySupported.slice(0, 8).join(", ")}</div
+                >
+                <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllCurrencies(!showAllCurrencies)}>
+                    {showAllCurrencies ? "[View Less]" : "[View More]"}
+                </span>
 			</div>
 		</div>
 		{/if}
