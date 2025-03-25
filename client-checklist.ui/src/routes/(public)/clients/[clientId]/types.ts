@@ -8,6 +8,7 @@ export type ClientSubtask = {
 
 export type ClientStep = {
     clientTaskId: number;
+    clientStepId?: number;
     clientId: string;
     step: number;
     stepName: string;

@@ -10,12 +10,13 @@
 	export let clientStep: ClientStep;
 	export let serviceTypeId: number;
 	export let CurrDevice: Device;
+    export let handleExpandTask: Function;
 
 	let status: number = 0;
 	let percentage = '0';
 
 	function toggle() {
-		clientStep.isExpanded = !clientStep.isExpanded;
+		handleExpandTask(clientStep.clientStepId, clientStep.environment);
 	}
 
 	function calculateProgress(clientSubtasks: ClientSubtask[]) {
