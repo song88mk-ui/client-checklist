@@ -66,9 +66,11 @@
 				<div class="text-[16px] font-bold leading-none text-[#0071BC] text-wrap">
 					{showAllLanguages ? LangSupported.join(", ") : LangSupported.slice(0, 8).join(", ")}</div
 				>
-                <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllLanguages(!showAllLanguages)}>
-                    {showAllLanguages ? "[View Less]" : "[View More]"}
-                </span>
+                {#if LangSupported.length > 8}
+                    <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllLanguages(!showAllLanguages)}>
+                        {showAllLanguages ? "[View Less]" : "[View More]"}
+                    </span>
+                {/if}
 			</div>
 			<div class="max-w-[20%] min-w-[20%]">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span
@@ -77,9 +79,11 @@
 				<div class="text-[16px] font-bold leading-none text-[#0071BC] text-wrap">
 					{showAllCurrencies ? CurrencySupported.join(", ") : CurrencySupported.slice(0, 8).join(", ")}</div
 				>
-                <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllCurrencies(!showAllCurrencies)}>
-                    {showAllCurrencies ? "[View Less]" : "[View More]"}
-                </span>
+                {#if CurrencySupported.length > 8}
+                    <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllCurrencies(!showAllCurrencies)}>
+                        {showAllCurrencies ? "[View Less]" : "[View More]"}
+                    </span>
+                {/if}
 			</div>
 			<div>
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Target Launch Date</span>
@@ -137,9 +141,11 @@
 				<div class="text-[16px] font-bold leading-none text-[#0071BC] text-wrap">
 					{showAllLanguages ? LangSupported.join(", ") : LangSupported.slice(0, 8).join(", ")}</div
 				>
-                <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllLanguages(!showAllLanguages)}>
-                    {showAllLanguages ? "[View Less]" : "[View More]"}
-                </span>
+                {#if LangSupported.length > 8}
+                    <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllLanguages(!showAllLanguages)}>
+                        {showAllLanguages ? "[View Less]" : "[View More]"}
+                    </span>
+                {/if}
 			</div>
 			<div class="max-w-[45%] min-w-[45%]">
 				<span class="text-[11px] font-normal leading-none text-[#7A7A7A]">Currencies Supported</span>
@@ -147,9 +153,11 @@
                 <div class="text-[16px] font-bold leading-none text-[#0071BC] text-wrap">
                     {showAllCurrencies ? CurrencySupported.join(", ") : CurrencySupported.slice(0, 8).join(", ")}</div
                 >
-                <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllCurrencies(!showAllCurrencies)}>
-                    {showAllCurrencies ? "[View Less]" : "[View More]"}
-                </span>
+                {#if CurrencySupported.length > 8}
+                    <span role="presentation" class="text-[10px] font-bold leading-none text-[#0071BC] cursor-pointer" onclick={() => handleShowAllCurrencies(!showAllCurrencies)}>
+                        {showAllCurrencies ? "[View Less]" : "[View More]"}
+                    </span>
+                {/if}
 			</div>
 		</div>
 		{/if}
