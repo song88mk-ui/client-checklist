@@ -16,6 +16,7 @@ builder.Host.UseSerilog((context, _, serilog) =>
     serilog.ReadFrom.Configuration(context.Configuration);
 });
 
+// telemetry
 builder.Services.AddSingleton<Instrumentation>();
 builder.Services.AddTelemetry(new TelemetrySettings(
             ServiceName: Instrumentation.ActivitySourceName,
