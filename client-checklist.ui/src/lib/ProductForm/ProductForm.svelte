@@ -17,7 +17,7 @@
 		disabled = false,
 		isLaunch = false,
 		serviceType = IntegrationType.WALLET_INTEGRATION,
-		dataKeys = ['staging', 'production']
+		dataKeys = ['dev', 'prd']
 	} = $props<{
 		title: string;
 		initialValues: ProductFormType;
@@ -33,7 +33,7 @@
 
 	let errorMsg = $state('');
 	const keys =
-		isLaunch && serviceType == IntegrationType.WALLET_INTEGRATION ? ['production'] : dataKeys;
+		isLaunch && serviceType == IntegrationType.WALLET_INTEGRATION ? ['prd'] : dataKeys;
 	const schema = createValidationSchema(keys);
 
 	// TODO: Need to make the initial values pair with validation schema
