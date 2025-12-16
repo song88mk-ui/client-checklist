@@ -40,7 +40,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.ECR }}/client-checklist-ui
+            ${{ env.ECR }}/client-checklist-web
           tags: |
             type=sha,event=pr,prefix=pr-sha-
             type=sha,event=branch,prefix={{branch}}-sha-,enable={{is_default_branch}}
@@ -70,6 +70,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: STAGE=dev
 
       - name: Logout to Amazon ECR
         if: success() && steps.proceed.outputs.proceed == 'true'

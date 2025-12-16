@@ -2,9 +2,7 @@ FROM node:19.6.0 AS build
 
 WORKDIR /src
 
-
 COPY client-checklist.ui/package.json ./client-checklist.ui/package.json
-#COPY client-checklist.ui/package-lock.json ./client-checklist.ui/package-lock.json
 
 WORKDIR /src/client-checklist.ui
 
