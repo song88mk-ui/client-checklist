@@ -1,24 +1,28 @@
 using Client.Checklist.API.ActionFilters;
-using Client.Checklist.API.Extensions;
 using Client.Checklist.API.Repository;
 using Client.Checklist.API.Telemetry;
 using Client.Checklist.Shared.Data.ClientChecklist;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// configure logging to single line, it will be easier to correlate
-// from application logs
-builder.Logging.ClearProviders();
-builder.Logging.AddSimpleConsole(opts => { opts.SingleLine = true;});
+builder.Host.UseSerilog((context, _, serilog) =>
+{
+    serilog.ReadFrom.Configuration(context.Configuration);
+});
+
+builder.Services.AddSingleton<Instrumentation>();
+builder.Services.AddTelemetry(new TelemetrySettings(
+            ServiceName: Instrumentation.ActivitySourceName,
+            ActivitySourceName: Instrumentation.ActivitySourceName,
+            MeterName: Instrumentation.MeterName));
 
 // Add services to the container.
-TelemetryOptions telemetryOptions = new();
-builder.Configuration.GetSection("Telemetry").Bind(telemetryOptions);
-builder.Services.AddTelemetry(telemetryOptions);
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 builder.Services.AddDbContextPool<ClientChecklistContext>(o => o.UseSqlServer(builder.Configuration["ConnectionStrings:ClientChecklist"], options =>
