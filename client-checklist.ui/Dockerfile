@@ -1,19 +1,16 @@
-FROM node:19.6.0 AS build
+FROM node:lts AS build
+
+RUN npm install -g pnpm
 
 WORKDIR /src
 
-COPY client-checklist.ui/package.json ./client-checklist.ui/package.json
-
-WORKDIR /src/client-checklist.ui
-
-RUN npm install
-
-COPY client-checklist.ui ./
+ADD . /src
 
 ARG STAGE
-RUN npm run build:$STAGE
 
-FROM nginx:1.27-alpine
-ADD client-checklist.ui/docker/default.conf /etc/nginx/conf.d/default.conf
+RUN pnpm ci && pnpm run build:$STAGE
 
-COPY --from=build /src/client-checklist.ui/build /usr/share/nginx/html
+FROM nginx:1.31-alpine
+ADD docker/default.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=build /src/build /usr/share/nginx/html
