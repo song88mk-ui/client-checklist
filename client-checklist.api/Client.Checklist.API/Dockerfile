@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
@@ -20,12 +20,13 @@ RUN dotnet build \
   --no-restore \
   --configuration Release
 RUN dotnet publish \
+  -c Release \
   --no-restore \
   -o /app && \
   cd /app && \
   rm -f appsettings.*.json
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 ENV ASPNETCORE_HTTP_PORTS=3000
 WORKDIR /app
 
