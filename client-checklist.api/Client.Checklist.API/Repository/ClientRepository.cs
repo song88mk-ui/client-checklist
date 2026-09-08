@@ -255,7 +255,7 @@ namespace Client.Checklist.API.Repository
                             MainDecisionMaker = new Manager { Name = s.MainDecisionMaker, Number = s.MainDecisionMakerContact },
                             ProductManager = new Manager { Name = s.ProductManager, Number = s.ProductManagerContact },
                             TechnicalManager = new Manager { Name = s.TechnicalManager, Number = s.TechnicalManagerContact },
-                            AccountManager = new Manager { Name = s.AccountManager, Number = s.AccountManagerContact},
+                            AccountManager = new Manager { Name = s.AccountManager, Number = s.AccountManagerContact },
                             SocialAccount = s.SocialAccount,
                             Currencies = string.IsNullOrEmpty(s.SupportedCurrency) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedCurrency) ?? new List<string>(),
                             Languages = string.IsNullOrEmpty(s.SupportedLanguage) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(s.SupportedLanguage) ?? new List<string>(),
@@ -479,7 +479,7 @@ namespace Client.Checklist.API.Repository
                 else
                 {
                     var statuses = new int[] { 0, 1 };
-                    if(!statuses.Contains(request.StatusId))
+                    if (!statuses.Contains(request.StatusId))
                         return new BaseResponse
                         {
                             StatusCode = StatusCode.Error,
@@ -596,7 +596,7 @@ namespace Client.Checklist.API.Repository
                 {
                     activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
 
-                    if(ex.InnerException?.Message.Contains("duplicate key") ?? false)
+                    if (ex.InnerException?.Message.Contains("duplicate key") ?? false)
                         return new BaseResponseDTO<AddClientStepsResponseDTO>
                         {
                             StatusCode = StatusCode.Error,

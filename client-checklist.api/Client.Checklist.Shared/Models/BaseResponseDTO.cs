@@ -4,7 +4,7 @@ namespace Client.Checklist.Shared.Models
 {
     public class BaseResponseDTO<T> : BaseResponse
     {
-        
+
         public T Result { get; set; }
     }
 

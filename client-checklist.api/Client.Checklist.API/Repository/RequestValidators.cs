@@ -31,7 +31,7 @@ namespace Client.Checklist.API.Repository
     {
         private int _serviceTypeId;
 
-        public ServiceTypeValidator(int serviceTypeId) 
+        public ServiceTypeValidator(int serviceTypeId)
         {
             _serviceTypeId = serviceTypeId;
         }

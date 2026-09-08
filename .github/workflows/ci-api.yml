@@ -10,6 +10,30 @@ on:
       - released
 
 jobs:
+  lint:
+    name: Lint
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Add NuGet source
+        run: |
+          dotnet nuget add source \
+            --username FlyingCockatoo \
+            --password ${{ secrets.NUGET_PASSWORD }} \
+            --store-password-in-clear-text \
+            --name github "https://nuget.pkg.github.com/FlyingCockatoo/index.json"
+
+      - name: Run
+        run: dotnet format client-checklist.api/Client.Checklist.API.sln --report --verify-no-changes
+
   build:
     name: Build Client.Checklist.API
     runs-on: ubuntu-latest

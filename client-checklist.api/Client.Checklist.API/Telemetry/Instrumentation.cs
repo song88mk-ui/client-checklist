@@ -6,7 +6,7 @@ namespace Client.Checklist.API.Telemetry
 {
     public class Instrumentation : IDisposable
     {
-        internal const string ActivitySourceName =  "Checklist.API";
+        internal const string ActivitySourceName = "Checklist.API";
         internal const string MeterName = ActivitySourceName;
         private readonly Meter meter;
 

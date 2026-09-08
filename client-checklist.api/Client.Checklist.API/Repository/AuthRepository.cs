@@ -22,7 +22,7 @@ namespace Client.Checklist.API.Repository
         }
         public async Task<BaseResponseDTO<TokenModel>> Login(LogInModel loginModel)
         {
-            using(var activity = _activitySource.StartActivity("auth.login"))
+            using (var activity = _activitySource.StartActivity("auth.login"))
             {
                 activity?.SetTag("user.name", loginModel.Username);
                 try
@@ -65,7 +65,7 @@ namespace Client.Checklist.API.Repository
         }
         public async Task<BaseResponseDTO<UserModel>> Authenticate(string token)
         {
-            using(var activity = _activitySource.StartActivity("auth.authenticate"))
+            using (var activity = _activitySource.StartActivity("auth.authenticate"))
             {
                 try
                 {
@@ -118,7 +118,7 @@ namespace Client.Checklist.API.Repository
 
         public async Task<BaseResponseDTO<bool>> Logout(string token)
         {
-            using(var activity = _activitySource.StartActivity("auth.logout"))
+            using (var activity = _activitySource.StartActivity("auth.logout"))
             {
                 try
                 {

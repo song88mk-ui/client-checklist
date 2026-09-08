@@ -23,7 +23,7 @@ namespace Client.Checklist.API.ActionFilters
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             var httpContext = context.HttpContext;
-            
+
             var instrumentation = httpContext.RequestServices.GetService<Instrumentation>();
 
             if (instrumentation == null)
