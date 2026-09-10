@@ -45,5 +45,5 @@ jobs:
                                     /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
                                     /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
           dotnet build --no-incremental client-checklist.api/Client.Checklist.API.sln
-          dotnet test --collect:"XPlat Code Coverage;Format=opencover" client-checklist/Client.Checklist.API.sln
+          dotnet test --collect:"XPlat Code Coverage;Format=opencover" client-checklist.api/Client.Checklist.API.sln
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONARQUBE_TOKEN }}"
