@@ -31,4 +31,5 @@ ENV ASPNETCORE_HTTP_PORTS=3000
 WORKDIR /app
 
 COPY --from=build /app .
+USER app
 CMD ["/usr/bin/dotnet", "Client.Checklist.API.dll"]
