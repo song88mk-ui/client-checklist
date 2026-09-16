@@ -14,6 +14,8 @@ namespace Client.Checklist.API.Repository
         private readonly HttpClient _httpClient;
         private string _version = "3";
 
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+
         public AuthRepository(HttpClient httpClient, Instrumentation instrumentation)
         {
             _httpClient = httpClient;
@@ -32,14 +34,14 @@ namespace Client.Checklist.API.Repository
                     if (response.IsSuccessStatusCode)
                     {
                         activity?.SetStatus(ActivityStatusCode.Ok);
-                        return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                        return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                             ?? new BaseResponseDTO<TokenModel>();
                     }
                     else
                     {
                         activity?.SetTag("http.status.code", response.StatusCode.ToString());
                         if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
-                            return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                            return JsonSerializer.Deserialize<BaseResponseDTO<TokenModel>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                                 ?? new BaseResponseDTO<TokenModel>();
                         else
                         {
@@ -84,14 +86,14 @@ namespace Client.Checklist.API.Repository
                     if (response.IsSuccessStatusCode)
                     {
                         activity?.SetStatus(ActivityStatusCode.Ok);
-                        return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                        return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                             ?? new BaseResponseDTO<UserModel>();
                     }
                     else
                     {
                         activity?.SetTag("http.status.code", response.StatusCode);
                         if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
-                            return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                            return JsonSerializer.Deserialize<BaseResponseDTO<UserModel>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                                 ?? new BaseResponseDTO<UserModel>();
                         else
                         {
@@ -131,14 +133,14 @@ namespace Client.Checklist.API.Repository
                     if (response.IsSuccessStatusCode)
                     {
                         activity?.SetStatus(ActivityStatusCode.Ok);
-                        return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                        return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                             ?? new BaseResponseDTO<bool>();
                     }
                     else
                     {
                         activity?.SetTag("http.status.code", response.StatusCode);
                         if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
-                            return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                            return JsonSerializer.Deserialize<BaseResponseDTO<bool>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                                 ?? new BaseResponseDTO<bool>();
                         else
                         {
@@ -178,12 +180,12 @@ namespace Client.Checklist.API.Repository
                 var response = await _httpClient.PostAsync($"v1/api/user/client/token", new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json"));
 
                 if (response.IsSuccessStatusCode)
-                    return JsonSerializer.Deserialize<BaseResponseDTO<string>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                    return JsonSerializer.Deserialize<BaseResponseDTO<string>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                         ?? new BaseResponseDTO<string>();
                 else
                 {
                     if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
-                        return JsonSerializer.Deserialize<BaseResponseDTO<string>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                        return JsonSerializer.Deserialize<BaseResponseDTO<string>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                             ?? new BaseResponseDTO<string>();
                     else
                     {
@@ -220,12 +222,12 @@ namespace Client.Checklist.API.Repository
                 var response = await _httpClient.GetAsync($"v1/api/user/client/token/list");
 
                 if (response.IsSuccessStatusCode)
-                    return JsonSerializer.Deserialize<BaseResponseDTO<List<ClientTokenModel>>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                    return JsonSerializer.Deserialize<BaseResponseDTO<List<ClientTokenModel>>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                         ?? new BaseResponseDTO<List<ClientTokenModel>>();
                 else
                 {
                     if (response.StatusCode == HttpStatusCode.BadRequest || response.StatusCode == HttpStatusCode.Unauthorized)
-                        return JsonSerializer.Deserialize<BaseResponseDTO<List<ClientTokenModel>>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })
+                        return JsonSerializer.Deserialize<BaseResponseDTO<List<ClientTokenModel>>>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions)
                             ?? new BaseResponseDTO<List<ClientTokenModel>>();
                     else
                     {
