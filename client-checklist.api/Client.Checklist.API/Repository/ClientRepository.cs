@@ -140,7 +140,7 @@ namespace Client.Checklist.API.Repository
             {
                 Guid.TryParse(clientId, out var clientGuid);
 
-                var client = _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefault(f => f.ClientId == clientGuid);
+                var client = await _clientChecklistContext.ClientInformation.AsNoTracking().FirstOrDefaultAsync(f => f.ClientId == clientGuid);
 
                 if (client == null || (client.IsDeleted && clientView))
                 {
@@ -151,7 +151,7 @@ namespace Client.Checklist.API.Repository
                     };
                 }
 
-                var clientSteps = _clientChecklistContext.ClientSteps.AsNoTracking().Where(c => c.ClientId == client.ClientId)
+                var clientSteps = await _clientChecklistContext.ClientSteps.AsNoTracking().Where(c => c.ClientId == client.ClientId)
                     .Select(s => new ClientStepModel
                     {
                         ClientStepId = s.ClientStepId,
@@ -164,18 +164,18 @@ namespace Client.Checklist.API.Repository
                         TargetDateCompleted = s.TargetDateCompleted,
                         Environment = (Environment)s.Environment,
                         SortOrder = s.SortOrder
-                    }).ToList();
+                    }).ToListAsync();
 
                 foreach (var task in clientSteps)
                 {
-                    var clientSubtasks = _clientChecklistContext.ClientSubtask.AsNoTracking().Where(c => c.ClientStepId == task.ClientStepId)
+                    var clientSubtasks = await _clientChecklistContext.ClientSubtask.AsNoTracking().Where(c => c.ClientStepId == task.ClientStepId)
                         .OrderBy(o => o.SortOrder).Select(cs => new ClientSubtaskModel
                         {
                             SubtaskId = cs.SubtaskId,
                             SubtaskName = cs.SubtaskName,
                             TaskStatus = (TaskStatus)cs.TaskStatusId,
                             Comment = cs.Comment
-                        }).ToList();
+                        }).ToListAsync();
 
                     task.ClientSubtasks.AddRange(clientSubtasks);
                 }
@@ -233,9 +233,9 @@ namespace Client.Checklist.API.Repository
             {
                 var clientTokens = (await _authRepository.GetClientToken(userToken)).Result;
 
-                var clients = _clientChecklistContext.ClientInformation.AsNoTracking().ToList();
+                var clients = await _clientChecklistContext.ClientInformation.AsNoTracking().ToListAsync();
 
-                var clientSteps = _clientChecklistContext.ClientSteps.AsNoTracking().ToList();
+                var clientSteps = await _clientChecklistContext.ClientSteps.AsNoTracking().ToListAsync();
 
                 return new BaseResponseDTO<ClientInformationListDTO>
                 {
@@ -334,7 +334,7 @@ namespace Client.Checklist.API.Repository
                         TaskStatus = (int)TaskStatus.NotStarted,
                     }).Entity;
 
-                    _clientChecklistContext.SaveChanges();
+                    await _clientChecklistContext.SaveChangesAsync();
 
                     var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
                     {
@@ -429,7 +429,7 @@ namespace Client.Checklist.API.Repository
                         client.TaskStatus = request.TaskStatus;
                     }
 
-                    _clientChecklistContext.SaveChanges();
+                    await _clientChecklistContext.SaveChangesAsync();
 
                     //removed this to retain the existing token
                     //var token = await _authRepository.CreateClientToken(new CreateClientTokenRequestDTO
@@ -489,7 +489,7 @@ namespace Client.Checklist.API.Repository
                     client.IsDeleted = request.StatusId == 0;
                 }
 
-                _clientChecklistContext.SaveChanges();
+                await _clientChecklistContext.SaveChangesAsync();
 
                 return new BaseResponse
                 {
@@ -561,7 +561,7 @@ namespace Client.Checklist.API.Repository
                         AssignedTo = request.AssignedTo,
                     }).Entity;
 
-                    _clientChecklistContext.SaveChanges();
+                    await _clientChecklistContext.SaveChangesAsync();
 
                     var ctr = 0;
                     foreach (var subTask in request.ClientSubTasks)
@@ -578,7 +578,7 @@ namespace Client.Checklist.API.Repository
                         });
                     }
 
-                    _clientChecklistContext.SaveChanges();
+                    await _clientChecklistContext.SaveChangesAsync();
 
                     activity?.SetStatus(ActivityStatusCode.Ok);
 
@@ -635,10 +635,10 @@ namespace Client.Checklist.API.Repository
                         clientTask.ActualDateCompleted = string.IsNullOrEmpty(request.ActualDateCompleted) ? null : Convert.ToDateTime(request.ActualDateCompleted);
                         clientTask.AssignedTo = request.AssignedTo;
 
-                        _clientChecklistContext.SaveChanges();
+                        await _clientChecklistContext.SaveChangesAsync();
 
                         var clientSubtasks = _clientChecklistContext.ClientSubtask.Where(c => c.ClientStepId == clientTask.ClientStepId);
-                        if (clientSubtasks.Any())
+                        if (await clientSubtasks.AnyAsync())
                             _clientChecklistContext.ClientSubtask.RemoveRange(clientSubtasks);
 
                         var ctr = 0;
@@ -657,7 +657,7 @@ namespace Client.Checklist.API.Repository
                             });
                         }
 
-                        _clientChecklistContext.SaveChanges();
+                        await _clientChecklistContext.SaveChangesAsync();
 
                         activity?.SetStatus(ActivityStatusCode.Ok);
 
