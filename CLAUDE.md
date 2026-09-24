@@ -56,7 +56,7 @@ no mocking framework unless one is already present).
   without a decision.
 - `System.IdentityModel.Tokens.Jwt` 8.1.2 for token handling; authorization via
   `client-checklist.api/Client.Checklist.API/ActionFilters/`.
-- Serilog, `Infra.Extensions.Telemetry` 0.0.1-1, Swashbuckle 10.2.3,
+- Serilog, `Infra.Extensions.Telemetry` 0.1.1-5, Swashbuckle 10.2.3,
   `Microsoft.AspNetCore.Diagnostics.HealthChecks` 2.2.0.
 - UI: SvelteKit, Tailwind, Vite. `VITE_API_BASE_URL` per environment in `.env.stg` / `.env.prd`.
 
