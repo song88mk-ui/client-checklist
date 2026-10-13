@@ -103,4 +103,4 @@ Read this before claiming coverage:
 
 ## See also
 
-`../CLAUDE.md` (workspace, full dotnet-claude-kit override list) · `../INTEGRATION-MAP.md`
+`../CLAUDE.md` (workspace, full dotnet-claude-kit override list) · `../INTEGRATION-MAP.md` · `AGENTS.md`
