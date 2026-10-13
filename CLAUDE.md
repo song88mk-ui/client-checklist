@@ -19,6 +19,8 @@ hook in `.claude/settings.json` re-injects these rules on every prompt.
 10. **Never print, log or commit a secret.** Mask it if it must appear in a log line.
 11. **A new project or service ships with tests** in the repo's existing test framework.
 12. **Commit, push or open a PR only when explicitly asked.** "Implement it" authorizes local edits only.
+13. **Report validation with every change:** build, unit tests, integration tests, manual checks and remaining risks. If something could not be validated, say what and why, name the tests to run before deployment, and mark the work Implementation Complete – Validation Pending, never Completed.
+14. **If a workflow step does not apply, say so** instead of skipping it silently.
 <!-- song88:standing-rules:end -->
 
 ## What this repo is
@@ -91,6 +93,13 @@ Read this before claiming coverage:
   no mocking framework unless one is already present).
 - dotnet-claude-kit defaults do not match this repo: **xUnit 2.5.3 rather than v3** (where tests
   exist at all), no central package management, controller-based rather than minimal API.
+- **Logging rules** (shared with odds-engine-2):
+  - Pass the exception as the first argument: `_logger.LogError(ex, "... {Payload}", payload)`.
+    Never put `ex.Message` or `ex.StackTrace` in the message text, and never pass the exception
+    as a template argument.
+  - Use PascalCase placeholders (`{Message}`, `{Payload}`).
+  - Keep operational log lines (start, connecting, connected, progress). Do not remove or merge
+    them to satisfy SonarQube S6664.
 
 ## See also
 
