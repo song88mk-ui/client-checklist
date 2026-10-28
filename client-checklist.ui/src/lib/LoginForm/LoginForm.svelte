@@ -33,7 +33,7 @@
 
 <div class="mx-auto flex w-[442px] flex-col gap-4 rounded-md border bg-white p-6 shadow">
 	<div class="flex justify-center">
-		<img src="/logo.svg" width="200" alt="logo" />
+		<img src="/song88logo.svg" width="200" alt="logo" />
 	</div>
 
 	<form on:submit={handleSubmit} class="flex flex-col gap-4">

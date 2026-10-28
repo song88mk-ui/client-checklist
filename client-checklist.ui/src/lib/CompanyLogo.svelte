@@ -2,4 +2,4 @@
 	export let size = 200;
 </script>
 
-<img src="/logo.svg" width={size} alt="logo" />
+<img src="/song88logo.svg" width={size} alt="logo" />
